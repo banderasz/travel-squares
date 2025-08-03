@@ -2,6 +2,7 @@ import collections
 import enum
 import math
 import os
+from collections import defaultdict
 from itertools import accumulate
 from typing import List, Tuple, Dict
 
@@ -12,6 +13,7 @@ import scipy
 import plotly.express as px
 import plotly.graph_objs as go
 from plotly.graph_objs import Figure, Scatter
+from plotly.graph_objs.layout.map.layer import Circle
 
 NUMBER_OF_SYMBOLS_IN_PLAY = 96
 
@@ -27,7 +29,7 @@ class Symbols(enum.Enum):
     SUN = ("elephant", 5,           [0,2,8,18,32,50,72,50,32,18,8,2,0], "#88CDF3")
     ARROW_LEFT = ("arrow_left", 1.5, [0]*13)
     ARROW_RIGHT = ("arrow_right", 1.5, [0]*13)
-    ARROW_UP = ("arrow_up", 1.5,  [0, 12, 27, 41, 53, 62, 68, 70, 71, 72, 72,72,72])
+    ARROW_UP = ("arrow_up", 1.5,  [0]*13)
     ARROW_DOWN = ("arrow_down", 1.5, [0]*13)
     NOTHING = ("", 44, [0]*13)
 
@@ -36,39 +38,80 @@ class Symbols(enum.Enum):
         self.weight = weigh
         self.points = points
         self.color_hex = color_hex
-        self.values = self.symbol_on_card_value()
+
+
+
         self.exact_probability = [self.calculate_probability_of_exactly_number(i, NUMBER_OF_SYMBOLS_IN_PLAY) for i in range(12)]
         self.exact_probability.append(1 - sum(self.exact_probability))
 
         self.expected_value = self.calculate_expected_value()
 
+        self.quarter_probabilities = np.array([self.calculate_probability_of_exactly_number(i, 4) for i in range(5)])
+
         self.probability_of_symbol_in_card = [self.calculate_probability_of_exactly_number(i, 16) for i in range(17)]
+
+        self.probability_of_symbol_in_n_card = [np.array(self.probability_of_symbol_in_card)]
+        for i in range(5):
+            self.probability_of_symbol_in_n_card.append(np.convolve(self.probability_of_symbol_in_n_card[-1], self.probability_of_symbol_in_n_card[0]))
+
         self.probability_of_at_most_in_card = list(accumulate(self.probability_of_symbol_in_card))
         self.probability_of_at_least_in_card =  list(reversed(list(accumulate(reversed(self.probability_of_symbol_in_card)))))
         self.probability_of_max_out_of_3_cards = [self.calculate_probability_of_exactly_k_best_out_of_3_card(i) for i in range(17)]
         self.probability_of_min_out_of_3_cards = [self.calculate_probability_of_exactly_k_worse_out_of_3_card(i) for i in range(17)]
-        self.probability_of_collecting_6_best_cards = np.array(self.probability_of_max_out_of_3_cards)
-        for i in range(5):
-            self.probability_of_collecting_6_best_cards = np.convolve(self.probability_of_collecting_6_best_cards, self.probability_of_max_out_of_3_cards)
-        self.probability_of_collecting_6_best_cards[12] = np.sum(self.probability_of_collecting_6_best_cards[12:])
-        self.probability_of_collecting_6_best_cards = self.probability_of_collecting_6_best_cards[:13]
 
-        self.probability_of_collecting_6_worse_cards = np.array(self.probability_of_min_out_of_3_cards)
-        for i in range(5):
-            self.probability_of_collecting_6_worse_cards = np.convolve(self.probability_of_collecting_6_worse_cards, self.probability_of_min_out_of_3_cards)
-        self.probability_of_collecting_6_worse_cards[12] = np.sum(self.probability_of_collecting_6_worse_cards[12:])
-        self.probability_of_collecting_6_worse_cards = self.probability_of_collecting_6_worse_cards[:13]
 
-        self.probability_of_best_and_worse_cards = np.array(self.probability_of_max_out_of_3_cards)
+        self.probability_of_collecting_best_cards = [np.array(self.probability_of_max_out_of_3_cards)]
+        for i in range(5):
+            self.probability_of_collecting_best_cards.append(np.convolve(self.probability_of_collecting_best_cards[-1], self.probability_of_max_out_of_3_cards))
+
+        self.probability_of_collecting_worse_cards = [np.array(self.probability_of_min_out_of_3_cards)]
+        for i in range(5):
+            self.probability_of_collecting_worse_cards.append(np.convolve(self.probability_of_collecting_worse_cards[-1], self.probability_of_min_out_of_3_cards))
+
+        self.probability_of_mean_max_cards = [np.array(self.probability_of_max_out_of_3_cards)]
+        self.probability_of_mean_min_cards = [np.array(self.probability_of_min_out_of_3_cards)]
         for i in range(5):
             if i % 2 == 0:
-                self.probability_of_best_and_worse_cards = np.convolve(self.probability_of_best_and_worse_cards,
-                                                                      self.probability_of_min_out_of_3_cards)
+                self.probability_of_mean_max_cards.append(np.convolve(self.probability_of_mean_max_cards[-1],
+                                                                      self.probability_of_min_out_of_3_cards))
+                self.probability_of_mean_min_cards.append(np.convolve(self.probability_of_mean_min_cards[-1],
+                                                                 self.probability_of_max_out_of_3_cards))
             else:
-                self.probability_of_best_and_worse_cards = np.convolve(self.probability_of_best_and_worse_cards,
-                                                                       self.probability_of_max_out_of_3_cards)
-        self.probability_of_best_and_worse_cards[12] = np.sum(self.probability_of_best_and_worse_cards[12:])
-        self.probability_of_best_and_worse_cards = self.probability_of_best_and_worse_cards[:13]
+                self.probability_of_mean_max_cards.append(np.convolve(self.probability_of_mean_max_cards[-1],
+                                                                 self.probability_of_max_out_of_3_cards))
+                self.probability_of_mean_min_cards.append(np.convolve(self.probability_of_mean_min_cards[-1],
+                                                                 self.probability_of_min_out_of_3_cards))
+
+        # self.values = self.symbol_on_card_value()
+        self.values = self.symbol_on_card_value_mean()
+
+    def calculate_half_quarter_probability(self):
+        p = self.quarter_probabilities
+        fft_length = np.pow(len(p), 2)
+        padded_p = np.pad(p, (0, fft_length - len(p)))
+
+        # Compute the FFT, take the element-wise square root, and then the inverse FFT
+        fft_p = np.fft.fft(padded_p)
+        sqrt_fft_p = np.pow(fft_p, 1 / 2)
+        q_padded = np.fft.ifft(sqrt_fft_p)
+        q = q_padded.real[:len(p)]
+        return q
+
+
+    def calculate_expected_value_from_dist(self, prob: np.array) -> float:
+        min_prob_5 = np.convolve(self.probability_of_mean_min_cards[4], prob)
+        max_prob_5 = np.convolve(self.probability_of_mean_max_cards[4], prob)
+        mean_prob_5 = (min_prob_5 + max_prob_5) / 2
+        e_5 = self.expected_value_of_dist(mean_prob_5)
+        e_6 =  self.expected_value_of_dist(self.probability_of_mean_min_cards[5])
+        return e_5 - e_6
+
+    def expected_value_of_dist(self, prob_orig: np.array) -> float:
+        prob = prob_orig.copy()
+        prob[12] = np.sum(prob[12:])
+        prob = prob[:13]
+        return (prob * np.array(self.points)).sum()
+
 
     def calculate_probability_of_exactly_k_best_out_of_3_card(self, k: int) -> float:
         if k == 0:
@@ -106,13 +149,13 @@ class Symbols(enum.Enum):
 
     @staticmethod
     def arrow_coordinate(arrow: "Symbols") -> Tuple[int, int]:
-        if arrow is Symbols.ARROW_UP:
+        if arrow == Symbols.ARROW_UP:
             return -1, 0
-        elif arrow is Symbols.ARROW_DOWN:
+        elif arrow == Symbols.ARROW_DOWN:
             return 1, 0
-        elif arrow is Symbols.ARROW_RIGHT:
+        elif arrow == Symbols.ARROW_RIGHT:
             return 0, 1
-        elif arrow is Symbols.ARROW_LEFT:
+        elif arrow == Symbols.ARROW_LEFT:
             return 0, -1
         else:
             raise ValueError(f"{arrow} is not an arrow.")
@@ -126,27 +169,54 @@ class Symbols(enum.Enum):
         return [Symbols.MOON, Symbols.X]
 
     def symbol_on_card_value(self) -> List[int]:
-        symbol_points = collections.defaultdict(lambda: list())
-        average_symbol_points = list()
+        q_to_value = collections.defaultdict(lambda: self.points[12])
+        for i in range(len(self.points)):
+            q_to_value[i] = self.points[i]
 
+        probabilities_5 = np.array(self.probability_of_symbol_in_n_card[4])
+        probabilities_5[12] = np.sum(probabilities_5[12:])
+        probabilities_5 = probabilities_5[:13]
+
+        probabilities_6 = np.array(self.probability_of_symbol_in_n_card[5])
+        probabilities_6[12] = np.sum(probabilities_6[12:])
+        probabilities_6 = probabilities_6[:13]
+
+        values = list()
         for symbol_number in range(11):
-            for no_cards in range(1, 7):
-                old_number_of_symbols = self.weight * ((no_cards - 1) / 7)
-                old_point_smaller = self.calculate_expected_value(int(old_number_of_symbols), 3 * 4 * (7-no_cards))
-                old_point_higher = self.calculate_expected_value(int(old_number_of_symbols) + 1, 3 * 4 * (7-no_cards))
-                old_point = old_point_higher * (old_number_of_symbols % 1) + old_point_smaller * (
-                            1 - old_number_of_symbols % 1)
+            expected_value_5 = 0
+            expected_value_6 = 0
+            for i in range(13):
+                expected_value_5 += probabilities_5[i] * q_to_value[i + symbol_number]
+                expected_value_6 += probabilities_6[i] * q_to_value[i]
+            values.append(expected_value_5-expected_value_6)
+        return values
 
-                new_number_of_symbols = self.weight * ((no_cards - 1) / 7) + symbol_number
-                new_point_smaller = self.calculate_expected_value(int(new_number_of_symbols), 3 * 4 * (6-no_cards))
-                new_point_higher = self.calculate_expected_value(int(new_number_of_symbols) + 1, 3 * 4 * (6-no_cards))
-                new_point = new_point_higher * (new_number_of_symbols % 1) + new_point_smaller * (
-                        1 - new_number_of_symbols % 1)
-                point = new_point - old_point
-                symbol_points[symbol_number].append(point)
-            average_symbol_points.append(sum(symbol_points[symbol_number]) / len(
-                symbol_points[symbol_number]))
-        return average_symbol_points
+    def symbol_on_card_value_mean(self):
+        q_to_value = collections.defaultdict(lambda: self.points[12])
+        for i in range(len(self.points)):
+            q_to_value[i] = self.points[i]
+
+        probabilities_min_5 = np.array(self.probability_of_mean_min_cards[4])
+        probabilities_min_5[12] = np.sum(probabilities_min_5[12:])
+        probabilities_min_5 = probabilities_min_5[:13]
+
+        probabilities_max_5 = np.array(self.probability_of_mean_max_cards[4])
+        probabilities_max_5[12] = np.sum(probabilities_max_5[12:])
+        probabilities_max_5 = probabilities_max_5[:13]
+
+        probabilities_6 = np.array(self.probability_of_mean_min_cards[5])
+        probabilities_6[12] = np.sum(probabilities_6[12:])
+        probabilities_6 = probabilities_6[:13]
+
+        values = list()
+        for symbol_number in range(11):
+            expected_value_5 = 0
+            expected_value_6 = 0
+            for i in range(13):
+                expected_value_5 += (probabilities_min_5[i] * q_to_value[i + symbol_number] + probabilities_max_5[i] * q_to_value[i + symbol_number]) / 2
+                expected_value_6 += probabilities_6[i] * q_to_value[i]
+            values.append(expected_value_5 - expected_value_6)
+        return values
 
 
 
@@ -156,12 +226,27 @@ class Symbols(enum.Enum):
     def __repr__(self):
         return self.display
 
+    def __eq__(self, other):
+        return self.name == other.name
+
+    def __hash__(self):
+        return hash(self.name)
+
 print(sum([symbol.weight for symbol in Symbols]))
 assert sum([symbol.weight for symbol in Symbols]) == NUMBER_OF_SYMBOLS_IN_PLAY
 
 def create_df() -> pd.DataFrame:
     plot_data = []
     for symbol in Symbols:
+        best_6 = symbol.probability_of_collecting_best_cards[-1]
+        best_6[12] = np.sum(best_6[12:])
+        best_6 = best_6[:13]
+        worse_6 = symbol.probability_of_collecting_worse_cards[-1]
+        worse_6[12] = np.sum(worse_6[12:])
+        worse_6 = worse_6[:13]
+        mean_6 = symbol.probability_of_mean_max_cards[-1]
+        mean_6[12] = np.sum(mean_6[12:])
+        mean_6 = mean_6[:13]
         if symbol.value_symbol():
             for i in range(13):
                 plot_data.append({"Symbol": symbol.display,
@@ -169,9 +254,9 @@ def create_df() -> pd.DataFrame:
                                   "Quantity": i,
                                   "Color": symbol.color_hex,
                                   "ExactlyRandomProbability": symbol.exact_probability[i],
-                                  "ExactlyFocusMaxProbability": symbol.probability_of_collecting_6_best_cards[i],
-                                  "ExactlyFocusMinProbability": symbol.probability_of_collecting_6_worse_cards[i],
-                                  "ExactlyFocusMeanProbability": symbol.probability_of_best_and_worse_cards[i]
+                                  "ExactlyFocusMaxProbability": best_6[i],
+                                  "ExactlyFocusMinProbability": worse_6[i],
+                                  "ExactlyFocusMeanProbability": mean_6[i]
                                   })
 
     df = pd.DataFrame(plot_data).sort_values(by=['Symbol', 'Value'], ascending=[True, False])
@@ -201,7 +286,8 @@ def create_df() -> pd.DataFrame:
     return df
 
 def generate_symbol_point_graph_and_df(original_df: pd.DataFrame, color_map: Dict[str, str]) ->  Tuple[Figure, pd.DataFrame]:
-    fig = px.line(original_df,
+    df = original_df.sort_values(by=['Symbol', 'Quantity'], ascending=[True, True])
+    fig = px.line(df,
                   x="Quantity",
                   y="Value",
                   color="Symbol",
@@ -216,7 +302,10 @@ def generate_symbol_point_graph_and_df(original_df: pd.DataFrame, color_map: Dic
     table_df.loc[""] = [""] * 12 + [Symbols.NOTHING.weight]
     return fig, table_df
 
-def figure_and_expected_value(df: pd.DataFrame, color_map: Dict[str, str], column_name: str, *args, **kwargs):
+def figure_and_expected_value(df: pd.DataFrame, color_map: Dict[str, str], column_postfix: str, *args, **kwargs):
+    probability_cols = ['Exactly', 'AtLeastQuantity', 'AtMostQuantity', 'AtLeastValue', 'AtMostValue']
+    column_name = probability_cols[0] + column_postfix
+
     fig = px.line(df,
                   x=column_name,
                   y='Value',
@@ -226,9 +315,76 @@ def figure_and_expected_value(df: pd.DataFrame, color_map: Dict[str, str], colum
                   labels={column_name: "Probability"},
                   hover_data=['Symbol', 'Value', column_name, "Quantity"],
                   **kwargs)
-    fig.update_layout(xaxis={"tickformat": ',.0%'}).show()
-    expected_value = (df['Value'] * df[column_name]).groupby(df['Symbol']).sum()
-    return fig, pd.DataFrame({"expected value": expected_value})
+
+    buttons = []
+    for prefix in probability_cols:
+        col_name = prefix + column_postfix
+        temp_df = df.sort_values(by=["Symbol", col_name if not col_name.startswith("Exactly") else 'Quantity'])
+
+        x_data_list = []
+        y_data_list = []
+        customdata_list = []
+        hovertemplate_list = []
+
+        for s in df['Symbol'].unique():
+            symbol_df = temp_df[temp_df['Symbol'] == s]
+            x_data_list.append(symbol_df[col_name].tolist())
+            y_data_list.append(symbol_df["Value"].tolist())
+            customdata_list.append(symbol_df[['Quantity']].values)
+
+            hovertemplate = (
+                f'Symbol: {s}<br>'
+                f'Value: %{{y}}<br>'
+                f'{col_name}: %{{x:.2%}}<br>'
+                f'Quantity: %{{customdata[0]}}<extra></extra>'
+            )
+            hovertemplate_list.append(hovertemplate)
+
+        buttons.append(
+            dict(
+                method='update',
+                label=col_name,
+                args=[
+                    {'x': x_data_list,
+                     'y': y_data_list,
+                     'customdata': customdata_list,
+                     'hovertemplate': hovertemplate_list
+                     },
+                    {'xaxis.title.text': col_name,
+                     'xaxis.tickformat': ',.0%'
+                     }
+                ]
+            )
+        )
+
+    fig.update_layout(
+        updatemenus=[
+            dict(
+                type="dropdown",
+                direction="down",
+                x=0.01,
+                y=1.15,
+                showactive=True,
+                active=0,
+                buttons=buttons
+            )
+        ],
+        xaxis=dict(
+            range=[-.02, 1.02],
+            tickformat=',.0%',
+            dtick=0.1,
+        ),
+        yaxis=dict(dtick=10)
+
+    )
+
+
+    probability_df = df.pivot_table(index="Symbol", columns="Quantity", values=column_name)
+    for column in probability_df.columns:
+        probability_df[column] = probability_df[column].apply(lambda x: f"{x * 100:.2f}%" if pd.notna(x) else x)
+    probability_df["ExpectedValue"] = (df['Value'] * df[column_name]).groupby(df['Symbol']).sum().round(2).apply(lambda x: str(x))
+    probability_df = probability_df.rename(columns={12: "12+"})
+    return fig, probability_df
 
 def generate_image_and_table(function, name: str, *args, **kwargs):
     output_dir = "../content/plotly_graphs"
@@ -236,7 +392,7 @@ def generate_image_and_table(function, name: str, *args, **kwargs):
     image, df = function(*args, **kwargs)
     image.write_html(os.path.join(output_dir, f"{name}.html"), full_html=False,
                                   include_plotlyjs="cdn")
-    df.to_html(os.path.join(output_dir, f"{name}_table.html"))
+    df.to_html(os.path.join(output_dir, f"{name}_table.html"), index_names=False)
 
 def generate_composite_figure(df: pd.DataFrame):
     probability_cols = ['ExactlyRandomProbability', 'ExactlyFocusMaxProbability', 'ExactlyFocusMinProbability', 'ExactlyFocusMeanProbability', 'AtLeastValueRandomProbability', 'AtLeastValueFocusMaxProbability', 'AtLeastValueFocusMinProbability', 'AtLeastValueFocusMeanProbability', 'AtMostValueRandomProbability', 'AtMostValueFocusMaxProbability', 'AtMostValueFocusMinProbability', 'AtMostValueFocusMeanProbability', 'AtLeastQuantityRandomProbability', 'AtLeastQuantityFocusMaxProbability', 'AtLeastQuantityFocusMinProbability', 'AtLeastQuantityFocusMeanProbability', 'AtMostQuantityRandomProbability', 'AtMostQuantityFocusMaxProbability', 'AtMostQuantityFocusMinProbability', 'AtMostQuantityFocusMeanProbability']
@@ -252,40 +408,63 @@ def generate_composite_figure(df: pd.DataFrame):
 
     buttons = []
     for col_name in probability_cols:
-        temp_df =  df.sort_values(by=["Symbol", col_name])
+        temp_df =  df.sort_values(by=["Symbol", col_name if not col_name.startswith("Exactly") else 'Quantity'])
+
+        x_data_list = []
+        y_data_list = []
+        customdata_list = []
+        hovertemplate_list = []
+
+        for s in df['Symbol'].unique():
+            symbol_df = temp_df[temp_df['Symbol'] == s]
+            x_data_list.append(symbol_df[col_name].tolist())
+            y_data_list.append(symbol_df["Value"].tolist())
+            customdata_list.append(symbol_df[['Quantity']].values)
+
+            hovertemplate = (
+                f'Symbol: {s}<br>'
+                f'Value: %{{y}}<br>'
+                f'{col_name}: %{{x:.2%}}<br>'
+                f'Quantity: %{{customdata[0]}}<extra></extra>'
+            )
+            hovertemplate_list.append(hovertemplate)
+
         buttons.append(
             dict(
                 method='update',
-                label=col_name,  # Label displayed in the dropdown
+                label=col_name,
                 args=[
-                    {'x': [temp_df[temp_df['Symbol'] == s][col_name].tolist() for s in df['Symbol'].unique()],
-                     'y': [temp_df[temp_df['Symbol'] == s]["Value"].tolist() for s in df['Symbol'].unique()],
+                    {'x': x_data_list,
+                     'y': y_data_list,
+                     'customdata': customdata_list,
+                     'hovertemplate': hovertemplate_list
                      },
-                    {'xaxis.title.text': col_name,  # Correct way to set x-axis title
+                    {'xaxis.title.text': col_name,
                      'xaxis.tickformat': ',.0%'
                      }
                 ]
             )
         )
 
-    # Add the dropdown to the layout
     fig.update_layout(
-        xaxis={"tickformat": ',.0%'},  # Apply initial tick format
         updatemenus=[
-            go.layout.Updatemenu(
+            dict(
                 type="dropdown",
                 direction="down",
-                x=0.01,  # Position of the dropdown
+                x=0.01,
                 y=1.15,
                 showactive=True,
-                active=0,  # Default selected item (first column)
-                buttons=buttons,
-                xanchor="left",
-                yanchor="top"
+                active=0,
+                buttons=buttons
             )
         ],
-        title_text="Line Chart with Dynamic X-Axis Selection",
-        title_x=0.5  # Center the title
+        xaxis=dict(
+            range=[-.02, 1.02],
+            tickformat=',.0%',
+            dtick=0.01
+        ),
+        yaxis=dict(dtick=1)
+
     )
 
     fig.show()
@@ -325,25 +504,99 @@ def generate_melted_figure(df: pd.DataFrame):
     fig.update_traces(marker={'size': 10})
     fig.show()
 
+def symbol_card_expected_value():
+    data = dict()
+    for symbol in Symbols:
+        expected_min = list()
+        expected_max = list()
+        expected_random = list()
+
+        min_prob = np.array(symbol.probability_of_min_out_of_3_cards)
+        max_prob = np.array(symbol.probability_of_max_out_of_3_cards)
+        random_prob = np.array(symbol.probability_of_symbol_in_card)
+
+
+        current_min = min_prob
+        current_max = max_prob
+        current_random = random_prob
+        current_mean_min = min_prob
+        current_mean_max = max_prob
+
+        expected_min.append(expected_value(current_min))
+        expected_max.append(expected_value(current_max))
+        expected_random.append(expected_value(current_random))
+
+
+        for card_no in range(5):
+            current_min = np.convolve(current_min, min_prob)
+            current_max = np.convolve(current_max, max_prob)
+            current_random = np.convolve(current_random, random_prob)
+            if card_no % 2 == 0:
+                current_mean_min = np.convolve(current_mean_min, max_prob)
+                current_mean_max = np.convolve(current_mean_max, min_prob)
+            else:
+                current_mean_min = np.convolve(current_mean_min, min_prob)
+                current_mean_max = np.convolve(current_mean_max, max_prob)
+
+            expected_min.append(expected_value(current_min))
+            expected_max.append(expected_value(current_max))
+            expected_random.append(expected_value(current_random))
+
+
+        data[symbol] = dict(collections.ChainMap(*[{
+          f"ExpectedMin_{i}": expected_min[i],
+          f"ExpectedMax_{i}": expected_max[i],
+          f"ExpectedMean_{i}": (expected_max[i] +  expected_min[i]) / 2,
+          f"ExpectedRandom_{i}": expected_random[i]} for i in range(6)]))
+
+
+    df = pd.DataFrame(data)
+    print(df)
+
+def expected_value(array: np.array, existing_value: int = 0) -> float:
+    return (np.array(range(existing_value, array.shape[0]+existing_value)) * array).sum()
+
+def symbol_value():
+    df = pd.DataFrame(Symbols.CIRCLE.probability_of_symbol_in_n_card)
+    mean_probabilities = pd.DataFrame(Symbols.CIRCLE.probability_of_symbol_in_n_card).mean().to_numpy()
+    mean_probabilities[12] = np.sum(mean_probabilities[12:])
+    mean_probabilities = mean_probabilities[:13]
+
+    mean_probabilities
+
+    probabilities = pd.DataFrame(Symbols.CIRCLE.probability_of_symbol_in_n_card).mean().to_list()
+
+
+    default_expected_quantity = expected_value(pd.DataFrame(Symbols.CIRCLE.probability_of_symbol_in_n_card).mean().to_numpy())
+    q_to_value = collections.defaultdict(lambda: Symbols.CIRCLE.points[12])
+    for i in range(len(Symbols.CIRCLE.points)):
+        q_to_value[i] = Symbols.CIRCLE.points[i]
+    exp_1 = 0
+    exp_2 = 0
+    for i in range(len(probabilities)):
+        exp_1 += probabilities[i] * q_to_value[i+6]
+    for i in range(13):
+        exp_2 += mean_probabilities[i] * q_to_value[i+6]
 
 
 
-
-
+    print(df)
 
 if __name__ == "__main__":
+    symbol_value()
+    symbol_card_expected_value()
     df = create_df()
     color_map = {symbol.display: symbol.color_hex for symbol in Symbols}
 
     generate_melted_figure(df)
+    generate_composite_figure(df)
 
 
-    #
-    # generate_image_and_table(generate_symbol_point_graph_and_df, "symbol_point", df, color_map)
-    # generate_image_and_table(figure_and_expected_value, "symbol_point_random", df, color_map, "RandomProbability", title="Randomly collecting symbols")
-    # generate_image_and_table(figure_and_expected_value, "symbol_max_prob_point", df, color_map, "FocusMaxProbability",
-    #                          title="Collecting most symbols out of 3 cards")
-    # generate_image_and_table(figure_and_expected_value, "symbol_min_prob_point", df, color_map, "FocusMinProbability",
-    #                         title="Collecting least symbols out of 3 cards")
-    # generate_image_and_table(figure_and_expected_value, "symbol_mean_prob_point", df, color_map, "FocusMeanProbability",
-    #                          title="Half time collecting the most, half time the least symbols out of three cards")
+    generate_image_and_table(generate_symbol_point_graph_and_df, "symbol_point", df, color_map)
+    generate_image_and_table(figure_and_expected_value, "symbol_point_random", df, color_map, "RandomProbability", title="Randomly collecting symbols")
+    generate_image_and_table(figure_and_expected_value, "symbol_max_prob_point", df, color_map, "FocusMaxProbability",
+                             title="Collecting most symbols out of 3 cards")
+    generate_image_and_table(figure_and_expected_value, "symbol_min_prob_point", df, color_map, "FocusMinProbability",
+                            title="Collecting least symbols out of 3 cards")
+    generate_image_and_table(figure_and_expected_value, "symbol_mean_prob_point", df, color_map, "FocusMeanProbability",
+                             title="Half time collecting the most, half time the least symbols out of three cards")
