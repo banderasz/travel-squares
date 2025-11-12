@@ -269,6 +269,7 @@ class TrainingDataGenerator:
                     "image_id": int,
                     "category_id": int,
                     "category_name": str,
+                    "supercategory": str,
                     "bbox": [x, y, width, height],  # Top-left corner + dimensions
                     "bbox_normalized": [x, y, width, height],  # Normalized to [0, 1]
                     "area": float,
@@ -307,8 +308,11 @@ class TrainingDataGenerator:
                 is_visible = quarter is not None and quarter.visible
 
                 for bbox in boxes:
-                    # Add category to set
-                    categories_set.add(bbox.symbol_name)
+                    # Determine supercategory based on symbol name
+                    supercategory = "quarter" if bbox.symbol_name == "quarter" else "symbol"
+
+                    # Add category to set with supercategory info
+                    categories_set.add((bbox.symbol_name, supercategory))
 
                     # Calculate bbox in COCO format: [x, y, width, height]
                     x = bbox.top_left.x
@@ -330,6 +334,7 @@ class TrainingDataGenerator:
                         "image_id": sample_id,
                         "category_id": None,  # Will be filled after creating category mapping
                         "category_name": bbox.symbol_name,
+                        "supercategory": supercategory,
                         "bbox": [int(x), int(y), int(w), int(h)],
                         "bbox_normalized": [
                             float(x_norm),
@@ -349,11 +354,11 @@ class TrainingDataGenerator:
         # Create category mapping
         categories = []
         category_name_to_id = {}
-        for cat_id, cat_name in enumerate(sorted(categories_set)):
+        for cat_id, (cat_name, supercategory) in enumerate(sorted(categories_set)):
             categories.append({
                 "id": cat_id,
                 "name": cat_name,
-                "supercategory": "symbol"
+                "supercategory": supercategory
             })
             category_name_to_id[cat_name] = cat_id
 
@@ -438,12 +443,14 @@ class TrainingDataGenerator:
         Returns:
             Image with bounding boxes drawn
         """
-        # Define colors for different visibility states
-        COLOR_VISIBLE = (0, 255, 0)  # Green
-        COLOR_HIDDEN = (128, 128, 128)  # Gray
+        # Define colors for different visibility states and types
+        COLOR_SYMBOL_VISIBLE = (0, 255, 0)  # Green for symbols
+        COLOR_QUARTER_VISIBLE = (0, 0, 255)  # Red for quarters
+        COLOR_HIDDEN = (128, 128, 128)  # Gray for hidden
 
         for ann in annotations["annotations"]:
             is_visible = ann["visible"]
+            is_quarter = ann["supercategory"] == "quarter"
 
             # Skip hidden symbols if show_hidden_symbols is False
             if not is_visible and not self.show_hidden_symbols:
@@ -451,8 +458,12 @@ class TrainingDataGenerator:
 
             x, y, w, h = ann["bbox"]
 
-            # Choose color based on visibility
-            color = COLOR_VISIBLE if is_visible else COLOR_HIDDEN
+            # Choose color based on visibility and type
+            if is_visible:
+                color = COLOR_QUARTER_VISIBLE if is_quarter else COLOR_SYMBOL_VISIBLE
+            else:
+                color = COLOR_HIDDEN
+
             thickness = 2 if is_visible else 1
 
             # Draw bounding box
@@ -581,14 +592,14 @@ class TrainingDataGenerator:
             dataset_annotations["images"].append(annotations["image"])
             dataset_annotations["annotations"].extend(annotations["annotations"])
 
-            # Collect categories
+            # Collect categories with supercategory info
             for cat in annotations["categories"]:
-                all_categories.add(cat["name"])
+                all_categories.add((cat["name"], cat["supercategory"]))
 
         # Create final category list
         dataset_annotations["categories"] = [
-            {"id": cat_id, "name": cat_name, "supercategory": "symbol"}
-            for cat_id, cat_name in enumerate(sorted(all_categories))
+            {"id": cat_id, "name": cat_name, "supercategory": supercategory}
+            for cat_id, (cat_name, supercategory) in enumerate(sorted(all_categories))
         ]
 
         # Save dataset-level annotations
@@ -632,11 +643,17 @@ class TrainingDataGenerator:
                 if not is_visible and not self.show_hidden_symbols:
                     continue
 
-                # Choose color based on visibility
-                color = (0, 255, 0) if is_visible else (128, 128, 128)  # Green or Gray
-                thickness = 2 if is_visible else 1
-
                 for bbox in boxes:
+                    is_quarter = bbox.symbol_name == "quarter"
+
+                    # Choose color based on visibility and type
+                    if is_visible:
+                        color = (0, 0, 255) if is_quarter else (0, 255, 0)  # Red for quarters, Green for symbols
+                    else:
+                        color = (128, 128, 128)  # Gray for hidden
+
+                    thickness = 2 if is_visible else 1
+
                     # Draw bounding box
                     cv2.rectangle(
                         canvas_bgr,

@@ -276,16 +276,24 @@ class Card:
 
     def _get_bounding_boxes(self) -> Dict[QuarterLocation, List[BoundingBox]]:
         all_boxes = defaultdict(list)
-
         quarter_size = self.original_size // 2
-        for quarter in self.quarters:
-            if quarter.visible and quarter.symbols:
-                bounding_boxes_from_quarter_top_left = quarter.get_relative_bounding_box_from_top_left(quarter_size)
-                quarter_top_left_coordinate = quarter.location.get_relative_top_left_position_from_center(quarter_size)
 
-                for bounding_box in bounding_boxes_from_quarter_top_left:
-                    all_boxes[quarter.location].append(bounding_box + quarter_top_left_coordinate +
-                                                       self.center_position)
+        for quarter in self.quarters:
+            if quarter.visible:
+                # Add quarter bounding box
+                quarter_top_left_coordinate = quarter.location.get_relative_top_left_position_from_center(quarter_size)
+                quarter_bbox = BoundingBox(
+                    symbol_name="quarter",
+                    top_left=quarter_top_left_coordinate + self.center_position,
+                    bottom_right=quarter_top_left_coordinate + self.center_position + Coordinate(quarter_size, quarter_size)
+                )
+                all_boxes[quarter.location].append(quarter_bbox)
+
+                # Add symbol bounding boxes if quarter has symbols
+                if quarter.symbols:
+                    bounding_boxes_from_quarter_top_left = quarter.get_relative_bounding_box_from_top_left(quarter_size)
+                    for bounding_box in bounding_boxes_from_quarter_top_left:
+                        all_boxes[quarter.location].append(bounding_box + quarter_top_left_coordinate + self.center_position)
 
         return all_boxes
 
@@ -1110,19 +1118,23 @@ if __name__ == "__main__":
                 continue
 
             for bbox in boxes:
-                # Draw bounding box in green
+                # Choose color based on symbol type
+                is_quarter = bbox.symbol_name == "quarter"
+                color = (0, 0, 255) if is_quarter else (0, 255, 0)  # Red for quarters, Green for symbols
+
+                # Draw bounding box
                 cv2.rectangle(
                     canvas_with_boxes,
                     (bbox.top_left.x, bbox.top_left.y),
                     (bbox.bottom_right.x, bbox.bottom_right.y),
-                    (0, 255, 0),  # Green color
+                    color,
                     2
                 )
 
                 # Draw center point
                 center_x = (bbox.top_left.x + bbox.bottom_right.x) // 2
                 center_y = (bbox.top_left.y + bbox.bottom_right.y) // 2
-                cv2.circle(canvas_with_boxes, (center_x, center_y), 3, (0, 255, 0), -1)
+                cv2.circle(canvas_with_boxes, (center_x, center_y), 3, color, -1)
 
                 # Draw symbol name
                 label = bbox.symbol_name
@@ -1140,7 +1152,7 @@ if __name__ == "__main__":
                     (label_x, label_y),
                     cv2.FONT_HERSHEY_SIMPLEX,
                     0.4,
-                    (0, 255, 0),  # Green color
+                    color,
                     1,
                     cv2.LINE_AA
                 )
@@ -1149,6 +1161,7 @@ if __name__ == "__main__":
 
     # Display the board without effects
     print("\nDisplaying board with bounding boxes (before visual effects)...")
+    print("RED boxes show quarter bounding boxes")
     print("GREEN boxes show symbol bounding boxes with labels")
     print("Press any key to continue...")
     cv2.imshow("Card Board - Before Visual Effects", canvas_with_boxes)
@@ -1189,19 +1202,23 @@ if __name__ == "__main__":
                 continue
 
             for bbox in boxes:
-                # Draw bounding box in green
+                # Choose color based on symbol type
+                is_quarter = bbox.symbol_name == "quarter"
+                color = (0, 0, 255) if is_quarter else (0, 255, 0)  # Red for quarters, Green for symbols
+
+                # Draw bounding box
                 cv2.rectangle(
                     canvas_with_effects_and_boxes,
                     (bbox.top_left.x, bbox.top_left.y),
                     (bbox.bottom_right.x, bbox.bottom_right.y),
-                    (0, 255, 0),
+                    color,
                     2
                 )
 
                 # Draw center point
                 center_x = (bbox.top_left.x + bbox.bottom_right.x) // 2
                 center_y = (bbox.top_left.y + bbox.bottom_right.y) // 2
-                cv2.circle(canvas_with_effects_and_boxes, (center_x, center_y), 3, (0, 255, 0), -1)
+                cv2.circle(canvas_with_effects_and_boxes, (center_x, center_y), 3, color, -1)
 
                 # Draw symbol name
                 label = bbox.symbol_name
@@ -1217,14 +1234,15 @@ if __name__ == "__main__":
                     (label_x, label_y),
                     cv2.FONT_HERSHEY_SIMPLEX,
                     0.4,
-                    (0, 255, 0),
+                    color,
                     1,
                     cv2.LINE_AA
                 )
 
     # Display board with visual effects and bounding boxes
     print("\nDisplaying board with visual effects and bounding boxes...")
-    print("GREEN boxes show that bounding boxes are still accurate after visual effects")
+    print("RED boxes show quarter bounding boxes")
+    print("GREEN boxes show symbol bounding boxes")
     print("Press any key to close...")
     cv2.imshow("Card Board - With Visual Effects + Bounding Boxes", canvas_with_effects_and_boxes)
     cv2.waitKey(0)
