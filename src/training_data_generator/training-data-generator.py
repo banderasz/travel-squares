@@ -23,7 +23,8 @@ class TrainingDataGenerator:
             seed: int = None,
             save_intermediate: bool = True,
             card_offset_percent: float = 0.1,
-            show_hidden_symbols: bool = False  # New parameter
+            show_hidden_symbols: bool = False,
+            save_bounding_boxes: bool = True
     ):
         """
         Initialize the training data generator.
@@ -45,6 +46,7 @@ class TrainingDataGenerator:
         self.save_intermediate = save_intermediate
         self.card_offset_percent = card_offset_percent
         self.show_hidden_symbols = show_hidden_symbols
+        self.save_bounding_boxes = save_bounding_boxes
 
         if seed is not None:
             random.seed(seed)
@@ -415,10 +417,11 @@ class TrainingDataGenerator:
             json.dump(annotations, f, indent=2)
         print(f"Saved annotations: {annotation_path}")
 
-        # Create and save visualization
-        visualization = self._create_visualization(image.copy(), annotations)
-        cv2.imwrite(visualization_path, visualization)
-        print(f"Saved visualization: {visualization_path}")
+        if self.save_bounding_boxes:
+            # Create and save visualization
+            visualization = self._create_visualization(image.copy(), annotations)
+            cv2.imwrite(visualization_path, visualization)
+            print(f"Saved visualization: {visualization_path}")
 
     def _create_visualization(
             self,
@@ -728,10 +731,11 @@ if __name__ == "__main__":
         cards_dir=CARDS_DIR,
         json_path=JSON_PATH,
         output_dir=OUTPUT_DIR,
-        seed=42,  # For reproducibility
-        save_intermediate=False,  # Enable intermediate image saving
+        seed=121,  # For reproducibility
+        save_intermediate=True,  # Enable intermediate image saving
         card_offset_percent=0.15,  # 15% of card size for random offset
-        show_hidden_symbols=False  # Don't show hidden symbols in visualizations
+        show_hidden_symbols=False,  # Don't show hidden symbols in visualizations
+        save_bounding_boxes=True
     )
 
     # Generate dataset
@@ -742,7 +746,7 @@ if __name__ == "__main__":
         max_board_rotation=15.0,
         perspective_strength_range=(0.3, 0.7),
         effect_presets=["light", "moderate", "heavy"],
-        available_card_indices=list(range(1, 26))  # Use all 25 cards
+        available_card_indices=list(range(1, 120))  # Use all 25 cards
     )
 
     print("\nDataset generation completed!")

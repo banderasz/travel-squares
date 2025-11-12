@@ -350,7 +350,7 @@ class Card:
         Rotate the card image and update bounding boxes.
         If total rotation exceeds 45 degrees, rotate quarter locations and reset rotation.
         """
-        self.rotation = (self.rotation + rotation_deg) % 360
+
 
         center = center if center is not None else self.center_position
 
@@ -364,13 +364,10 @@ class Card:
         self.__rotate_bounding_boxes(rotation_deg, center)
 
         # Calculate how many 90-degree rotations to perform
-        num_90_rotations = round(self.rotation / 90)
+        num_90_rotations = round(rotation_deg / 90)
 
         # Rotate quarters
         self.__rotate_quarters(num_90_rotations)
-
-        # Reset rotation to the remainder
-        self.rotation = self.rotation % 90
 
     def __rotate_bounding_boxes(self, rotation_deg: float, center: Coordinate = None):
         """
