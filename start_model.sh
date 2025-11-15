@@ -1,0 +1,1 @@
+docker run -t --rm -p 8501:8501 -v "C:\Users\heszl\repos\travel-squares\model:/models" -e MODEL_NAME=square_pirates_edge tensorflow/serving
