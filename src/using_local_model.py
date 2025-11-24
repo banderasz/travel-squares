@@ -8,7 +8,7 @@ MODEL_NAME = "square_pirates_edge"
 # The port exposed on the host machine: -p 8501:8501
 HOST_PORT = "8501"
 # The path to the image you want to test
-IMAGE_PATH = r"C:\Users\heszl\Desktop\sample_00000_small.png"
+IMAGE_PATH = r"../resources/20250812_200906.jpg"
 # The REST API endpoint URL
 URL = f"http://localhost:{HOST_PORT}/v1/models/{MODEL_NAME}:predict"
 
