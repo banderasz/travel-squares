@@ -1,0 +1,1899 @@
+{
+  "image": {
+    "id": 0,
+    "width": 1146,
+    "height": 1706,
+    "file_name": "sample_00000.png"
+  },
+  "annotations": [
+    {
+      "id": 0,
+      "image_id": 0,
+      "category_id": 9,
+      "category_name": "quarter",
+      "supercategory": "quarter",
+      "bbox": [
+        432,
+        992,
+        281,
+        281
+      ],
+      "bbox_normalized": [
+        0.3769633507853403,
+        0.5814771395076201,
+        0.24520069808027922,
+        0.16471277842907386
+      ],
+      "area": 78961.0,
+      "card_id": 0,
+      "quarter_location": "bottom_right",
+      "visible": false
+    },
+    {
+      "id": 1,
+      "image_id": 0,
+      "category_id": 5,
+      "category_name": "coin",
+      "supercategory": "symbol",
+      "bbox": [
+        574,
+        1134,
+        134,
+        134
+      ],
+      "bbox_normalized": [
+        0.5008726003490401,
+        0.6647127784290738,
+        0.1169284467713787,
+        0.07854630715123095
+      ],
+      "area": 17956.0,
+      "card_id": 0,
+      "quarter_location": "bottom_right",
+      "visible": false
+    },
+    {
+      "id": 2,
+      "image_id": 0,
+      "category_id": 10,
+      "category_name": "rat",
+      "supercategory": "symbol",
+      "bbox": [
+        437,
+        997,
+        135,
+        135
+      ],
+      "bbox_normalized": [
+        0.38132635253054104,
+        0.5844079718640094,
+        0.11780104712041885,
+        0.07913247362250879
+      ],
+      "area": 18225.0,
+      "card_id": 0,
+      "quarter_location": "bottom_right",
+      "visible": false
+    },
+    {
+      "id": 3,
+      "image_id": 0,
+      "category_id": 9,
+      "category_name": "quarter",
+      "supercategory": "quarter",
+      "bbox": [
+        151,
+        992,
+        281,
+        281
+      ],
+      "bbox_normalized": [
+        0.13176265270506107,
+        0.5814771395076201,
+        0.24520069808027922,
+        0.16471277842907386
+      ],
+      "area": 78961.0,
+      "card_id": 0,
+      "quarter_location": "bottom_left",
+      "visible": false
+    },
+    {
+      "id": 4,
+      "image_id": 0,
+      "category_id": 4,
+      "category_name": "arrow_up",
+      "supercategory": "symbol",
+      "bbox": [
+        225,
+        1066,
+        134,
+        134
+      ],
+      "bbox_normalized": [
+        0.19633507853403143,
+        0.6248534583821805,
+        0.1169284467713787,
+        0.07854630715123095
+      ],
+      "area": 17956.0,
+      "card_id": 0,
+      "quarter_location": "bottom_left",
+      "visible": false
+    },
+    {
+      "id": 5,
+      "image_id": 0,
+      "category_id": 9,
+      "category_name": "quarter",
+      "supercategory": "quarter",
+      "bbox": [
+        432,
+        711,
+        281,
+        281
+      ],
+      "bbox_normalized": [
+        0.3769633507853403,
+        0.4167643610785463,
+        0.24520069808027922,
+        0.16471277842907386
+      ],
+      "area": 78961.0,
+      "card_id": 0,
+      "quarter_location": "top_right",
+      "visible": false
+    },
+    {
+      "id": 6,
+      "image_id": 0,
+      "category_id": 10,
+      "category_name": "rat",
+      "supercategory": "symbol",
+      "bbox": [
+        506,
+        785,
+        134,
+        134
+      ],
+      "bbox_normalized": [
+        0.44153577661431065,
+        0.4601406799531067,
+        0.1169284467713787,
+        0.07854630715123095
+      ],
+      "area": 17956.0,
+      "card_id": 0,
+      "quarter_location": "top_right",
+      "visible": false
+    },
+    {
+      "id": 7,
+      "image_id": 0,
+      "category_id": 9,
+      "category_name": "quarter",
+      "supercategory": "quarter",
+      "bbox": [
+        151,
+        711,
+        281,
+        281
+      ],
+      "bbox_normalized": [
+        0.13176265270506107,
+        0.4167643610785463,
+        0.24520069808027922,
+        0.16471277842907386
+      ],
+      "area": 78961.0,
+      "card_id": 0,
+      "quarter_location": "top_left",
+      "visible": false
+    },
+    {
+      "id": 8,
+      "image_id": 0,
+      "category_id": 7,
+      "category_name": "map",
+      "supercategory": "symbol",
+      "bbox": [
+        293,
+        853,
+        134,
+        134
+      ],
+      "bbox_normalized": [
+        0.2556719022687609,
+        0.5,
+        0.1169284467713787,
+        0.07854630715123095
+      ],
+      "area": 17956.0,
+      "card_id": 0,
+      "quarter_location": "top_left",
+      "visible": false
+    },
+    {
+      "id": 9,
+      "image_id": 0,
+      "category_id": 7,
+      "category_name": "map",
+      "supercategory": "symbol",
+      "bbox": [
+        156,
+        853,
+        135,
+        134
+      ],
+      "bbox_normalized": [
+        0.13612565445026178,
+        0.5,
+        0.11780104712041885,
+        0.07854630715123095
+      ],
+      "area": 18090.0,
+      "card_id": 0,
+      "quarter_location": "top_left",
+      "visible": false
+    },
+    {
+      "id": 10,
+      "image_id": 0,
+      "category_id": 1,
+      "category_name": "arrow_down",
+      "supercategory": "symbol",
+      "bbox": [
+        225,
+        715,
+        134,
+        136
+      ],
+      "bbox_normalized": [
+        0.19633507853403143,
+        0.4191090269636577,
+        0.1169284467713787,
+        0.07971864009378664
+      ],
+      "area": 18224.0,
+      "card_id": 0,
+      "quarter_location": "top_left",
+      "visible": false
+    },
+    {
+      "id": 11,
+      "image_id": 0,
+      "category_id": 9,
+      "category_name": "quarter",
+      "supercategory": "quarter",
+      "bbox": [
+        151,
+        711,
+        281,
+        281
+      ],
+      "bbox_normalized": [
+        0.13176265270506107,
+        0.4167643610785463,
+        0.24520069808027922,
+        0.16471277842907386
+      ],
+      "area": 78961.0,
+      "card_id": 1,
+      "quarter_location": "top_left",
+      "visible": false
+    },
+    {
+      "id": 12,
+      "image_id": 0,
+      "category_id": 6,
+      "category_name": "kraken",
+      "supercategory": "symbol",
+      "bbox": [
+        156,
+        716,
+        134,
+        134
+      ],
+      "bbox_normalized": [
+        0.13612565445026178,
+        0.4196951934349355,
+        0.1169284467713787,
+        0.07854630715123095
+      ],
+      "area": 17956.0,
+      "card_id": 1,
+      "quarter_location": "top_left",
+      "visible": false
+    },
+    {
+      "id": 13,
+      "image_id": 0,
+      "category_id": 10,
+      "category_name": "rat",
+      "supercategory": "symbol",
+      "bbox": [
+        292,
+        716,
+        135,
+        134
+      ],
+      "bbox_normalized": [
+        0.2547993019197208,
+        0.4196951934349355,
+        0.11780104712041885,
+        0.07854630715123095
+      ],
+      "area": 18090.0,
+      "card_id": 1,
+      "quarter_location": "top_left",
+      "visible": false
+    },
+    {
+      "id": 14,
+      "image_id": 0,
+      "category_id": 4,
+      "category_name": "arrow_up",
+      "supercategory": "symbol",
+      "bbox": [
+        156,
+        852,
+        134,
+        135
+      ],
+      "bbox_normalized": [
+        0.13612565445026178,
+        0.49941383352872215,
+        0.1169284467713787,
+        0.07913247362250879
+      ],
+      "area": 18090.0,
+      "card_id": 1,
+      "quarter_location": "top_left",
+      "visible": false
+    },
+    {
+      "id": 15,
+      "image_id": 0,
+      "category_id": 13,
+      "category_name": "spyglass",
+      "supercategory": "symbol",
+      "bbox": [
+        292,
+        852,
+        135,
+        135
+      ],
+      "bbox_normalized": [
+        0.2547993019197208,
+        0.49941383352872215,
+        0.11780104712041885,
+        0.07913247362250879
+      ],
+      "area": 18225.0,
+      "card_id": 1,
+      "quarter_location": "top_left",
+      "visible": false
+    },
+    {
+      "id": 16,
+      "image_id": 0,
+      "category_id": 9,
+      "category_name": "quarter",
+      "supercategory": "quarter",
+      "bbox": [
+        432,
+        711,
+        281,
+        281
+      ],
+      "bbox_normalized": [
+        0.3769633507853403,
+        0.4167643610785463,
+        0.24520069808027922,
+        0.16471277842907386
+      ],
+      "area": 78961.0,
+      "card_id": 1,
+      "quarter_location": "top_right",
+      "visible": false
+    },
+    {
+      "id": 17,
+      "image_id": 0,
+      "category_id": 11,
+      "category_name": "rum",
+      "supercategory": "symbol",
+      "bbox": [
+        437,
+        716,
+        134,
+        134
+      ],
+      "bbox_normalized": [
+        0.38132635253054104,
+        0.4196951934349355,
+        0.1169284467713787,
+        0.07854630715123095
+      ],
+      "area": 17956.0,
+      "card_id": 1,
+      "quarter_location": "top_right",
+      "visible": false
+    },
+    {
+      "id": 18,
+      "image_id": 0,
+      "category_id": 8,
+      "category_name": "parrot",
+      "supercategory": "symbol",
+      "bbox": [
+        573,
+        852,
+        135,
+        135
+      ],
+      "bbox_normalized": [
+        0.5,
+        0.49941383352872215,
+        0.11780104712041885,
+        0.07913247362250879
+      ],
+      "area": 18225.0,
+      "card_id": 1,
+      "quarter_location": "top_right",
+      "visible": false
+    },
+    {
+      "id": 19,
+      "image_id": 0,
+      "category_id": 9,
+      "category_name": "quarter",
+      "supercategory": "quarter",
+      "bbox": [
+        151,
+        992,
+        281,
+        281
+      ],
+      "bbox_normalized": [
+        0.13176265270506107,
+        0.5814771395076201,
+        0.24520069808027922,
+        0.16471277842907386
+      ],
+      "area": 78961.0,
+      "card_id": 1,
+      "quarter_location": "bottom_left",
+      "visible": false
+    },
+    {
+      "id": 20,
+      "image_id": 0,
+      "category_id": 12,
+      "category_name": "shark",
+      "supercategory": "symbol",
+      "bbox": [
+        156,
+        997,
+        134,
+        134
+      ],
+      "bbox_normalized": [
+        0.13612565445026178,
+        0.5844079718640094,
+        0.1169284467713787,
+        0.07854630715123095
+      ],
+      "area": 17956.0,
+      "card_id": 1,
+      "quarter_location": "bottom_left",
+      "visible": false
+    },
+    {
+      "id": 21,
+      "image_id": 0,
+      "category_id": 7,
+      "category_name": "map",
+      "supercategory": "symbol",
+      "bbox": [
+        292,
+        1133,
+        135,
+        135
+      ],
+      "bbox_normalized": [
+        0.2547993019197208,
+        0.664126611957796,
+        0.11780104712041885,
+        0.07913247362250879
+      ],
+      "area": 18225.0,
+      "card_id": 1,
+      "quarter_location": "bottom_left",
+      "visible": false
+    },
+    {
+      "id": 22,
+      "image_id": 0,
+      "category_id": 9,
+      "category_name": "quarter",
+      "supercategory": "quarter",
+      "bbox": [
+        432,
+        992,
+        281,
+        281
+      ],
+      "bbox_normalized": [
+        0.3769633507853403,
+        0.5814771395076201,
+        0.24520069808027922,
+        0.16471277842907386
+      ],
+      "area": 78961.0,
+      "card_id": 1,
+      "quarter_location": "bottom_right",
+      "visible": false
+    },
+    {
+      "id": 23,
+      "image_id": 0,
+      "category_id": 10,
+      "category_name": "rat",
+      "supercategory": "symbol",
+      "bbox": [
+        437,
+        997,
+        134,
+        134
+      ],
+      "bbox_normalized": [
+        0.38132635253054104,
+        0.5844079718640094,
+        0.1169284467713787,
+        0.07854630715123095
+      ],
+      "area": 17956.0,
+      "card_id": 1,
+      "quarter_location": "bottom_right",
+      "visible": false
+    },
+    {
+      "id": 24,
+      "image_id": 0,
+      "category_id": 5,
+      "category_name": "coin",
+      "supercategory": "symbol",
+      "bbox": [
+        573,
+        997,
+        135,
+        134
+      ],
+      "bbox_normalized": [
+        0.5,
+        0.5844079718640094,
+        0.11780104712041885,
+        0.07854630715123095
+      ],
+      "area": 18090.0,
+      "card_id": 1,
+      "quarter_location": "bottom_right",
+      "visible": false
+    },
+    {
+      "id": 25,
+      "image_id": 0,
+      "category_id": 4,
+      "category_name": "arrow_up",
+      "supercategory": "symbol",
+      "bbox": [
+        505,
+        1133,
+        134,
+        135
+      ],
+      "bbox_normalized": [
+        0.4406631762652705,
+        0.664126611957796,
+        0.1169284467713787,
+        0.07913247362250879
+      ],
+      "area": 18090.0,
+      "card_id": 1,
+      "quarter_location": "bottom_right",
+      "visible": false
+    },
+    {
+      "id": 26,
+      "image_id": 0,
+      "category_id": 9,
+      "category_name": "quarter",
+      "supercategory": "quarter",
+      "bbox": [
+        713,
+        711,
+        281,
+        281
+      ],
+      "bbox_normalized": [
+        0.6221640488656196,
+        0.4167643610785463,
+        0.24520069808027922,
+        0.16471277842907386
+      ],
+      "area": 78961.0,
+      "card_id": 2,
+      "quarter_location": "bottom_right",
+      "visible": true
+    },
+    {
+      "id": 27,
+      "image_id": 0,
+      "category_id": 12,
+      "category_name": "shark",
+      "supercategory": "symbol",
+      "bbox": [
+        855,
+        853,
+        134,
+        134
+      ],
+      "bbox_normalized": [
+        0.7460732984293194,
+        0.5,
+        0.1169284467713787,
+        0.07854630715123095
+      ],
+      "area": 17956.0,
+      "card_id": 2,
+      "quarter_location": "bottom_right",
+      "visible": true
+    },
+    {
+      "id": 28,
+      "image_id": 0,
+      "category_id": 12,
+      "category_name": "shark",
+      "supercategory": "symbol",
+      "bbox": [
+        718,
+        853,
+        135,
+        134
+      ],
+      "bbox_normalized": [
+        0.6265270506108203,
+        0.5,
+        0.11780104712041885,
+        0.07854630715123095
+      ],
+      "area": 18090.0,
+      "card_id": 2,
+      "quarter_location": "bottom_right",
+      "visible": true
+    },
+    {
+      "id": 29,
+      "image_id": 0,
+      "category_id": 10,
+      "category_name": "rat",
+      "supercategory": "symbol",
+      "bbox": [
+        787,
+        716,
+        134,
+        135
+      ],
+      "bbox_normalized": [
+        0.6867364746945899,
+        0.4196951934349355,
+        0.1169284467713787,
+        0.07913247362250879
+      ],
+      "area": 18090.0,
+      "card_id": 2,
+      "quarter_location": "bottom_right",
+      "visible": true
+    },
+    {
+      "id": 30,
+      "image_id": 0,
+      "category_id": 9,
+      "category_name": "quarter",
+      "supercategory": "quarter",
+      "bbox": [
+        432,
+        711,
+        281,
+        281
+      ],
+      "bbox_normalized": [
+        0.3769633507853403,
+        0.4167643610785463,
+        0.24520069808027922,
+        0.16471277842907386
+      ],
+      "area": 78961.0,
+      "card_id": 2,
+      "quarter_location": "bottom_left",
+      "visible": false
+    },
+    {
+      "id": 31,
+      "image_id": 0,
+      "category_id": 12,
+      "category_name": "shark",
+      "supercategory": "symbol",
+      "bbox": [
+        574,
+        853,
+        134,
+        134
+      ],
+      "bbox_normalized": [
+        0.5008726003490401,
+        0.5,
+        0.1169284467713787,
+        0.07854630715123095
+      ],
+      "area": 17956.0,
+      "card_id": 2,
+      "quarter_location": "bottom_left",
+      "visible": false
+    },
+    {
+      "id": 32,
+      "image_id": 0,
+      "category_id": 10,
+      "category_name": "rat",
+      "supercategory": "symbol",
+      "bbox": [
+        437,
+        716,
+        135,
+        135
+      ],
+      "bbox_normalized": [
+        0.38132635253054104,
+        0.4196951934349355,
+        0.11780104712041885,
+        0.07913247362250879
+      ],
+      "area": 18225.0,
+      "card_id": 2,
+      "quarter_location": "bottom_left",
+      "visible": false
+    },
+    {
+      "id": 33,
+      "image_id": 0,
+      "category_id": 9,
+      "category_name": "quarter",
+      "supercategory": "quarter",
+      "bbox": [
+        713,
+        430,
+        281,
+        281
+      ],
+      "bbox_normalized": [
+        0.6221640488656196,
+        0.25205158264947247,
+        0.24520069808027922,
+        0.16471277842907386
+      ],
+      "area": 78961.0,
+      "card_id": 2,
+      "quarter_location": "top_right",
+      "visible": false
+    },
+    {
+      "id": 34,
+      "image_id": 0,
+      "category_id": 10,
+      "category_name": "rat",
+      "supercategory": "symbol",
+      "bbox": [
+        855,
+        572,
+        134,
+        134
+      ],
+      "bbox_normalized": [
+        0.7460732984293194,
+        0.33528722157092616,
+        0.1169284467713787,
+        0.07854630715123095
+      ],
+      "area": 17956.0,
+      "card_id": 2,
+      "quarter_location": "top_right",
+      "visible": false
+    },
+    {
+      "id": 35,
+      "image_id": 0,
+      "category_id": 7,
+      "category_name": "map",
+      "supercategory": "symbol",
+      "bbox": [
+        718,
+        572,
+        135,
+        134
+      ],
+      "bbox_normalized": [
+        0.6265270506108203,
+        0.33528722157092616,
+        0.11780104712041885,
+        0.07854630715123095
+      ],
+      "area": 18090.0,
+      "card_id": 2,
+      "quarter_location": "top_right",
+      "visible": false
+    },
+    {
+      "id": 36,
+      "image_id": 0,
+      "category_id": 2,
+      "category_name": "arrow_left",
+      "supercategory": "symbol",
+      "bbox": [
+        787,
+        435,
+        134,
+        135
+      ],
+      "bbox_normalized": [
+        0.6867364746945899,
+        0.25498241500586166,
+        0.1169284467713787,
+        0.07913247362250879
+      ],
+      "area": 18090.0,
+      "card_id": 2,
+      "quarter_location": "top_right",
+      "visible": false
+    },
+    {
+      "id": 37,
+      "image_id": 0,
+      "category_id": 9,
+      "category_name": "quarter",
+      "supercategory": "quarter",
+      "bbox": [
+        432,
+        430,
+        281,
+        281
+      ],
+      "bbox_normalized": [
+        0.3769633507853403,
+        0.25205158264947247,
+        0.24520069808027922,
+        0.16471277842907386
+      ],
+      "area": 78961.0,
+      "card_id": 2,
+      "quarter_location": "top_left",
+      "visible": false
+    },
+    {
+      "id": 38,
+      "image_id": 0,
+      "category_id": 0,
+      "category_name": "anchor",
+      "supercategory": "symbol",
+      "bbox": [
+        574,
+        572,
+        134,
+        134
+      ],
+      "bbox_normalized": [
+        0.5008726003490401,
+        0.33528722157092616,
+        0.1169284467713787,
+        0.07854630715123095
+      ],
+      "area": 17956.0,
+      "card_id": 2,
+      "quarter_location": "top_left",
+      "visible": false
+    },
+    {
+      "id": 39,
+      "image_id": 0,
+      "category_id": 0,
+      "category_name": "anchor",
+      "supercategory": "symbol",
+      "bbox": [
+        437,
+        572,
+        135,
+        134
+      ],
+      "bbox_normalized": [
+        0.38132635253054104,
+        0.33528722157092616,
+        0.11780104712041885,
+        0.07854630715123095
+      ],
+      "area": 18090.0,
+      "card_id": 2,
+      "quarter_location": "top_left",
+      "visible": false
+    },
+    {
+      "id": 40,
+      "image_id": 0,
+      "category_id": 1,
+      "category_name": "arrow_down",
+      "supercategory": "symbol",
+      "bbox": [
+        506,
+        434,
+        134,
+        136
+      ],
+      "bbox_normalized": [
+        0.44153577661431065,
+        0.2543962485345838,
+        0.1169284467713787,
+        0.07971864009378664
+      ],
+      "area": 18224.0,
+      "card_id": 2,
+      "quarter_location": "top_left",
+      "visible": false
+    },
+    {
+      "id": 41,
+      "image_id": 0,
+      "category_id": 9,
+      "category_name": "quarter",
+      "supercategory": "quarter",
+      "bbox": [
+        713,
+        1273,
+        281,
+        281
+      ],
+      "bbox_normalized": [
+        0.6221640488656196,
+        0.746189917936694,
+        0.24520069808027922,
+        0.16471277842907386
+      ],
+      "area": 78961.0,
+      "card_id": 3,
+      "quarter_location": "bottom_right",
+      "visible": true
+    },
+    {
+      "id": 42,
+      "image_id": 0,
+      "category_id": 5,
+      "category_name": "coin",
+      "supercategory": "symbol",
+      "bbox": [
+        855,
+        1415,
+        134,
+        134
+      ],
+      "bbox_normalized": [
+        0.7460732984293194,
+        0.8294255568581477,
+        0.1169284467713787,
+        0.07854630715123095
+      ],
+      "area": 17956.0,
+      "card_id": 3,
+      "quarter_location": "bottom_right",
+      "visible": true
+    },
+    {
+      "id": 43,
+      "image_id": 0,
+      "category_id": 13,
+      "category_name": "spyglass",
+      "supercategory": "symbol",
+      "bbox": [
+        718,
+        1415,
+        135,
+        134
+      ],
+      "bbox_normalized": [
+        0.6265270506108203,
+        0.8294255568581477,
+        0.11780104712041885,
+        0.07854630715123095
+      ],
+      "area": 18090.0,
+      "card_id": 3,
+      "quarter_location": "bottom_right",
+      "visible": true
+    },
+    {
+      "id": 44,
+      "image_id": 0,
+      "category_id": 2,
+      "category_name": "arrow_left",
+      "supercategory": "symbol",
+      "bbox": [
+        787,
+        1278,
+        134,
+        135
+      ],
+      "bbox_normalized": [
+        0.6867364746945899,
+        0.7491207502930832,
+        0.1169284467713787,
+        0.07913247362250879
+      ],
+      "area": 18090.0,
+      "card_id": 3,
+      "quarter_location": "bottom_right",
+      "visible": true
+    },
+    {
+      "id": 45,
+      "image_id": 0,
+      "category_id": 9,
+      "category_name": "quarter",
+      "supercategory": "quarter",
+      "bbox": [
+        432,
+        1273,
+        281,
+        281
+      ],
+      "bbox_normalized": [
+        0.3769633507853403,
+        0.746189917936694,
+        0.24520069808027922,
+        0.16471277842907386
+      ],
+      "area": 78961.0,
+      "card_id": 3,
+      "quarter_location": "bottom_left",
+      "visible": true
+    },
+    {
+      "id": 46,
+      "image_id": 0,
+      "category_id": 10,
+      "category_name": "rat",
+      "supercategory": "symbol",
+      "bbox": [
+        574,
+        1415,
+        134,
+        134
+      ],
+      "bbox_normalized": [
+        0.5008726003490401,
+        0.8294255568581477,
+        0.1169284467713787,
+        0.07854630715123095
+      ],
+      "area": 17956.0,
+      "card_id": 3,
+      "quarter_location": "bottom_left",
+      "visible": true
+    },
+    {
+      "id": 47,
+      "image_id": 0,
+      "category_id": 12,
+      "category_name": "shark",
+      "supercategory": "symbol",
+      "bbox": [
+        437,
+        1278,
+        135,
+        135
+      ],
+      "bbox_normalized": [
+        0.38132635253054104,
+        0.7491207502930832,
+        0.11780104712041885,
+        0.07913247362250879
+      ],
+      "area": 18225.0,
+      "card_id": 3,
+      "quarter_location": "bottom_left",
+      "visible": true
+    },
+    {
+      "id": 48,
+      "image_id": 0,
+      "category_id": 9,
+      "category_name": "quarter",
+      "supercategory": "quarter",
+      "bbox": [
+        713,
+        992,
+        281,
+        281
+      ],
+      "bbox_normalized": [
+        0.6221640488656196,
+        0.5814771395076201,
+        0.24520069808027922,
+        0.16471277842907386
+      ],
+      "area": 78961.0,
+      "card_id": 3,
+      "quarter_location": "top_right",
+      "visible": true
+    },
+    {
+      "id": 49,
+      "image_id": 0,
+      "category_id": 11,
+      "category_name": "rum",
+      "supercategory": "symbol",
+      "bbox": [
+        855,
+        1134,
+        134,
+        134
+      ],
+      "bbox_normalized": [
+        0.7460732984293194,
+        0.6647127784290738,
+        0.1169284467713787,
+        0.07854630715123095
+      ],
+      "area": 17956.0,
+      "card_id": 3,
+      "quarter_location": "top_right",
+      "visible": true
+    },
+    {
+      "id": 50,
+      "image_id": 0,
+      "category_id": 11,
+      "category_name": "rum",
+      "supercategory": "symbol",
+      "bbox": [
+        718,
+        997,
+        135,
+        135
+      ],
+      "bbox_normalized": [
+        0.6265270506108203,
+        0.5844079718640094,
+        0.11780104712041885,
+        0.07913247362250879
+      ],
+      "area": 18225.0,
+      "card_id": 3,
+      "quarter_location": "top_right",
+      "visible": true
+    },
+    {
+      "id": 51,
+      "image_id": 0,
+      "category_id": 9,
+      "category_name": "quarter",
+      "supercategory": "quarter",
+      "bbox": [
+        432,
+        992,
+        281,
+        281
+      ],
+      "bbox_normalized": [
+        0.3769633507853403,
+        0.5814771395076201,
+        0.24520069808027922,
+        0.16471277842907386
+      ],
+      "area": 78961.0,
+      "card_id": 3,
+      "quarter_location": "top_left",
+      "visible": false
+    },
+    {
+      "id": 52,
+      "image_id": 0,
+      "category_id": 5,
+      "category_name": "coin",
+      "supercategory": "symbol",
+      "bbox": [
+        506,
+        1066,
+        134,
+        134
+      ],
+      "bbox_normalized": [
+        0.44153577661431065,
+        0.6248534583821805,
+        0.1169284467713787,
+        0.07854630715123095
+      ],
+      "area": 17956.0,
+      "card_id": 3,
+      "quarter_location": "top_left",
+      "visible": false
+    },
+    {
+      "id": 53,
+      "image_id": 0,
+      "category_id": 9,
+      "category_name": "quarter",
+      "supercategory": "quarter",
+      "bbox": [
+        432,
+        711,
+        281,
+        281
+      ],
+      "bbox_normalized": [
+        0.3769633507853403,
+        0.4167643610785463,
+        0.24520069808027922,
+        0.16471277842907386
+      ],
+      "area": 78961.0,
+      "card_id": 4,
+      "quarter_location": "top_right",
+      "visible": true
+    },
+    {
+      "id": 54,
+      "image_id": 0,
+      "category_id": 0,
+      "category_name": "anchor",
+      "supercategory": "symbol",
+      "bbox": [
+        574,
+        716,
+        134,
+        134
+      ],
+      "bbox_normalized": [
+        0.5008726003490401,
+        0.4196951934349355,
+        0.1169284467713787,
+        0.07854630715123095
+      ],
+      "area": 17956.0,
+      "card_id": 4,
+      "quarter_location": "top_right",
+      "visible": true
+    },
+    {
+      "id": 55,
+      "image_id": 0,
+      "category_id": 5,
+      "category_name": "coin",
+      "supercategory": "symbol",
+      "bbox": [
+        573,
+        852,
+        135,
+        134
+      ],
+      "bbox_normalized": [
+        0.5,
+        0.49941383352872215,
+        0.11780104712041885,
+        0.07854630715123095
+      ],
+      "area": 18090.0,
+      "card_id": 4,
+      "quarter_location": "top_right",
+      "visible": true
+    },
+    {
+      "id": 56,
+      "image_id": 0,
+      "category_id": 6,
+      "category_name": "kraken",
+      "supercategory": "symbol",
+      "bbox": [
+        437,
+        783,
+        134,
+        135
+      ],
+      "bbox_normalized": [
+        0.38132635253054104,
+        0.458968347010551,
+        0.1169284467713787,
+        0.07913247362250879
+      ],
+      "area": 18090.0,
+      "card_id": 4,
+      "quarter_location": "top_right",
+      "visible": true
+    },
+    {
+      "id": 57,
+      "image_id": 0,
+      "category_id": 9,
+      "category_name": "quarter",
+      "supercategory": "quarter",
+      "bbox": [
+        432,
+        992,
+        281,
+        281
+      ],
+      "bbox_normalized": [
+        0.3769633507853403,
+        0.5814771395076201,
+        0.24520069808027922,
+        0.16471277842907386
+      ],
+      "area": 78961.0,
+      "card_id": 4,
+      "quarter_location": "bottom_right",
+      "visible": true
+    },
+    {
+      "id": 58,
+      "image_id": 0,
+      "category_id": 3,
+      "category_name": "arrow_right",
+      "supercategory": "symbol",
+      "bbox": [
+        574,
+        997,
+        134,
+        134
+      ],
+      "bbox_normalized": [
+        0.5008726003490401,
+        0.5844079718640094,
+        0.1169284467713787,
+        0.07854630715123095
+      ],
+      "area": 17956.0,
+      "card_id": 4,
+      "quarter_location": "bottom_right",
+      "visible": true
+    },
+    {
+      "id": 59,
+      "image_id": 0,
+      "category_id": 8,
+      "category_name": "parrot",
+      "supercategory": "symbol",
+      "bbox": [
+        436,
+        1133,
+        136,
+        135
+      ],
+      "bbox_normalized": [
+        0.38045375218150085,
+        0.664126611957796,
+        0.11867364746945899,
+        0.07913247362250879
+      ],
+      "area": 18360.0,
+      "card_id": 4,
+      "quarter_location": "bottom_right",
+      "visible": true
+    },
+    {
+      "id": 60,
+      "image_id": 0,
+      "category_id": 9,
+      "category_name": "quarter",
+      "supercategory": "quarter",
+      "bbox": [
+        151,
+        711,
+        281,
+        281
+      ],
+      "bbox_normalized": [
+        0.13176265270506107,
+        0.4167643610785463,
+        0.24520069808027922,
+        0.16471277842907386
+      ],
+      "area": 78961.0,
+      "card_id": 4,
+      "quarter_location": "top_left",
+      "visible": true
+    },
+    {
+      "id": 61,
+      "image_id": 0,
+      "category_id": 0,
+      "category_name": "anchor",
+      "supercategory": "symbol",
+      "bbox": [
+        293,
+        716,
+        134,
+        134
+      ],
+      "bbox_normalized": [
+        0.2556719022687609,
+        0.4196951934349355,
+        0.1169284467713787,
+        0.07854630715123095
+      ],
+      "area": 17956.0,
+      "card_id": 4,
+      "quarter_location": "top_left",
+      "visible": true
+    },
+    {
+      "id": 62,
+      "image_id": 0,
+      "category_id": 11,
+      "category_name": "rum",
+      "supercategory": "symbol",
+      "bbox": [
+        292,
+        852,
+        135,
+        134
+      ],
+      "bbox_normalized": [
+        0.2547993019197208,
+        0.49941383352872215,
+        0.11780104712041885,
+        0.07854630715123095
+      ],
+      "area": 18090.0,
+      "card_id": 4,
+      "quarter_location": "top_left",
+      "visible": true
+    },
+    {
+      "id": 63,
+      "image_id": 0,
+      "category_id": 13,
+      "category_name": "spyglass",
+      "supercategory": "symbol",
+      "bbox": [
+        156,
+        783,
+        134,
+        135
+      ],
+      "bbox_normalized": [
+        0.13612565445026178,
+        0.458968347010551,
+        0.1169284467713787,
+        0.07913247362250879
+      ],
+      "area": 18090.0,
+      "card_id": 4,
+      "quarter_location": "top_left",
+      "visible": true
+    },
+    {
+      "id": 64,
+      "image_id": 0,
+      "category_id": 9,
+      "category_name": "quarter",
+      "supercategory": "quarter",
+      "bbox": [
+        151,
+        992,
+        281,
+        281
+      ],
+      "bbox_normalized": [
+        0.13176265270506107,
+        0.5814771395076201,
+        0.24520069808027922,
+        0.16471277842907386
+      ],
+      "area": 78961.0,
+      "card_id": 4,
+      "quarter_location": "bottom_left",
+      "visible": true
+    },
+    {
+      "id": 65,
+      "image_id": 0,
+      "category_id": 10,
+      "category_name": "rat",
+      "supercategory": "symbol",
+      "bbox": [
+        293,
+        997,
+        134,
+        134
+      ],
+      "bbox_normalized": [
+        0.2556719022687609,
+        0.5844079718640094,
+        0.1169284467713787,
+        0.07854630715123095
+      ],
+      "area": 17956.0,
+      "card_id": 4,
+      "quarter_location": "bottom_left",
+      "visible": true
+    },
+    {
+      "id": 66,
+      "image_id": 0,
+      "category_id": 5,
+      "category_name": "coin",
+      "supercategory": "symbol",
+      "bbox": [
+        155,
+        1133,
+        136,
+        135
+      ],
+      "bbox_normalized": [
+        0.13525305410122165,
+        0.664126611957796,
+        0.11867364746945899,
+        0.07913247362250879
+      ],
+      "area": 18360.0,
+      "card_id": 4,
+      "quarter_location": "bottom_left",
+      "visible": true
+    },
+    {
+      "id": 67,
+      "image_id": 0,
+      "category_id": 9,
+      "category_name": "quarter",
+      "supercategory": "quarter",
+      "bbox": [
+        432,
+        430,
+        281,
+        281
+      ],
+      "bbox_normalized": [
+        0.3769633507853403,
+        0.25205158264947247,
+        0.24520069808027922,
+        0.16471277842907386
+      ],
+      "area": 78961.0,
+      "card_id": 5,
+      "quarter_location": "bottom_left",
+      "visible": true
+    },
+    {
+      "id": 68,
+      "image_id": 0,
+      "category_id": 7,
+      "category_name": "map",
+      "supercategory": "symbol",
+      "bbox": [
+        437,
+        572,
+        134,
+        134
+      ],
+      "bbox_normalized": [
+        0.38132635253054104,
+        0.33528722157092616,
+        0.1169284467713787,
+        0.07854630715123095
+      ],
+      "area": 17956.0,
+      "card_id": 5,
+      "quarter_location": "bottom_left",
+      "visible": true
+    },
+    {
+      "id": 69,
+      "image_id": 0,
+      "category_id": 13,
+      "category_name": "spyglass",
+      "supercategory": "symbol",
+      "bbox": [
+        436,
+        435,
+        135,
+        134
+      ],
+      "bbox_normalized": [
+        0.38045375218150085,
+        0.25498241500586166,
+        0.11780104712041885,
+        0.07854630715123095
+      ],
+      "area": 18090.0,
+      "card_id": 5,
+      "quarter_location": "bottom_left",
+      "visible": true
+    },
+    {
+      "id": 70,
+      "image_id": 0,
+      "category_id": 5,
+      "category_name": "coin",
+      "supercategory": "symbol",
+      "bbox": [
+        573,
+        503,
+        134,
+        135
+      ],
+      "bbox_normalized": [
+        0.5,
+        0.29484173505275496,
+        0.1169284467713787,
+        0.07913247362250879
+      ],
+      "area": 18090.0,
+      "card_id": 5,
+      "quarter_location": "bottom_left",
+      "visible": true
+    },
+    {
+      "id": 71,
+      "image_id": 0,
+      "category_id": 9,
+      "category_name": "quarter",
+      "supercategory": "quarter",
+      "bbox": [
+        432,
+        149,
+        281,
+        281
+      ],
+      "bbox_normalized": [
+        0.3769633507853403,
+        0.0873388042203986,
+        0.24520069808027922,
+        0.16471277842907386
+      ],
+      "area": 78961.0,
+      "card_id": 5,
+      "quarter_location": "top_left",
+      "visible": true
+    },
+    {
+      "id": 72,
+      "image_id": 0,
+      "category_id": 1,
+      "category_name": "arrow_down",
+      "supercategory": "symbol",
+      "bbox": [
+        437,
+        291,
+        134,
+        134
+      ],
+      "bbox_normalized": [
+        0.38132635253054104,
+        0.17057444314185227,
+        0.1169284467713787,
+        0.07854630715123095
+      ],
+      "area": 17956.0,
+      "card_id": 5,
+      "quarter_location": "top_left",
+      "visible": true
+    },
+    {
+      "id": 73,
+      "image_id": 0,
+      "category_id": 13,
+      "category_name": "spyglass",
+      "supercategory": "symbol",
+      "bbox": [
+        573,
+        154,
+        135,
+        135
+      ],
+      "bbox_normalized": [
+        0.5,
+        0.09026963657678781,
+        0.11780104712041885,
+        0.07913247362250879
+      ],
+      "area": 18225.0,
+      "card_id": 5,
+      "quarter_location": "top_left",
+      "visible": true
+    },
+    {
+      "id": 74,
+      "image_id": 0,
+      "category_id": 9,
+      "category_name": "quarter",
+      "supercategory": "quarter",
+      "bbox": [
+        713,
+        430,
+        281,
+        281
+      ],
+      "bbox_normalized": [
+        0.6221640488656196,
+        0.25205158264947247,
+        0.24520069808027922,
+        0.16471277842907386
+      ],
+      "area": 78961.0,
+      "card_id": 5,
+      "quarter_location": "bottom_right",
+      "visible": true
+    },
+    {
+      "id": 75,
+      "image_id": 0,
+      "category_id": 10,
+      "category_name": "rat",
+      "supercategory": "symbol",
+      "bbox": [
+        718,
+        572,
+        134,
+        134
+      ],
+      "bbox_normalized": [
+        0.6265270506108203,
+        0.33528722157092616,
+        0.1169284467713787,
+        0.07854630715123095
+      ],
+      "area": 17956.0,
+      "card_id": 5,
+      "quarter_location": "bottom_right",
+      "visible": true
+    },
+    {
+      "id": 76,
+      "image_id": 0,
+      "category_id": 10,
+      "category_name": "rat",
+      "supercategory": "symbol",
+      "bbox": [
+        854,
+        435,
+        135,
+        135
+      ],
+      "bbox_normalized": [
+        0.7452006980802792,
+        0.25498241500586166,
+        0.11780104712041885,
+        0.07913247362250879
+      ],
+      "area": 18225.0,
+      "card_id": 5,
+      "quarter_location": "bottom_right",
+      "visible": true
+    },
+    {
+      "id": 77,
+      "image_id": 0,
+      "category_id": 9,
+      "category_name": "quarter",
+      "supercategory": "quarter",
+      "bbox": [
+        713,
+        149,
+        281,
+        281
+      ],
+      "bbox_normalized": [
+        0.6221640488656196,
+        0.0873388042203986,
+        0.24520069808027922,
+        0.16471277842907386
+      ],
+      "area": 78961.0,
+      "card_id": 5,
+      "quarter_location": "top_right",
+      "visible": true
+    },
+    {
+      "id": 78,
+      "image_id": 0,
+      "category_id": 6,
+      "category_name": "kraken",
+      "supercategory": "symbol",
+      "bbox": [
+        786,
+        223,
+        134,
+        134
+      ],
+      "bbox_normalized": [
+        0.6858638743455497,
+        0.13071512309495897,
+        0.1169284467713787,
+        0.07854630715123095
+      ],
+      "area": 17956.0,
+      "card_id": 5,
+      "quarter_location": "top_right",
+      "visible": true
+    }
+  ],
+  "categories": [
+    {
+      "id": 0,
+      "name": "anchor",
+      "supercategory": "symbol"
+    },
+    {
+      "id": 1,
+      "name": "arrow_down",
+      "supercategory": "symbol"
+    },
+    {
+      "id": 2,
+      "name": "arrow_left",
+      "supercategory": "symbol"
+    },
+    {
+      "id": 3,
+      "name": "arrow_right",
+      "supercategory": "symbol"
+    },
+    {
+      "id": 4,
+      "name": "arrow_up",
+      "supercategory": "symbol"
+    },
+    {
+      "id": 5,
+      "name": "coin",
+      "supercategory": "symbol"
+    },
+    {
+      "id": 6,
+      "name": "kraken",
+      "supercategory": "symbol"
+    },
+    {
+      "id": 7,
+      "name": "map",
+      "supercategory": "symbol"
+    },
+    {
+      "id": 8,
+      "name": "parrot",
+      "supercategory": "symbol"
+    },
+    {
+      "id": 9,
+      "name": "quarter",
+      "supercategory": "quarter"
+    },
+    {
+      "id": 10,
+      "name": "rat",
+      "supercategory": "symbol"
+    },
+    {
+      "id": 11,
+      "name": "rum",
+      "supercategory": "symbol"
+    },
+    {
+      "id": 12,
+      "name": "shark",
+      "supercategory": "symbol"
+    },
+    {
+      "id": 13,
+      "name": "spyglass",
+      "supercategory": "symbol"
+    }
+  ]
+}
