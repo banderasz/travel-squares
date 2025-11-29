@@ -60,8 +60,8 @@ def predict_image_object_detection_sample(
 # [END aiplatform_predict_image_object_detection_sample]
 
 predict_image_object_detection_sample(
-    project="1055827017349",
-    endpoint_id="2318678707956350976",
+    project="290460944912",
+    endpoint_id="4251637741772603392",
     location="europe-west4",
     api_endpoint="europe-west4-aiplatform.googleapis.com",
-    filename=r"C:\Users\heszl\Desktop\sample_00000_small.png")
+    filename=r"")
