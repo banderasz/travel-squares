@@ -11,8 +11,6 @@ from card_rules import CardRules, ArrowBonusPoints
 from symbols import Symbols, NUMBER_OF_SYMBOLS_IN_PLAY
 import matplotlib.pyplot as plt
 
-
-
 class Quarter:
     def __init__(self, symbols: List[Symbols]):
         self.symbols = symbols
@@ -206,10 +204,11 @@ def deviation_score(counter: Dict[Symbols, int], selected_cards: int):
 
 if __name__ == "__main__":
     NUMBER_OF_CARDS = 120
-    TOTAL_GENERATED_CARDS = 2000
+    TOTAL_GENERATED_CARDS = 10000
+    batch_size = 2
 
-    MINIMUM_POINT = 18
-    MAXIMUM_POINT = 22
+    MINIMUM_POINT = 40
+    MAXIMUM_POINT = 45
 
     cards, values = zip(*[CardGenerator().generate_card() for _ in range(TOTAL_GENERATED_CARDS)])
 
@@ -221,21 +220,73 @@ if __name__ == "__main__":
         print(f"{str(symbol)}: {round(counter[symbol] / len(cards) / 16 * NUMBER_OF_SYMBOLS_IN_PLAY, 2)} vs {symbol.weight}")
 
     cards = list(cards)
+
+
+
+    batches = [cards[i:i + batch_size] for i in range(0, len(cards), batch_size)]
+
+    # chosen_cards = cards
     chosen_cards = []
-    for _ in range(NUMBER_OF_CARDS):
+    for _ in range(NUMBER_OF_CARDS//batch_size):
         best_card_index = 0
         best_score = 100000000
-        for remaining_card_index in range(len(cards)):
-            counter = statistics(chosen_cards + [cards[remaining_card_index]])
+        for remaining_batch_index in range(len(batches)):
+            counter = statistics(chosen_cards + batches[remaining_batch_index])
             deviation_value = deviation_score(counter, len(chosen_cards) + 1)
             if deviation_value < best_score:
                 best_score = deviation_value
-                best_card_index = remaining_card_index
-        chosen_cards.append(cards.pop(best_card_index))
-        # counter = statistics(chosen_cards)
-        # for symbol in Symbols:
-        #     print(f"{str(symbol)}: {round(counter[symbol] / len(chosen_cards) / 16 * NUMBER_OF_SYMBOLS_IN_PLAY, 2)} vs {symbol.weight}")
+                best_card_index = remaining_batch_index
+        chosen_cards.extend(batches.pop(best_card_index))
+        counter = statistics(chosen_cards)
+        for symbol in Symbols:
+            print(f"{str(symbol)}: {round(counter[symbol] / len(chosen_cards) / 16 * NUMBER_OF_SYMBOLS_IN_PLAY, 2)} vs {symbol.weight}")
 
+
+    used_quarters = [card.used_quarters for card in chosen_cards]
+
+    symbol_in_card_hist = collections.defaultdict(lambda : [])
+    symbol_in_quarter_hist = collections.defaultdict(lambda: [])
+    counter_per_card = [Counter(card.symbols()) for card in chosen_cards]
+    counter_per_quarter = []
+    for card in chosen_cards:
+        for quarter in card.quarters().values():
+            counter_per_quarter.append(Counter(quarter.symbols))
+
+    for card in counter_per_card:
+        for key, value in card.items():
+            symbol_in_card_hist[key].append(value)
+
+    for quarter in counter_per_quarter:
+        for key, value in quarter.items():
+            symbol_in_quarter_hist[key].append(value)
+
+
+    plt.hist(used_quarters)
+    plt.show()
+
+    n_cols = 3
+    n_rows = 5
+    fig, axes = plt.subplots(n_rows, n_cols, figsize=(n_cols * 5, n_rows * 4))
+    axes = axes.flatten()
+
+    for i, (symbol, values) in enumerate(symbol_in_card_hist.items()):
+        print(f"Card: {symbol}: {collections.Counter(values)}")
+        ax = axes[i]
+        ax.hist(values, bins=[0 + i for i in range(int(min(values)), int(max(values) + 2))])
+        ax.set_title(symbol.name)
+
+    n_cols = 3
+    n_rows = 5
+    fig, axes = plt.subplots(n_rows, n_cols, figsize=(n_cols * 5, n_rows * 4))
+    axes = axes.flatten()
+
+    for i, (symbol, values) in enumerate(symbol_in_quarter_hist.items()):
+        print(f"Quarter: {symbol}: {collections.Counter(values)}")
+        ax = axes[i]
+        ax.hist(values, bins=[0 + i for i in range(int(min(values)), int(max(values) + 2))])
+        ax.set_title(symbol.name)
+
+    plt.show()
 
 
 
@@ -247,22 +298,22 @@ if __name__ == "__main__":
     chosen_values = [CardGenerator.calculate_card_point(card) for card in chosen_cards]
     # plt.hist(chosen_values, bins=[0+i for i in range(int(min(chosen_values)),int(max(chosen_values)+1))], edgecolor='black', alpha=0.7)
     # plt.show()
-    with open("cards.json", "w") as file:
+    with open(f"cards_{MINIMUM_POINT}_{MAXIMUM_POINT}.json", "w") as file:
         file.write("[\n")
         file.write(",\n".join([str(card) for card in chosen_cards]))
         file.write("\n]")
 
 
-    test_card = Card(**{"top_left": Quarter([Symbols.CIRCLE, Symbols.X, Symbols.STAR, Symbols.DIAMOND]),
-                      "top_right": Quarter([Symbols.MOON, Symbols.MOON, Symbols.ARROW_RIGHT]),
-                     "bottom_left": Quarter([Symbols.SQUARE, Symbols.X]),
-                      "bottom_right": Quarter([Symbols.ARROW_LEFT, Symbols.ARROW_LEFT])
+    test_card = Card(**{"top_left": Quarter([Symbols.CIRCLE, Symbols.CIRCLE, Symbols.CIRCLE, Symbols.CIRCLE]),
+                      "top_right": Quarter([]),
+                     "bottom_left": Quarter([]),
+                      "bottom_right": Quarter([])
                       })
     print(CardGenerator.calculate_card_point(test_card))
 
-    # test_card = Card(**{"top_left": Quarter([Symbols.STAR, Symbols.SQUARE]),
-    #                   "top_right": Quarter([Symbols.SQUARE, Symbols.TRIANGLE]),
-    #                  "bottom_left": Quarter([Symbols.STAR, Symbols.DIAMOND]),
-    #                   "bottom_right": Quarter([Symbols.CIRCLE, Symbols.CIRCLE, Symbols.X])
-    #                   })
-    # print(CardGenerator.calculate_card_point(test_card))
+    test_card = Card(**{"top_left": Quarter([Symbols.DIAMOND, Symbols.ARROW_RIGHT, Symbols.SUN]),
+                      "top_right": Quarter([Symbols.DIAMOND, Symbols.ARROW_LEFT]),
+                     "bottom_left": Quarter([Symbols.CIRCLE, Symbols.CIRCLE, Symbols.X]),
+                      "bottom_right": Quarter([Symbols.ARROW_UP, Symbols.ARROW_UP, Symbols.X, Symbols.MOON])
+                      })
+    print(CardGenerator.calculate_card_point(test_card))

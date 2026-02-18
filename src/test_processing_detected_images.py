@@ -20,7 +20,7 @@ class TestSymbol(TestCase):
 
     # Access data just like a standard dictionary
     def test_perfect_scenario(self):
-        with open('training_data_generator/other_data/annotations/sample_00000.json', 'r') as file:
+        with open('training_data_generator/other_data/annotations/perfect.json', 'r') as file:
             data = json.load(file)
         perfect_data = parse_generated_annotation(data)
 

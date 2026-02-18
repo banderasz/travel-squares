@@ -18,22 +18,41 @@ from plotly.graph_objs.layout.map.layer import Circle
 NUMBER_OF_SYMBOLS_IN_PLAY = 96
 
 class Symbols(enum.Enum):
-    CIRCLE = ("flamingo", 7,       [0,3,7,12,18,25,33,42,52,63,75,88,102], "#F3A2BD")
-    SQUARE = ("red_panda", 5,    [0,1,4,9,16,25,36,49,64,81,100,121,144], "#EB7B36")
-    TRIANGLE = ("cat", 4,        [0,-20,-10,0,20,39,57,74,90,105,119,132,144], "#F7DCB4")
-    STAR = ("koala", 6,      [0,10,19,27,34,40,45,50,56,63,71,80,90], "#C2CCDA")
-    X = ("crocodile", 8,             [0,-1,-3,-6,-10,-15,-21,-28,-36,-45,-55, -66, -78], "#739C41")
-    MOON = ("shark", 6,           [0,-10,-12,-14,-17,-20,-24,-28,-33,-38,-43,-48,-54], "#4E598B")
-    DIAMOND = ("butterfly", 2,       [0,25,0,50,0,75,0,100,0,125,0,150,0], "#8D79B6")
-    SKULL = ("spider", 3,       [0,-36,-27,-19,-12,-6,-1,0,0,0,0,0,0], "#0F1421")
-    SUN = ("elephant", 5,           [0,2,8,18,32,50,72,50,32,18,8,2,0], "#88CDF3")
+    CIRCLE = ("anchor", 7,       [0,3,7,12,18,25,33,42,52,63,75,88,102], "#F3A2BD", {
+    "mixed_sim_5": [0.0034999999999999996,0.018000000000000002,0.0513,0.0938,0.13935,0.16620000000000001,0.1595,0.14340000000000003,0.09709999999999999,0.0654,0.03635,0.017849999999999998,0.00825],
+    "mixed_sim_6": [0.0014,0.0084,0.0238,0.0543,0.085,0.1287,0.1537,0.1471,0.1294,0.1093,0.0688,0.0447,0.045399999999999996]})
+    SQUARE = ("map", 5,    [0,1,4,9,16,25,36,49,64,81,100,121,144], "#EB7B36", {
+        "mixed_sim_5": [0.019,0.06925,0.138,0.1832,0.1917,0.15485,0.111,0.06785,0.0387,0.016300000000000002,0.00655,0.0029999999999999996,0.0006000000000000001],
+    "mixed_sim_6": [0.0084,0.0436,0.093,0.1471,0.1686,0.1649,0.1407,0.1021,0.0618,0.0375,0.0191,0.0092,0.004]})
+    TRIANGLE = ("rum", 4,        [0,-20,-10,0,20,39,57,74,90,105,119,132,144], "#F7DCB4", {
+        "mixed_sim_5": [0.048,0.1011,0.17709999999999998,0.20825,0.1992,0.1381,0.07655,0.033100000000000004,0.01315,0.00395,0.00125,0,0.0001],
+    "mixed_sim_6": [0.0396,0.0666,0.1324,0.1716,0.1959,0.1729,0.1183,0.061,0.0267,0.0106,0.0032,0.0012,0.0]})
+    STAR = ("spyglass", 6,      [0,10,19,27,34,40,45,50,56,63,71,80,90], "#C2CCDA", {
+        "mixed_sim_5": [0.0049,0.03055,0.08410000000000001,0.1419,0.1882,0.1809,0.14495,0.09945000000000001,0.0624,0.0342,0.01815,0.006999999999999999,0.0033],
+    "mixed_sim_6": [0.0022,0.0145,0.039,0.0864,0.1428,0.1705,0.1704,0.1398,0.0965,0.0674,0.0363,0.0178,0.0164]})
+    X = ("rat", 8,             [0,-1,-3,-6,-10,-15,-21,-28,-36,-45,-55, -66, -78], "#739C41", {
+        "mixed_sim_5": [0,0.00435,0.0188,0.04195,0.09154999999999999,0.14275000000000002,0.16685,0.1641,0.14215,0.0973,0.0606,0.032299999999999995,0.036849999999999994],
+    "mixed_sim_6": [0.0002,0.0005,0.0041,0.0166,0.0399,0.076,0.1186,0.1504,0.1577,0.1507,0.1115,0.0668,0.107]})
+    MOON = ("shark", 6,           [0,-10,-12,-14,-17,-20,-24,-28,-33,-38,-43,-48,-54], "#4E598B", {
+        "mixed_sim_5": [0.0054,0.026250000000000002,0.07444999999999999,0.1377,0.1778,0.18645,0.15375,0.11325,0.06565,0.032600000000000004,0.0162,0.00655,0.00395],
+    "mixed_sim_6": [0.0021,0.0097,0.0339,0.0811,0.1291,0.1623,0.1693,0.15,0.1081,0.0744,0.041,0.0204,0.0186]})
+    DIAMOND = ("parrot", 2,       [0,25,0,50,0,75,0,100,0,125,0,150,0], "#8D79B6", {
+        "mixed_sim_5": [0.1786,0.36655,0.197,0.1945,0.031450000000000006,0.02775,0.00215,0.0019,0,0,0,0,0.0],
+    "mixed_sim_6": [0.1047,0.3776,0.1404,0.2918,0.0249,0.0532,0.0021,0.0049,0.0001,0.0003,0,0,0.0]})
+    SKULL = ("kraken", 3,       [0,-36,-27,-19,-12,-6,-1,0,0,0,0,0,0], "#0F1421", {
+        "mixed_sim_5": [0.11425,0.16365000000000002,0.2496,0.2281,0.1381,0.07095000000000001,0.025849999999999998,0.00735,0.0017499999999999998,0.00035,0,0,0.0],
+    "mixed_sim_6": [0.0927,0.1114,0.2049,0.2242,0.1769,0.1091,0.0533,0.02,0.0059,0.0015,0.0001,0,0.0]})
+    SUN = ("coin", 5,           [0,2,8,18,32,50,72,50,32,18,8,2,0], "#88CDF3", {
+        "mixed_sim_5": [0.01255,0.04635,0.10285,0.16904999999999998,0.23099999999999998,0.22920000000000001,0.13615,0.0444,0.01725,0.006999999999999999,0.0022,0.00135,0.0006500000000000001],
+    "mixed_sim_6": [0.0065,0.0247,0.0613,0.1044,0.163,0.2122,0.2664,0.0946,0.0377,0.0158,0.0065,0.004,0.0029]})
     ARROW_LEFT = ("arrow_left", 1.5, [0]*13)
     ARROW_RIGHT = ("arrow_right", 1.5, [0]*13)
     ARROW_UP = ("arrow_up", 1.5,  [0]*13)
     ARROW_DOWN = ("arrow_down", 1.5, [0]*13)
     NOTHING = ("", 44, [0]*13)
 
-    def __init__(self, display: str, weigh: int, points: List, color_hex: str = "white"):
+    def __init__(self, display: str, weigh: int, points: List, color_hex: str = "white", *args):
+        self.args = args
         self.display = display
         self.weight = weigh
         self.points = points
@@ -85,6 +104,9 @@ class Symbols(enum.Enum):
         # self.values = self.symbol_on_card_value()
         self.values = self.symbol_on_card_value_mean()
 
+        if self.args:
+            self.expected_value_sim_6 = self.expected_value_of_dist(np.array(self.args[0]["mixed_sim_6"]))
+
     def calculate_half_quarter_probability(self):
         p = self.quarter_probabilities
         fft_length = np.pow(len(p), 2)
@@ -99,11 +121,9 @@ class Symbols(enum.Enum):
 
 
     def calculate_expected_value_from_dist(self, prob: np.array) -> float:
-        min_prob_5 = np.convolve(self.probability_of_mean_min_cards[4], prob)
-        max_prob_5 = np.convolve(self.probability_of_mean_max_cards[4], prob)
-        mean_prob_5 = (min_prob_5 + max_prob_5) / 2
+        mean_prob_5 = np.convolve(np.array(self.args[0]["mixed_sim_5"]), prob)
         e_5 = self.expected_value_of_dist(mean_prob_5)
-        e_6 =  self.expected_value_of_dist(self.probability_of_mean_min_cards[5])
+        e_6 =  self.expected_value_sim_6
         return e_5 - e_6
 
     def expected_value_of_dist(self, prob_orig: np.array) -> float:
@@ -256,32 +276,24 @@ def create_df() -> pd.DataFrame:
                                   "ExactlyRandomProbability": symbol.exact_probability[i],
                                   "ExactlyFocusMaxProbability": best_6[i],
                                   "ExactlyFocusMinProbability": worse_6[i],
-                                  "ExactlyFocusMeanProbability": mean_6[i]
+                                  "ExactlyFocusMeanProbability": mean_6[i],
+                                  "ExactlyMixedSim": symbol.args[0]["mixed_sim_6"][i],
+
                                   })
 
-    df = pd.DataFrame(plot_data).sort_values(by=['Symbol', 'Value'], ascending=[True, False])
-    df["AtLeastValueRandomProbability"] = df.groupby("Symbol")["ExactlyRandomProbability"].cumsum()
-    df["AtLeastValueFocusMaxProbability"] = df.groupby("Symbol")["ExactlyFocusMaxProbability"].cumsum()
-    df["AtLeastValueFocusMinProbability"] = df.groupby("Symbol")["ExactlyFocusMinProbability"].cumsum()
-    df["AtLeastValueFocusMeanProbability"] = df.groupby("Symbol")["ExactlyFocusMeanProbability"].cumsum()
+    df = pd.DataFrame(plot_data)
+    for column_post_fix in ["RandomProbability", "FocusMaxProbability", "FocusMinProbability", "FocusMeanProbability", "MixedSim"]:
+        df = df.sort_values(by=['Symbol', 'Value'], ascending=[True, False])
+        df[f"AtLeastValue{column_post_fix}"] = df.groupby("Symbol")[f"Exactly{column_post_fix}"].cumsum()
 
-    df = df.sort_values(by=['Symbol', 'Value'], ascending=[True, True])
-    df["AtMostValueRandomProbability"] = df.groupby("Symbol")["ExactlyRandomProbability"].cumsum()
-    df["AtMostValueFocusMaxProbability"] = df.groupby("Symbol")["ExactlyFocusMaxProbability"].cumsum()
-    df["AtMostValueFocusMinProbability"] = df.groupby("Symbol")["ExactlyFocusMinProbability"].cumsum()
-    df["AtMostValueFocusMeanProbability"] = df.groupby("Symbol")["ExactlyFocusMeanProbability"].cumsum()
+        df = df.sort_values(by=['Symbol', 'Value'], ascending=[True, True])
+        df[f"AtMostValue{column_post_fix}"] = df.groupby("Symbol")[f"Exactly{column_post_fix}"].cumsum()
 
-    df = df.sort_values(by=['Symbol', 'Quantity'], ascending=[True, False])
-    df["AtLeastQuantityRandomProbability"] = df.groupby("Symbol")["ExactlyRandomProbability"].cumsum()
-    df["AtLeastQuantityFocusMaxProbability"] = df.groupby("Symbol")["ExactlyFocusMaxProbability"].cumsum()
-    df["AtLeastQuantityFocusMinProbability"] = df.groupby("Symbol")["ExactlyFocusMinProbability"].cumsum()
-    df["AtLeastQuantityFocusMeanProbability"] = df.groupby("Symbol")["ExactlyFocusMeanProbability"].cumsum()
+        df = df.sort_values(by=['Symbol', 'Quantity'], ascending=[True, False])
+        df[f"AtLeastQuantity{column_post_fix}"] = df.groupby("Symbol")[f"Exactly{column_post_fix}"].cumsum()
 
-    df = df.sort_values(by=['Symbol', 'Quantity'], ascending=[True, True])
-    df["AtMostQuantityRandomProbability"] = df.groupby("Symbol")["ExactlyRandomProbability"].cumsum()
-    df["AtMostQuantityFocusMaxProbability"] = df.groupby("Symbol")["ExactlyFocusMaxProbability"].cumsum()
-    df["AtMostQuantityFocusMinProbability"] = df.groupby("Symbol")["ExactlyFocusMinProbability"].cumsum()
-    df["AtMostQuantityFocusMeanProbability"] = df.groupby("Symbol")["ExactlyFocusMeanProbability"].cumsum()
+        df = df.sort_values(by=['Symbol', 'Quantity'], ascending=[True, True])
+        df[f"AtMostQuantity{column_post_fix}"] = df.groupby("Symbol")[f"Exactly{column_post_fix}"].cumsum()
 
     return df
 
@@ -395,7 +407,13 @@ def generate_image_and_table(function, name: str, *args, **kwargs):
     df.to_html(os.path.join(output_dir, f"{name}_table.html"), index_names=False)
 
 def generate_composite_figure(df: pd.DataFrame):
-    probability_cols = ['ExactlyRandomProbability', 'ExactlyFocusMaxProbability', 'ExactlyFocusMinProbability', 'ExactlyFocusMeanProbability', 'AtLeastValueRandomProbability', 'AtLeastValueFocusMaxProbability', 'AtLeastValueFocusMinProbability', 'AtLeastValueFocusMeanProbability', 'AtMostValueRandomProbability', 'AtMostValueFocusMaxProbability', 'AtMostValueFocusMinProbability', 'AtMostValueFocusMeanProbability', 'AtLeastQuantityRandomProbability', 'AtLeastQuantityFocusMaxProbability', 'AtLeastQuantityFocusMinProbability', 'AtLeastQuantityFocusMeanProbability', 'AtMostQuantityRandomProbability', 'AtMostQuantityFocusMaxProbability', 'AtMostQuantityFocusMinProbability', 'AtMostQuantityFocusMeanProbability']
+    probability_cols = []
+    prefixes = ['Exactly', 'AtLeastValue', 'AtMostValue', 'AtLeastQuantity', 'AtMostQuantity']
+    postfixes = ["RandomProbability", "FocusMaxProbability", "FocusMinProbability", "FocusMeanProbability", "BestSim",
+                 "WorstSim", "MixedSim"]
+    for prefix in prefixes:
+        for postfix in postfixes:
+            probability_cols.append(f"{prefix}{postfix}")
     initial_column = probability_cols[0]
 
     fig = px.line(df,
@@ -470,15 +488,13 @@ def generate_composite_figure(df: pd.DataFrame):
     fig.show()
 
 def generate_melted_figure(df: pd.DataFrame):
-    probability_cols = ['ExactlyRandomProbability', 'ExactlyFocusMaxProbability', 'ExactlyFocusMinProbability', 'ExactlyFocusMeanProbability',
-                        'AtLeastValueRandomProbability', 'AtLeastValueFocusMaxProbability',
-                        'AtLeastValueFocusMinProbability', 'AtLeastValueFocusMeanProbability',
-                        'AtMostValueRandomProbability', 'AtMostValueFocusMaxProbability',
-                        'AtMostValueFocusMinProbability', 'AtMostValueFocusMeanProbability',
-                        'AtLeastQuantityRandomProbability', 'AtLeastQuantityFocusMaxProbability',
-                        'AtLeastQuantityFocusMinProbability', 'AtLeastQuantityFocusMeanProbability',
-                        'AtMostQuantityRandomProbability', 'AtMostQuantityFocusMaxProbability',
-                        'AtMostQuantityFocusMinProbability', 'AtMostQuantityFocusMeanProbability']
+    probability_cols = []
+
+    prefixes = ['AtLeastValue', 'AtMostValue', 'AtLeastQuantity', 'AtMostQuantity', 'Exactly']
+    postfixes = ["RandomProbability", "FocusMaxProbability", "FocusMinProbability", "FocusMeanProbability", "BestSim", "WorstSim", "MixedSim"]
+    for prefix in prefixes:
+        for postfix in postfixes:
+            probability_cols.append(f"{prefix}{postfix}")
 
     # Melt the DataFrame
     df_melted = df.melt(
@@ -488,8 +504,18 @@ def generate_melted_figure(df: pd.DataFrame):
         value_name='Probability_Value'
     )
 
-    df_melted["prefix"] = df_melted["Probability_Type"].str.removesuffix('RandomProbability').str.removesuffix('FocusMaxProbability').str.removesuffix('FocusMinProbability').str.removesuffix('FocusMeanProbability')
-    df_melted["suffix"] = df_melted["Probability_Type"].str.removeprefix('AtLeastValue').str.removeprefix('AtMostValue').str.removeprefix('AtLeastQuantity').str.removeprefix('AtMostQuantity').str.removeprefix('Exactly')
+    df_melted = df_melted.sort_values(["Symbol", "Value", "Quantity"], ascending=[True, True, False])
+
+    prefix_column = df_melted["Probability_Type"]
+    postfix_column = df_melted["Probability_Type"]
+
+    for prefix in prefixes:
+        postfix_column = postfix_column.str.removeprefix(prefix)
+
+    for postfix in postfixes:
+        prefix_column = prefix_column.str.removesuffix(postfix)
+    df_melted["prefix"] = prefix_column
+    df_melted["suffix"] = postfix_column
 
     fig = px.line(df_melted,
                   x='Probability_Value',
@@ -588,15 +614,16 @@ if __name__ == "__main__":
     df = create_df()
     color_map = {symbol.display: symbol.color_hex for symbol in Symbols}
 
+    sandbox = df[["Symbol", "Quantity", "ExactlyRandomProbability", "ExactlyFocusMeanProbability", "ExactlyBestSim", "ExactlyWorstSim", "ExactlyMixedSim"]]
     generate_melted_figure(df)
     generate_composite_figure(df)
 
 
-    generate_image_and_table(generate_symbol_point_graph_and_df, "symbol_point", df, color_map)
-    generate_image_and_table(figure_and_expected_value, "symbol_point_random", df, color_map, "RandomProbability", title="Randomly collecting symbols")
-    generate_image_and_table(figure_and_expected_value, "symbol_max_prob_point", df, color_map, "FocusMaxProbability",
-                             title="Collecting most symbols out of 3 cards")
-    generate_image_and_table(figure_and_expected_value, "symbol_min_prob_point", df, color_map, "FocusMinProbability",
-                            title="Collecting least symbols out of 3 cards")
-    generate_image_and_table(figure_and_expected_value, "symbol_mean_prob_point", df, color_map, "FocusMeanProbability",
-                             title="Half time collecting the most, half time the least symbols out of three cards")
+    # generate_image_and_table(generate_symbol_point_graph_and_df, "symbol_point", df, color_map)
+    # generate_image_and_table(figure_and_expected_value, "symbol_point_random", df, color_map, "RandomProbability", title="Randomly collecting symbols")
+    # generate_image_and_table(figure_and_expected_value, "symbol_max_prob_point", df, color_map, "FocusMaxProbability",
+    #                          title="Collecting most symbols out of 3 cards")
+    # generate_image_and_table(figure_and_expected_value, "symbol_min_prob_point", df, color_map, "FocusMinProbability",
+    #                         title="Collecting least symbols out of 3 cards")
+    # generate_image_and_table(figure_and_expected_value, "symbol_mean_prob_point", df, color_map, "FocusMeanProbability",
+    #                          title="Half time collecting the most, half time the least symbols out of three cards")

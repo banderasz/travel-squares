@@ -741,15 +741,15 @@ if __name__ == "__main__":
     # Configuration
     CARDS_DIR = "../../pirate_cards"
     JSON_PATH = "../../pirate_cards/pirate_20_25.json"
-    OUTPUT_DIR = "training_data"
+    OUTPUT_DIR = "other_data"
 
     # Create generator with configurable offset
     generator = TrainingDataGenerator(
         cards_dir=CARDS_DIR,
         json_path=JSON_PATH,
         output_dir=OUTPUT_DIR,
-        seed=121,  # For reproducibility
-        save_intermediate=True,  # Enable intermediate image saving
+        seed=None,  # For reproducibility
+        save_intermediate=False,  # Enable intermediate image saving
         card_offset_percent=0.15,  # 15% of card size for random offset
         show_hidden_symbols=False,  # Don't show hidden symbols in visualizations
         save_bounding_boxes=True
@@ -759,10 +759,10 @@ if __name__ == "__main__":
     generator.generate_dataset(
         num_samples=1,
         num_cards=6,
-        max_card_rotation=15.0,
-        max_board_rotation=15.0,
-        perspective_strength_range=(0.3, 0.7),
-        effect_presets=["light", "moderate", "heavy"],
+        max_card_rotation=0,
+        max_board_rotation=0,
+        perspective_strength_range=(0, 0),
+        effect_presets=["light"],
         available_card_indices=list(range(1, 120))  # Use all 25 cards
     )
 
