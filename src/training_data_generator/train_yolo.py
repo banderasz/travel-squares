@@ -8,7 +8,7 @@ import os
 from pathlib import Path
 import shutil
 import yaml
-from sympy.printing.pytorch import torch
+import torch
 from ultralytics import YOLO
 from PIL import Image
 
