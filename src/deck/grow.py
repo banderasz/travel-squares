@@ -157,8 +157,13 @@ def save(path, state):
     os.replace(tmp, path)
 
 
-def run(kind, n_cards, target, iterations, max_replace, sigma, candidates,
+def run(kind, n_cards, bench, target, iterations, max_replace, sigma, candidates,
         pool, hands, rounds, placements, checkpoint, deck_out, seed):
+    # The roster carries `bench` more cards than the deck ships. Freshly
+    # generated cards land on the bench, get measured there, and only join the
+    # shipped deck if they earn it. Without that, every iteration's reported
+    # spread included cards with a single observation to their name.
+    roster_size = n_cards + bench
     heuristic = Heuristic(kind)
     # records[key] = {'card': …, 'values': [means], 'sds': [per-measurement sd]}
     records, deck_keys, history, start = {}, [], [], 0
@@ -176,13 +181,14 @@ def run(kind, n_cards, target, iterations, max_replace, sigma, candidates,
               flush=True)
 
     if not deck_keys:
-        for c in [random_card() for _ in range(n_cards)]:
+        for c in [random_card() for _ in range(roster_size)]:
             records[card_key(c)] = {'card': c, 'values': [], 'sds': []}
         deck_keys = list(records)
 
     hands_per_card = rounds * hands * 6 // pool
-    print(f"  [{kind}] {n_cards} cards, {hands_per_card:,} hands per card per iteration,"
-          f" replace<={max_replace} at >{sigma} sigma", flush=True)
+    print(f"  [{kind}] roster {roster_size} -> ships best {n_cards}, "
+          f"{hands_per_card:,} hands per card per iteration, "
+          f"replace<={max_replace} at >{sigma} sigma", flush=True)
 
     for i in range(start + 1, start + iterations + 1):
         if _stop:
@@ -205,26 +211,34 @@ def run(kind, n_cards, target, iterations, max_replace, sigma, candidates,
         if target is None:
             target = float(np.median(est))
 
+        # the deck we would ship: the n_cards closest to target
+        rank = np.argsort(np.abs(est - target))
+        shipped, benched = rank[:n_cards], rank[n_cards:]
+        ship_est = est[shipped]
+
         all_cards = [r['card'] for r in records.values() if r['values']]
         all_vals = [float(np.mean(r['values'])) for r in records.values() if r['values']]
         heuristic.fit(all_cards, all_vals)
 
         latest = result['middle_mean']
         history.append({'iteration': i,
-                        'spread_pooled': float(est.max() - est.min()),
-                        'sd_pooled': float(est.std()),
+                        'spread_pooled': float(ship_est.max() - ship_est.min()),
+                        'sd_pooled': float(ship_est.std()),
+                        'spread_roster': float(est.max() - est.min()),
                         'spread_latest': float(latest.max() - latest.min()),
                         'mean': float(est.mean()), 'target': target,
                         'median_obs': int(np.median(n_obs)),
                         'typical_se': float(np.median(se)),
                         'distinct_cards': len(records)})
 
-        # replace only where the miss is bigger than the uncertainty
+        # cut only from the bench, and only where the miss beats the uncertainty
         z = np.abs(est - target) / np.maximum(se, 1e-9)
-        doomed = [j for j in np.argsort(-z)[:max_replace] if z[j] > sigma]
-        print(f"  [{kind:>8}] iter {i:>4}  pooled spread {est.max()-est.min():5.2f}  "
-              f"sd {est.std():4.2f}  se {np.median(se):.3f}  obs/card {int(np.median(n_obs)):>3}  "
-              f"replacing {len(doomed):>2}  ({time.time()-t0:.0f}s)", flush=True)
+        bench_by_z = sorted(benched, key=lambda j: -z[j])
+        doomed = [j for j in bench_by_z[:max_replace] if z[j] > sigma]
+        print(f"  [{kind:>8}] iter {i:>4}  deck spread {ship_est.max()-ship_est.min():5.2f}  "
+              f"sd {ship_est.std():4.2f}  se {np.median(se):.3f}  "
+              f"obs/card {int(np.median(n_obs)):>3}  replacing {len(doomed):>2}"
+              f"  ({time.time()-t0:.0f}s)", flush=True)
 
         if doomed:
             keep = [k for j, k in enumerate(deck_keys) if j not in set(doomed)]
@@ -238,7 +252,7 @@ def run(kind, n_cards, target, iterations, max_replace, sigma, candidates,
                           'heuristic_kind': kind,
                           'heuristic_state': heuristic.state()})
         with open(deck_out, 'w') as handle:
-            handle.write(dumps_deck([records[k]['card'] for k in deck_keys]))
+            handle.write(dumps_deck([records[deck_keys[j]]['card'] for j in shipped]))
 
     print(f"  [{kind}] stopped at iteration {history[-1]['iteration'] if history else start}",
           flush=True)
@@ -248,7 +262,9 @@ def main():
     p = argparse.ArgumentParser(description=__doc__,
                                 formatter_class=argparse.RawDescriptionHelpFormatter)
     p.add_argument('--heuristic', choices=['measured', 'analytic'], required=True)
-    p.add_argument('--cards', type=int, default=120)
+    p.add_argument('--cards', type=int, default=120, help='Deck size to ship')
+    p.add_argument('--bench', type=int, default=12,
+                   help='Extra cards carried and measured but not shipped')
     p.add_argument('--target', type=float, default=None)
     p.add_argument('--iterations', type=int, default=100000)
     p.add_argument('--replace', type=int, default=6,
@@ -271,7 +287,7 @@ def main():
     checkpoint = a.checkpoint or f'data/grow_{a.heuristic}.json'
     deck_out = a.deck_out or f'decks/grown_{a.heuristic}.json'
     os.makedirs(os.path.dirname(checkpoint) or '.', exist_ok=True)
-    run(a.heuristic, a.cards, a.target, a.iterations, a.replace, a.sigma, a.candidates,
+    run(a.heuristic, a.cards, a.bench, a.target, a.iterations, a.replace, a.sigma, a.candidates,
         a.pool, a.hands, a.rounds, a.placements, checkpoint, deck_out, a.seed)
 
 
