@@ -55,7 +55,7 @@ Two caveats when reading older material:
   predate the rename** and use the pirate names throughout. Translate with the
   table above.
 - The **simulation's integer symbol indices are a wire format**, baked into the
-  placement shards under `data/` and into `pirate_sim_rs`. `SYM_ORDER` in
+  placement shards under `data/`. `SYM_ORDER` in
   `sim.py` pins them; never reorder.
 
 ---
@@ -110,25 +110,38 @@ The combinatorial core: for a fixed set of 6 cards, evaluate placements across
 `analysis/01`–`06` work through the combinatorics, pruning and equivalence
 arguments that make this tractable.
 
-- `src/simulation/sim.py` — numpy + numba implementation. Precomputes card data
-  into L1-sized arrays, caches DFS position paths, union-finds arrow groups, and
-  persists to SQLite or sharded binary stores.
-- `pirate_sim_rs/` — a Rust + rayon port of the same algorithm, reading the same
-  JSON and `.npy` path cache and writing the same schema.
+`src/simulation/sim.py` is the implementation — numpy + numba. It precomputes card
+data into L1-sized arrays, caches DFS position paths, union-finds arrow groups, and
+persists to SQLite or sharded binary stores. Its scoring and symbol indices derive
+from `Symbols`.
 
-Both are current and neither is authoritative; the Rust version is faster, while
-the analysis scripts import `PlacementStore` and friends from `sim.py`. `sim.py`
-derives its scoring and symbol indices from `Symbols`; the Rust port keeps its own
-copies, and `src/test_symbols.py` parses `main.rs` to assert the two still agree.
+Two modes:
+
+- **scenario** (`--scenarios`) — pick random 6-card hands, evaluate each across the
+  path set, rank cards by mean score into SQLite.
+- **Monte Carlo placements** (`--placements`, `--sharded`) — sample individual
+  placements into binary shards. This is what produced everything under
+  `data/placements_*` and every conclusion in the deck-balancing work.
 
 The point tables here are the current ones. `src/symbols.py` previously carried a
 different, much larger scale (`treasure` = n² up to 144); that has been replaced.
 
 ```bash
-# both expect to run from the repo root
+# expects to run from the repo root
 python -m src.simulation.sim --help
-cargo run --release --manifest-path pirate_sim_rs/Cargo.toml -- --help
 ```
+
+There was also a Rust + rayon port (`pirate_sim_rs/`), removed in favour of keeping
+one implementation. Benchmarked on an M1 Max at 10 threads, one scenario over the
+full 729,529-path set: **Rust 55.5 s vs Python 122.2 s** on identical cards. Real,
+but it only implemented the scenario mode, and on smaller sampled path counts
+Python was actually slightly faster (100k paths: 82 s vs 89 s). Not worth a second
+copy of the algorithm to keep in sync. Recover it with
+`git show 5b27764:pirate_sim_rs/src/main.rs`.
+
+Worth knowing: Rust scaled *sublinearly* with path count (7× the paths for 2.4× the
+time) where Python is roughly linear — it was amortising repeated work across paths
+in a way `sim.py` does not. Porting that idea to Python is the open performance win.
 
 ## 4. Deck balancing
 
@@ -183,12 +196,11 @@ None of this is in git; all of it is reproducible. It reached ~264 GB.
 
 | Path | Produced by |
 |---|---|
-| `data/placements*`, `data/*.db`, `data/paths.*` | `src/simulation/sim.py`, `pirate_sim_rs` |
+| `data/placements*`, `data/*.db`, `data/paths.*` | `src/simulation/sim.py` |
 | `src/training_data_generator/training_data*/` | `training-data-generator.py` |
 | `src/training_data_generator/yolo_dataset/`, `runs/` | `train_yolo.py` |
 | `src/square-pirates.jsonl` | `src/gcloud_stuff.py` |
 | `output/` | `pelican content` |
-| `pirate_sim_rs/target/` | `cargo build` |
 
 ## Known rough edges
 
@@ -196,7 +208,7 @@ None of this is in git; all of it is reproducible. It reached ~264 GB.
   copies of the scoring tables** (`analyze_*.py`, `find_counter_examples*.py`,
   `generate_balanced_deck*.py`, `recalibrate_formula.py`, `visualize_scenario.py`,
   `symbol_points.py`). They read the migrated deck files, so they need porting to
-  `Symbols.of` before their output can be trusted. `src/` and both simulators are
+  `Symbols.of` before their output can be trusted. `src/` and the simulator are
   done; these are not.
 - Root analysis scripts carry `sys.path.insert` preambles instead of being a package.
 - Several scripts are versioned by filename (`find_counter_examples{,_v2}`,

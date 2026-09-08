@@ -213,7 +213,7 @@ __marimo__/
 # ============================================================
 
 # Placement simulation output + path caches.
-# Regenerate: python -m src.simulation.sim  /  cargo run --release (pirate_sim_rs)
+# Regenerate: python -m src.simulation.sim
 /data/
 
 # Synthetic training images, YOLO datasets and training runs.
@@ -230,9 +230,6 @@ __marimo__/
 
 # Vertex AI upload manifest (55 MB). Regenerate: src/gcloud_stuff.py
 /src/square-pirates.jsonl
-
-# Rust build artifacts
-/pirate_sim_rs/target/
 
 # macOS Finder metadata
 .DS_Store

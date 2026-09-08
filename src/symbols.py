@@ -64,8 +64,8 @@ LEGACY_NAMES: Dict[str, Tuple[str, ...]] = {
 
 # Member layout: (display, weight, points, colour, monte-carlo distributions)
 #
-# The points tables are the "small points" scoring used by src/simulation/sim.py
-# and pirate_sim_rs. Those define counts 0..11; index 12 is added here as the
+# The points tables are the "small points" scoring used by src/simulation/sim.py.
+# Those define counts 0..11; index 12 is added here as the
 # saturating "12 or more" bucket the probability code expects. For most symbols
 # that repeats the count-11 value. Parrot is the exception: it only scores on odd
 # counts, so its index 12 is 0 to keep that rule intact rather than repeating 15.

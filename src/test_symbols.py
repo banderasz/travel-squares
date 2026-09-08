@@ -4,15 +4,9 @@ These exist because the contract has already been broken once: a rename left
 most of the repo reading card files whose symbol names no longer matched, and
 nothing failed.
 """
-import os
-import re
-import unittest
 from unittest import TestCase
 
 from src.symbols import LEGACY_NAMES, NUMBER_OF_SYMBOLS_IN_PLAY, Symbols
-
-REPO_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-RUST_MAIN = os.path.join(REPO_ROOT, "pirate_sim_rs", "src", "main.rs")
 
 # The rename that prompted all this. Verified against the diff between commits
 # 8151842 and d28967b, in which only the display strings changed.
@@ -77,7 +71,7 @@ class TestSymbolTables(TestCase):
 
 class TestSimulationWireFormat(TestCase):
     """The simulation's symbol indices are baked into ~200 GB of placement
-    shards under data/ and into pirate_sim_rs. They must never move."""
+    shards under data/. They must never move."""
 
     EXPECTED_INDICES = {
         "anchor": 0, "shark": 1, "rat": 2, "kraken": 3, "map": 4,
@@ -99,45 +93,3 @@ class TestSimulationWireFormat(TestCase):
 
         for symbol in SYM_ORDER[:9]:
             self.assertEqual(SCORE_DEFAULT[symbol.name], symbol.points[:MAX_CT + 1])
-
-
-@unittest.skipUnless(os.path.exists(RUST_MAIN), "pirate_sim_rs not present")
-class TestRustParity(TestCase):
-    """The Rust port keeps its own copies of the scoring table and the name
-    mapping. Nothing at runtime forces them to agree with src/symbols.py, and a
-    silent divergence would make the two simulators disagree, so check here."""
-
-    @classmethod
-    def setUpClass(cls):
-        with open(RUST_MAIN) as handle:
-            cls.source = handle.read()
-
-    def test_scoring_table_matches(self):
-        from src.simulation.sim import MAX_CT, SYM_ORDER
-
-        block = re.search(r"const SCORING[^=]*=\s*\[(.*?)\n\];", self.source, re.S)
-        self.assertIsNotNone(block, "could not locate SCORING in main.rs")
-        rows = re.findall(r"\[([-0-9.,\s]+)\]", block.group(1))
-        self.assertEqual(len(rows), 9, "expected 9 scoring rows")
-
-        for index, row in enumerate(rows):
-            values = [float(v) for v in row.replace("\n", "").split(",") if v.strip()]
-            expected = [float(v) for v in SYM_ORDER[index].points[:MAX_CT + 1]]
-            self.assertEqual(
-                values, expected,
-                f"Rust SCORING row {index} disagrees with {SYM_ORDER[index].name}",
-            )
-
-    def test_name_mapping_matches(self):
-        from src.simulation.sim import SYM_MAP
-
-        body = re.search(r"fn sym_id.*?\{(.*?)\n\}", self.source, re.S).group(1)
-        arms = re.findall(r'((?:"[A-Za-z_]+"\s*\|?\s*)+)=>\s*(\d+)', body)
-        self.assertTrue(arms, "could not parse sym_id arms")
-
-        for names, index in arms:
-            for name in re.findall(r'"([A-Za-z_]+)"', names):
-                self.assertEqual(
-                    SYM_MAP[Symbols.of(name).name], int(index),
-                    f"Rust maps {name!r} to {index}, Python disagrees",
-                )

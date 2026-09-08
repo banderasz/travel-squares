@@ -36,12 +36,11 @@ from src.symbols import Symbols
 # Symbol index order.
 #
 # THIS IS A WIRE FORMAT. These integers are baked into every placement shard
-# under data/ (~200 GB) and into pirate_sim_rs/src/main.rs. Reordering them
-# silently reinterprets all existing simulation output. Add new symbols at the
-# end; never move an existing one.
+# under data/ (~200 GB). Reordering them silently reinterprets all existing
+# simulation output. Add new symbols at the end; never move an existing one.
 #
 # The trailing comments are the names these indices were originally written
-# with, kept for cross-referencing the Rust port and older analysis scripts.
+# with, kept for cross-referencing the older analysis scripts.
 SYM_ORDER = (
     Symbols.CIRCLE,       # 0  anchor
     Symbols.MOON,         # 1  shark
