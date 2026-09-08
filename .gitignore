@@ -225,3 +225,7 @@ __marimo__/
 
 # JetBrains project settings (workspace.xml is machine-specific)
 .idea/
+
+# Long-running deck growth: checkpoints and logs
+/data/grow_*.json
+/data/grow_*.log
