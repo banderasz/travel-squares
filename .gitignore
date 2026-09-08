@@ -216,20 +216,9 @@ __marimo__/
 # Regenerate: python -m src.deck.simulation
 /data/
 
-# Synthetic training images, YOLO datasets and training runs.
-# Regenerate: src/training_images/generator.py, src/recognition/train.py
+# Synthetic training images. Regenerate: src/training_images/generator.py
 /src/training_images/training_data/
 /src/training_images/training_data_big/
-/src/recognition/yolo_dataset/
-/src/recognition/runs/
-# Pretrained YOLO weights, re-downloaded by ultralytics on demand
-/src/recognition/*.pt
-
-# Pelican site build. Regenerate: pelican content
-/output/
-
-# Vertex AI upload manifest (55 MB). Regenerate: src/recognition/vertex_export.py
-/src/recognition/square-pirates.jsonl
 
 # macOS Finder metadata
 .DS_Store

@@ -11,6 +11,8 @@ from numpy import ndarray
 import matplotlib.pyplot as plt
 
 # Import image effects
+from src.deck_io import load_deck
+from src.symbols import Symbols
 from src.training_images.effects import apply_camera_effects_to_composite
 
 def debug_show_image(image, title='Debug Image'):
@@ -218,17 +220,20 @@ class Quarter:
         Returns:
             The rotated arrow name, or the original name if not an arrow
         """
-        if not arrow_name.startswith("arrow_"):
+        try:
+            symbol = Symbols.of(arrow_name)
+        except ValueError:
+            return arrow_name  # e.g. "quarter", a detection class rather than a symbol
+        if symbol not in Symbols.arrows():
             return arrow_name
 
-        arrow_rotation_map = {
-            "arrow_up": "arrow_left",
-            "arrow_right": "arrow_up",
-            "arrow_down": "arrow_right",
-            "arrow_left": "arrow_down"
+        rotation = {
+            Symbols.ARROW_UP: Symbols.ARROW_LEFT,
+            Symbols.ARROW_RIGHT: Symbols.ARROW_UP,
+            Symbols.ARROW_DOWN: Symbols.ARROW_RIGHT,
+            Symbols.ARROW_LEFT: Symbols.ARROW_DOWN,
         }
-
-        return arrow_rotation_map.get(arrow_name, arrow_name)
+        return rotation[symbol].name
 
 class Card:
     def __init__(self, quarters: List[Quarter], image: ndarray):
@@ -267,12 +272,17 @@ class Card:
 
     @staticmethod
     def __load_quarters_from_json(json_path: str, card_index: int):
-        with open(json_path, "r") as f:
-            cards_data = json.load(f)
-        quarters = cards_data[card_index - 1]['card']['quarters']
+        """Load one card's quarters, labelled with stable symbol IDs.
 
-        # Create quarters with original locations
-        return [Quarter(location=QuarterLocation(item[0]), symbols=item[1]) for item in quarters.items()]
+        Goes through deck_io so any deck vocabulary loads, and so the labels
+        written into the training annotations are the stable IDs rather than
+        names that change with the theme. See src/symbols.py.
+        """
+        card = load_deck(json_path)[card_index - 1]
+        return [
+            Quarter(location=QuarterLocation(name), symbols=[s.name for s in quarter.symbols])
+            for name, quarter in card.quarters().items()
+        ]
 
     def _get_bounding_boxes(self) -> Dict[QuarterLocation, List[BoundingBox]]:
         all_boxes = defaultdict(list)
