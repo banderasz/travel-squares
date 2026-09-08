@@ -223,6 +223,17 @@ class Symbols(enum.Enum):
         """Names this symbol used to be known by. See LEGACY_NAMES."""
         return LEGACY_NAMES.get(self.name, ())
 
+    @property
+    def abbrev(self) -> str:
+        """Short label for table headers, derived so it follows a rename.
+
+        Arrows get a direction code (AL/AR/AU/AD) because they would all
+        collapse to "Arr" otherwise.
+        """
+        if self in Symbols.arrows():
+            return "A" + self.name.rsplit("_", 1)[1][0].upper()
+        return self.display[:3].title() if self.display else ""
+
     @staticmethod
     def of(name: str) -> "Symbols":
         """Resolve a symbol from its stable ID, current display name, or any legacy name.
@@ -362,6 +373,11 @@ _SYMBOL_LOOKUP: Dict[str, Symbols] = _build_symbol_lookup()
 # length: the probability vectors they are multiplied against are also 13 long.
 assert all(len(symbol.points) == 13 for symbol in Symbols), \
     "every points table must have 13 entries (counts 0..12)"
+
+# Abbreviations are derived from display names, so a rename could collide them.
+_abbrevs = [s.abbrev for s in Symbols if s.abbrev]
+assert len(_abbrevs) == len(set(_abbrevs)), \
+    f"symbol abbreviations are not unique: {sorted(_abbrevs)}"
 
 def create_df() -> pd.DataFrame:
     plot_data = []

@@ -15,8 +15,9 @@ import json, sys, os
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import numpy as np
 from src.simulation.sim import (load_cards, get_paths, evaluate_scenario,
-                                 SYM_MAP, SCORE_DEFAULT, Z_STACKS,
-                                 _make_z_stacks)
+                                 SYM_MAP, SYM_ORDER, SCORE_DEFAULT, Z_STACKS,
+                                 _make_z_stacks, symbol_index)
+from src.symbols import Symbols
 
 # ── Config ──────────────────────────────────────────────────
 CARD_IDS   = [0, 5, 3, 2, 4, 1]     # 6 cards to use
@@ -25,17 +26,15 @@ TB_IDX     = 0                        # which top/bottom config (0-31)
 ROTATIONS  = [0, 0, 0, 0, 0, 0]      # rotation per card (0-3, 0=original)
 
 # ── Symbol display ──────────────────────────────────────────
+# Keyed by stable symbol ID so a rename does not silently mislabel the output.
+# (These were pirate icons; they now follow the current display names.)
 SYM_ICONS = {
-    'anchor': '⚓', 'shark': '🦈', 'rat': '🐀', 'kraken': '🐙',
-    'map': '🗺️ ', 'coin': '🪙', 'rum': '🍺', 'parrot': '🦜',
-    'spyglass': '🔭', 'arrow_up': '⬆️ ', 'arrow_down': '⬇️ ',
-    'arrow_left': '⬅️ ', 'arrow_right': '➡️ ',
+    'CIRCLE': '🍖', 'MOON': '🐍', 'X': '🐀', 'SKULL': '🎭',
+    'SQUARE': '💰', 'SUN': '🪙', 'TRIANGLE': '🍺', 'DIAMOND': '🦜',
+    'STAR': '⚔️ ', 'ARROW_UP': '⬆️ ', 'ARROW_DOWN': '⬇️ ',
+    'ARROW_LEFT': '⬅️ ', 'ARROW_RIGHT': '➡️ ',
 }
-SYM_SHORT = {
-    'anchor':'Anc','shark':'Shk','rat':'Rat','kraken':'Kra','map':'Map',
-    'coin':'Coi','rum':'Rum','parrot':'Par','spyglass':'Spy',
-    'arrow_up':'A↑','arrow_down':'A↓','arrow_left':'A←','arrow_right':'A→',
-}
+SYM_SHORT = {symbol.name: symbol.abbrev for symbol in Symbols if symbol.abbrev}
 INV_SYM = {v:k for k,v in SYM_MAP.items()}
 QNAMES = ['top_left','top_right','bottom_left','bottom_right']
 
@@ -203,7 +202,7 @@ print(f"{'─'*72}")
 rotated = []
 for i, cid in enumerate(CARD_IDS):
     q = raw_cards[cid]['card']['quarters']
-    q_ids = [[SYM_MAP[s] for s in q[qn]] for qn in QNAMES]
+    q_ids = [[symbol_index(s) for s in q[qn]] for qn in QNAMES]
     q_rot = rotate_quarters(q_ids, ROTATIONS[i])
     rotated.append(q_rot)
 
@@ -271,15 +270,13 @@ print(f"\n{'─'*72}")
 print("  STEP 6: Score Calculation")
 print(f"{'─'*72}")
 
-SYM_NAMES = ['anchor','shark','rat','kraken','map','coin','rum','parrot','spyglass']
-
 print(f"\n  {'Symbol':<10} {'Count':>5} {'Score':>6}  Scoring table")
 print(f"  {'─'*10} {'─'*5} {'─'*6}  {'─'*30}")
 total = 0
-for si in range(9):
-    name = SYM_NAMES[si]
+for si, symbol in enumerate(SYM_ORDER[:9]):
+    name = symbol.display
     cnt = int(sym_counts[si])
-    pts_table = SCORE_DEFAULT[name]
+    pts_table = SCORE_DEFAULT[symbol.name]
     clamped = min(cnt, 11)
     score = pts_table[clamped]
     total += score
@@ -333,7 +330,7 @@ for tb in range(32):
         sc = np.zeros(9, dtype=int)
         for i in range(6):
             q = raw_cards[CARD_IDS[i]]['card']['quarters']
-            q_ids = [[SYM_MAP[s] for s in q[qn]] for qn in QNAMES]
+            q_ids = [[symbol_index(s) for s in q[qn]] for qn in QNAMES]
             q_rot = rotate_quarters(q_ids, rots[i])
             for qi in range(4):
                 if v[i] & (1 << qi):
@@ -355,15 +352,15 @@ for tb in range(32):
                                     tk = g[tidx2]
                                     tqi2 = gq[tidx2]
                                     q2 = raw_cards[CARD_IDS[tk]]['card']['quarters']
-                                    q2_ids = [[SYM_MAP[s2] for s2 in q2[qn]] for qn in QNAMES]
+                                    q2_ids = [[symbol_index(s2) for s2 in q2[qn]] for qn in QNAMES]
                                     q2_rot = rotate_quarters(q2_ids, rots[tk])
                                     for sid2 in q2_rot[tqi2]:
                                         if sid2 < 9:
                                             sc[sid2] += 1
         total_s = 0
-        for si in range(9):
+        for si, symbol in enumerate(SYM_ORDER[:9]):
             c = min(int(sc[si]), 11)
-            total_s += SCORE_DEFAULT[SYM_NAMES[si]][c]
+            total_s += SCORE_DEFAULT[symbol.name][c]
         all_scores.append(total_s)
 
 mean_s = np.mean(all_scores)

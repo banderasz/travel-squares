@@ -16,6 +16,9 @@ import numpy as np
 
 sys.path.insert(0, os.path.dirname(__file__))
 from src.simulation.sim import PlacementStore, ShardedPlacementStore, SYM_MAP, load_cards
+from src.symbols import Symbols
+
+ARROW_ABBREVS = {symbol.abbrev for symbol in Symbols.arrows()}
 
 
 def load_card_details(json_path, n_cards=20):
@@ -23,12 +26,6 @@ def load_card_details(json_path, n_cards=20):
     with open(json_path) as f:
         raw = json.load(f)
 
-    sym_display = {
-        'anchor': 'Anc', 'shark': 'Shk', 'rat': 'Rat', 'kraken': 'Kra',
-        'map': 'Map', 'coin': 'Coi', 'rum': 'Rum', 'parrot': 'Par',
-        'spyglass': 'Spy', 'arrow_up': '↑', 'arrow_down': '↓',
-        'arrow_left': '←', 'arrow_right': '→'
-    }
     qnames = ['top_left', 'top_right', 'bottom_left', 'bottom_right']
     qshort = ['TL', 'TR', 'BL', 'BR']
 
@@ -38,7 +35,7 @@ def load_card_details(json_path, n_cards=20):
         quarters = {}
         for qi, qn in enumerate(qnames):
             syms = card['card']['quarters'][qn]
-            quarters[qshort[qi]] = [sym_display.get(s, s) for s in syms]
+            quarters[qshort[qi]] = [Symbols.of(s).abbrev for s in syms]
         cards.append(quarters)
     return cards
 
@@ -239,12 +236,14 @@ def analyze_cards(store, n_cards, trim_low, trim_high, json_path):
     print(f"  CARD PROPERTIES — WHY SOME CARDS ARE BETTER")
     print(f"  {'='*70}")
 
-    # Score each card's raw symbol values
-    score_map = {
-        'Anc': 1, 'Spy': 1, 'Map': 1, 'Coi': 1, 'Rum': 1, 'Par': 1,
-        'Shk': -1, 'Rat': -1, 'Kra': -1,
-        '↑': 0.5, '↓': 0.5, '←': 0.5, '→': 0.5  # arrows have conditional value
-    }
+    # Crude per-symbol value, keyed by abbreviation and derived from the scoring
+    # tables so it follows a rename or a rebalance.
+    score_map = {}
+    for symbol in Symbols:
+        if symbol in Symbols.arrows():
+            score_map[symbol.abbrev] = 0.5  # arrows have conditional value
+        elif symbol.value_symbol():
+            score_map[symbol.abbrev] = 1 if max(symbol.points) > 0 else -1
 
     print(f"  {'#':<4} {'Card':<5} {'SimAvg':>7} {'RawVal':>7} {'Arrows':>7} {'Neg':>5} {'Pos':>5}  Quarters")
     print(f"  {'-'*4} {'-'*5} {'-'*7} {'-'*7} {'-'*7} {'-'*5} {'-'*5}  {'-'*40}")
@@ -259,7 +258,7 @@ def analyze_cards(store, n_cards, trim_low, trim_high, json_path):
             for s in syms:
                 v = score_map.get(s, 0)
                 raw_val += v
-                if s in ('↑', '↓', '←', '→'):
+                if s in ARROW_ABBREVS:
                     n_arrows += 1
                 elif v > 0:
                     n_pos += 1

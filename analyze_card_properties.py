@@ -15,22 +15,21 @@ import numpy as np
 from itertools import combinations
 
 sys.path.insert(0, os.path.dirname(__file__))
-from src.simulation.sim import PlacementStore, ShardedPlacementStore, SCORE_DEFAULT
+from src.simulation.sim import PlacementStore, ShardedPlacementStore, SCORE_DEFAULT, SYM_ORDER
+from src.symbols import Symbols
+
+# Derived from the scoring tables rather than hardcoded, so a rename or a
+# rebalance cannot leave these sets quietly out of date. This reproduces the
+# original membership exactly: 6 positive, 3 negative.
+POSITIVE = {s for s in Symbols if s.value_symbol() and max(s.points) > 0}
+NEGATIVE = {s for s in Symbols if s.value_symbol() and max(s.points) <= 0}
+ARROWS = set(Symbols.arrows())
 
 
 def load_and_score_cards(json_path, n_cards=20):
     with open(json_path) as f:
         raw = json.load(f)
 
-    SYM_SHORT = {
-        'anchor': 'Anc', 'shark': 'Shk', 'rat': 'Rat', 'kraken': 'Kra',
-        'map': 'Map', 'coin': 'Coi', 'rum': 'Rum', 'parrot': 'Par',
-        'spyglass': 'Spy', 'arrow_up': '↑', 'arrow_down': '↓',
-        'arrow_left': '←', 'arrow_right': '→'
-    }
-    POSITIVE = {'anchor', 'map', 'coin', 'rum', 'parrot', 'spyglass'}
-    NEGATIVE = {'shark', 'rat', 'kraken'}
-    ARROWS = {'arrow_up', 'arrow_down', 'arrow_left', 'arrow_right'}
     qnames = ['top_left', 'top_right', 'bottom_left', 'bottom_right']
     qshort = ['TL', 'TR', 'BL', 'BR']
 
@@ -49,9 +48,9 @@ def load_and_score_cards(json_path, n_cards=20):
         quarter_pos_counts = []
 
         for qi, qn in enumerate(qnames):
-            syms = card[qn]
-            c['raw_quarters'][qshort[qi]] = syms
-            c['quarters'][qshort[qi]] = [SYM_SHORT.get(s, s) for s in syms]
+            syms = [Symbols.of(s) for s in card[qn]]
+            c['raw_quarters'][qshort[qi]] = card[qn]
+            c['quarters'][qshort[qi]] = [s.abbrev for s in syms]
 
             q_pos = sum(1 for s in syms if s in POSITIVE)
             q_neg = sum(1 for s in syms if s in NEGATIVE)
@@ -321,7 +320,7 @@ def main():
         all_syms.update(c['sym_counts'].keys())
 
     sym_corrs = []
-    for sym in sorted(all_syms):
+    for sym in sorted(all_syms, key=SYM_ORDER.index):  # wire order; Symbols is not orderable
         counts = np.array([c['sym_counts'].get(sym, 0) for c in cards], dtype=np.float64)
         if counts.std() > 0:
             corr = np.corrcoef(counts, sim_scores)[0, 1]
@@ -330,24 +329,19 @@ def main():
 
     sym_corrs.sort(key=lambda x: -x[1])
 
-    SYM_SHORT = {
-        'anchor': 'Anc', 'shark': 'Shk', 'rat': 'Rat', 'kraken': 'Kra',
-        'map': 'Map', 'coin': 'Coi', 'rum': 'Rum', 'parrot': 'Par', 'spyglass': 'Spy',
-    }
-
     # Show scoring tables for context
     print(f"\n  Scoring reminder (points by count):")
     print(f"  {'Symbol':<10} {'1':>4} {'2':>4} {'3':>4} {'4':>4} {'5':>4} {'6':>4}")
     print(f"  {'-'*10} {'-'*4} {'-'*4} {'-'*4} {'-'*4} {'-'*4} {'-'*4}")
-    for sym_name in ['coin', 'map', 'anchor', 'spyglass', 'parrot', 'rum', 'kraken', 'rat', 'shark']:
-        pts = SCORE_DEFAULT[sym_name]
-        short = SYM_SHORT[sym_name]
+    for symbol in SYM_ORDER[:9]:
+        pts = SCORE_DEFAULT[symbol.name]
+        short = symbol.abbrev
         print(f"  {short:<10} {pts[0]:>4} {pts[1]:>4} {pts[2]:>4} {pts[3]:>4} {pts[4]:>4} {pts[5]:>4}")
 
     print(f"\n  {'Symbol':<10} {'Avg/card':>8} {'Corr w/score':>13}  {'Direction'}")
     print(f"  {'-'*10} {'-'*8} {'-'*13}  {'-'*20}")
     for sym, corr, avg in sym_corrs:
-        short = SYM_SHORT.get(sym, sym)
+        short = sym.abbrev
         direction = "more → better" if corr > 0.1 else "more → worse" if corr < -0.1 else "neutral"
         bar = '█' * int(abs(corr) * 15)
         sign = '+' if corr > 0 else '−'

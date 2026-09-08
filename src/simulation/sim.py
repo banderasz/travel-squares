@@ -57,6 +57,8 @@ SYM_ORDER = (
     Symbols.ARROW_RIGHT,  # 12
 )
 SYM_MAP = {symbol.name: index for index, symbol in enumerate(SYM_ORDER)}
+# Display names in wire-index order, for analysis scripts that report by index.
+SYM_NAMES = [symbol.display for symbol in SYM_ORDER]
 N_SYM = 9
 MAX_CT = 11
 
