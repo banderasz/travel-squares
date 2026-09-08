@@ -13,19 +13,50 @@ vocabularies below before assuming otherwise.
 
 ---
 
-## ⚠️ Two different symbol vocabularies
+## Symbol names
 
-This is the single most confusing thing in the repo. The game was re-themed
-partway through, and both versions still live here:
+The game has been re-themed once, and will be again, so symbol names come in
+three layers. `src/symbols.py` is the single source of truth.
 
-| | Symbols | Used by |
+| Layer | Example | Changes? |
 |---|---|---|
-| **Original** (`src/symbols.py`) | food, treasure, rum, weapon, rat, snake, parrot, mask, coin | `card_rules.py`, `square_card_generator.py`, `simulate_game.py`, `statistics.py`, the Pelican site |
-| **Current** (`SYM_MAP` in `sim.py`) | anchor, shark, rat, kraken, map, coin, rum, parrot, spyglass | `src/simulation/sim.py`, `pirate_sim_rs/`, all root `analyze_*` scripts, `pirate_cards/*.json` |
+| **Stable ID** — the enum member name | `CIRCLE` | Never. This is what gets written to disk. |
+| **`display`** — the current theme label | `food` | Freely. |
+| **`LEGACY_NAMES`** — every previous name | `anchor` | Append-only. |
 
-Only rum, rat, parrot and coin appear in both. The scoring tables are also
-independent. Workstreams 1 and 3 below are therefore **not** comparable
-without a translation step.
+Read every incoming name with `Symbols.of(...)`, which accepts all three forms
+and raises on anything unknown. Write names as `symbol.name`. Never key data off
+`display`.
+
+**To rename a symbol:** change its `display` and append the old value to
+`LEGACY_NAMES`. That is the whole change — no stored data is invalidated, and old
+deck files keep loading.
+
+The current mapping, for reference when reading older files or analysis notes:
+
+| Stable ID | Current | Previously |
+|---|---|---|
+| `CIRCLE` | food | anchor |
+| `SQUARE` | treasure | map |
+| `TRIANGLE` | rum | — |
+| `STAR` | weapon | spyglass |
+| `X` | rat | — |
+| `MOON` | snake | shark |
+| `DIAMOND` | parrot | — |
+| `SKULL` | mask | kraken |
+| `SUN` | coin | — |
+
+The legacy names are permanent: the trained detection model emits them as its
+class labels, so they cannot be retired without retraining it.
+
+Two caveats when reading older material:
+
+- **`CARD_BALANCE_GUIDE.md`, `analysis_results_v2.txt` and `good_card_findings*.txt`
+  predate the rename** and use the pirate names throughout. Translate with the
+  table above.
+- The **simulation's integer symbol indices are a wire format**, baked into the
+  placement shards under `data/` and into `pirate_sim_rs`. `SYM_ORDER` in
+  `sim.py` pins them; never reorder.
 
 ---
 
@@ -86,9 +117,12 @@ arguments that make this tractable.
   JSON and `.npy` path cache and writing the same schema.
 
 Both are current and neither is authoritative; the Rust version is faster, while
-the analysis scripts import `PlacementStore` and friends from `sim.py`. Note the
-scoring tables are duplicated between them (and in several root scripts) — see
-"Known rough edges".
+the analysis scripts import `PlacementStore` and friends from `sim.py`. `sim.py`
+derives its scoring and symbol indices from `Symbols`; the Rust port keeps its own
+copies, and `src/test_symbols.py` parses `main.rs` to assert the two still agree.
+
+The point tables here are the current ones. `src/symbols.py` previously carried a
+different, much larger scale (`treasure` = n² up to 144); that has been replaced.
 
 ```bash
 # both expect to run from the repo root
@@ -158,13 +192,19 @@ None of this is in git; all of it is reproducible. It reached ~264 GB.
 
 ## Known rough edges
 
-- The two symbol vocabularies described above.
-- Scoring tables are duplicated in seven places (`sim.py`, `main.rs`,
-  `find_counter_examples.py`, `generate_balanced_deck_v3.py`,
-  `analyze_combo_variance.py`, `analyze_card_properties.py`,
-  `visualize_scenario.py`) plus `src/symbols.py` and `symbol_points.py`. Symbol
-  name lists are hardcoded in ten files. Changing a rule means changing all of them.
+- **The root analysis scripts still hardcode the old pirate names and their own
+  copies of the scoring tables** (`analyze_*.py`, `find_counter_examples*.py`,
+  `generate_balanced_deck*.py`, `recalibrate_formula.py`, `visualize_scenario.py`,
+  `symbol_points.py`). They read the migrated deck files, so they need porting to
+  `Symbols.of` before their output can be trusted. `src/` and both simulators are
+  done; these are not.
 - Root analysis scripts carry `sys.path.insert` preambles instead of being a package.
 - Several scripts are versioned by filename (`find_counter_examples{,_v2}`,
   `generate_balanced_deck{,_v3}` with no v2, `analyze_placement_variance{,_20}`).
 - `Detection.total_overlap_with_others` is a stub.
+- `src/statistics.py` does not run: `df = create_df()` is commented out but `df`
+  is used further down. Pre-existing.
+- `src/conv_test.py` does not parse — it ends mid-expression (`q = Symbols.CIRCLE.`).
+  Abandoned scratch file.
+- Nothing renders the card artwork; `pirate_cards/*.png` are produced in Adobe
+  Illustrator, so a regenerated deck will not match the existing images.
