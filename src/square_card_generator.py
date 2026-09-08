@@ -203,12 +203,12 @@ def deviation_score(counter: Dict[Symbols, int], selected_cards: int):
 
 
 if __name__ == "__main__":
-    NUMBER_OF_CARDS = 120
-    TOTAL_GENERATED_CARDS = 10000
+    NUMBER_OF_CARDS = 12
+    TOTAL_GENERATED_CARDS = 100
     batch_size = 2
 
-    MINIMUM_POINT = 40
-    MAXIMUM_POINT = 45
+    MINIMUM_POINT = 5
+    MAXIMUM_POINT = 7
 
     cards, values = zip(*[CardGenerator().generate_card() for _ in range(TOTAL_GENERATED_CARDS)])
 

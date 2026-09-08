@@ -9,13 +9,21 @@ color_map = {symbol.display: symbol.color_hex for symbol in Symbols}
 
 
 
-good_sim = pd.read_csv("simulate_5_10000_simulate_5_turn_mixed_game_less_evil.csv")
+good_sim = pd.read_csv("simpler_simulate_5_10000_simulate_5_turn_mixed_game_less_evil.csv")
 good_sim = good_sim / good_sim.sum()
 good_sim.loc[12] = good_sim.loc[12:].sum()
 
-bad_sim = pd.read_csv("simulate_5_10000_simulate_5_turn_mixed_game_more_evil.csv")
+bad_sim = pd.read_csv("simpler_simulate_5_10000_simulate_5_turn_mixed_game_more_evil.csv")
 bad_sim = bad_sim / bad_sim.sum()
 bad_sim.loc[12] = bad_sim.loc[12:].sum()
+
+good_old_sim = pd.read_csv("simulate_5_10000_simulate_5_turn_mixed_game_less_evil.csv")
+good_old_sim = good_old_sim / good_old_sim.sum()
+good_old_sim.loc[12] = good_old_sim.loc[12:].sum()
+
+bad_old_sim = pd.read_csv("simulate_5_10000_simulate_5_turn_mixed_game_more_evil.csv")
+bad_old_sim = bad_old_sim / bad_old_sim.sum()
+bad_old_sim.loc[12] = bad_old_sim.loc[12:].sum()
 
 good_sim_column = good_sim.stack()
 good_sim_column.name = "GoodSimProbability"

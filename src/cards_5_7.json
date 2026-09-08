@@ -1,0 +1,146 @@
+[
+
+        {
+            "card": {
+                "dimensions": 
+                {
+                    "width": 135,
+                    "height": 135
+                },
+                "quarters": {"top_left": ["treasure", "snake", "snake"], "top_right": ["parrot", "arrow_right", "arrow_up"], "bottom_left": ["food", "weapon"], "bottom_right": ["weapon"]}
+            }
+        }
+        ,
+
+        {
+            "card": {
+                "dimensions": 
+                {
+                    "width": 135,
+                    "height": 135
+                },
+                "quarters": {"top_left": ["weapon", "rat", "coin"], "top_right": ["arrow_up", "rum", "coin"], "bottom_left": ["rat", "snake", "rat", "parrot"], "bottom_right": ["snake", "treasure"]}
+            }
+        }
+        ,
+
+        {
+            "card": {
+                "dimensions": 
+                {
+                    "width": 135,
+                    "height": 135
+                },
+                "quarters": {"top_left": ["rum", "rat"], "top_right": ["rat", "arrow_down", "weapon"], "bottom_left": ["food", "mask"], "bottom_right": ["arrow_up", "food"]}
+            }
+        }
+        ,
+
+        {
+            "card": {
+                "dimensions": 
+                {
+                    "width": 135,
+                    "height": 135
+                },
+                "quarters": {"top_left": ["mask", "rat", "parrot"], "top_right": ["food", "food", "food"], "bottom_left": ["rat", "coin"], "bottom_right": ["weapon", "snake"]}
+            }
+        }
+        ,
+
+        {
+            "card": {
+                "dimensions": 
+                {
+                    "width": 135,
+                    "height": 135
+                },
+                "quarters": {"top_left": ["treasure", "weapon", "arrow_down"], "top_right": ["weapon", "rat", "mask"], "bottom_left": ["food", "coin", "snake"], "bottom_right": ["snake", "arrow_left", "snake", "food"]}
+            }
+        }
+        ,
+
+        {
+            "card": {
+                "dimensions": 
+                {
+                    "width": 135,
+                    "height": 135
+                },
+                "quarters": {"top_left": ["rat"], "top_right": ["rum"], "bottom_left": ["rum"], "bottom_right": ["parrot", "coin"]}
+            }
+        }
+        ,
+
+        {
+            "card": {
+                "dimensions": 
+                {
+                    "width": 135,
+                    "height": 135
+                },
+                "quarters": {"top_left": ["rat", "treasure", "food", "coin"], "top_right": ["mask", "mask"], "bottom_left": ["weapon", "snake"], "bottom_right": ["food"]}
+            }
+        }
+        ,
+
+        {
+            "card": {
+                "dimensions": 
+                {
+                    "width": 135,
+                    "height": 135
+                },
+                "quarters": {"top_left": ["arrow_right", "rat"], "top_right": ["parrot", "treasure"], "bottom_left": ["rat"], "bottom_right": ["coin", "coin"]}
+            }
+        }
+        ,
+
+        {
+            "card": {
+                "dimensions": 
+                {
+                    "width": 135,
+                    "height": 135
+                },
+                "quarters": {"top_left": ["rum", "treasure"], "top_right": ["snake", "rat", "parrot", "snake"], "bottom_left": ["arrow_right"], "bottom_right": ["weapon", "rat"]}
+            }
+        }
+        ,
+
+        {
+            "card": {
+                "dimensions": 
+                {
+                    "width": 135,
+                    "height": 135
+                },
+                "quarters": {"top_left": ["mask", "rat", "treasure"], "top_right": ["coin"], "bottom_left": ["food"], "bottom_right": ["rum", "arrow_left", "snake"]}
+            }
+        }
+        ,
+
+        {
+            "card": {
+                "dimensions": 
+                {
+                    "width": 135,
+                    "height": 135
+                },
+                "quarters": {"top_left": ["coin", "food"], "top_right": ["rat", "weapon"], "bottom_left": ["treasure", "weapon"], "bottom_right": ["coin", "arrow_down", "rat"]}
+            }
+        }
+        ,
+
+        {
+            "card": {
+                "dimensions": 
+                {
+                    "width": 135,
+                    "height": 135
+                },
+                "quarters": {"top_left": ["weapon"], "top_right": ["snake", "weapon", "coin"], "bottom_left": ["arrow_up", "arrow_up", "rat", "food"], "bottom_right": ["arrow_left", "treasure"]}
+            }
+        }
+        
+]
