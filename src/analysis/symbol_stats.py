@@ -11,7 +11,7 @@ color_map = {symbol.display: symbol.color_hex for symbol in Symbols}
 
 # The simulation CSVs sit next to this module. Resolve them from __file__ so the
 # module works from the repo root, which is where everything else is now run.
-_HERE = os.path.dirname(os.path.abspath(__file__))
+_HERE = os.path.join(os.path.dirname(os.path.abspath(__file__)), "data")
 
 
 def _read_sim(name):

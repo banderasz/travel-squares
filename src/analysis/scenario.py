@@ -14,7 +14,7 @@ Shows:
 import json, sys, os
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import numpy as np
-from src.simulation.sim import (load_cards, get_paths, evaluate_scenario,
+from src.deck.simulation import (load_cards, get_paths, evaluate_scenario,
                                  SYM_MAP, SYM_ORDER, SCORE_DEFAULT, Z_STACKS,
                                  _make_z_stacks, symbol_index)
 from src.symbols import Symbols

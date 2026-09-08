@@ -213,23 +213,23 @@ __marimo__/
 # ============================================================
 
 # Placement simulation output + path caches.
-# Regenerate: python -m src.simulation.sim
+# Regenerate: python -m src.deck.simulation
 /data/
 
 # Synthetic training images, YOLO datasets and training runs.
-# Regenerate: src/training_data_generator/training-data-generator.py, train_yolo.py
-/src/training_data_generator/training_data/
-/src/training_data_generator/training_data_big/
-/src/training_data_generator/yolo_dataset/
-/src/training_data_generator/runs/
+# Regenerate: src/training_images/generator.py, src/recognition/train.py
+/src/training_images/training_data/
+/src/training_images/training_data_big/
+/src/recognition/yolo_dataset/
+/src/recognition/runs/
 # Pretrained YOLO weights, re-downloaded by ultralytics on demand
-/src/training_data_generator/*.pt
+/src/recognition/*.pt
 
 # Pelican site build. Regenerate: pelican content
 /output/
 
-# Vertex AI upload manifest (55 MB). Regenerate: src/gcloud_stuff.py
-/src/square-pirates.jsonl
+# Vertex AI upload manifest (55 MB). Regenerate: src/recognition/vertex_export.py
+/src/recognition/square-pirates.jsonl
 
 # macOS Finder metadata
 .DS_Store

@@ -6,7 +6,7 @@ import sys
 import os
 
 sys.path.insert(0, os.path.dirname(__file__))
-from src.simulation.sim import (
+from src.deck.simulation import (
     PLACEMENT_DTYPE, PlacementStore, load_cards, get_paths,
     evaluate_placements_batch
 )

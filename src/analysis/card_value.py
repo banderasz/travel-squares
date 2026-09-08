@@ -15,7 +15,7 @@ import time
 import numpy as np
 
 sys.path.insert(0, os.path.dirname(__file__))
-from src.simulation.sim import PlacementStore, ShardedPlacementStore, SYM_MAP, load_cards
+from src.deck.simulation import PlacementStore, ShardedPlacementStore, SYM_MAP, load_cards
 from src.symbols import Symbols
 
 ARROW_ABBREVS = {symbol.abbrev for symbol in Symbols.arrows()}

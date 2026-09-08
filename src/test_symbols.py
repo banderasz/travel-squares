@@ -80,7 +80,7 @@ class TestSimulationWireFormat(TestCase):
     }
 
     def test_indices_match_the_original_order(self):
-        from src.simulation.sim import SYM_MAP
+        from src.deck.simulation import SYM_MAP
 
         for legacy_name, index in self.EXPECTED_INDICES.items():
             self.assertEqual(
@@ -89,7 +89,7 @@ class TestSimulationWireFormat(TestCase):
             )
 
     def test_scoring_matches_symbols(self):
-        from src.simulation.sim import MAX_CT, SCORE_DEFAULT, SYM_ORDER
+        from src.deck.simulation import MAX_CT, SCORE_DEFAULT, SYM_ORDER
 
         for symbol in SYM_ORDER[:9]:
             self.assertEqual(SCORE_DEFAULT[symbol.name], symbol.points[:MAX_CT + 1])

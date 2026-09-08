@@ -11,7 +11,7 @@ from numpy import ndarray
 import matplotlib.pyplot as plt
 
 # Import image effects
-from image_effects import apply_camera_effects_to_composite
+from src.training_images.effects import apply_camera_effects_to_composite
 
 def debug_show_image(image, title='Debug Image'):
     """Display an image in PyCharm's debug window using matplotlib."""

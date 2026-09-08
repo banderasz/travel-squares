@@ -3,11 +3,12 @@ import os
 from unittest import TestCase
 from PIL import Image, ImageDraw
 
-from src.processing_detected_images import Detection, BoundingBox, visualize_detections, Symbol, Quarter, Board
+from src.recognition.board import Detection, BoundingBox, visualize_detections, Symbol, Quarter, Board
 
+# Fixtures live with the generator that produces them.
 ANNOTATIONS_DIR = os.path.join(
-    os.path.dirname(os.path.abspath(__file__)),
-    "training_data_generator", "other_data", "annotations",
+    os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
+    "training_images", "fixtures", "annotations",
 )
 
 # These tests are also a debugging aid: they can render what was detected.

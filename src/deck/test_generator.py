@@ -1,6 +1,7 @@
 from unittest import TestCase
 
-from src.square_card_generator import Card, Quarter, CardGenerator
+from src.cards import Card, Quarter
+from src.deck.generator import CardGenerator
 from src.symbols import Symbols
 
 

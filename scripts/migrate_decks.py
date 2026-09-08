@@ -25,7 +25,7 @@ sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from src.deck_io import QUARTER_NAMES, dumps_deck  # noqa: E402
 from src.symbols import Symbols  # noqa: E402
 
-DECK_GLOBS = ("src/cards*.json", "pirate_cards/*.json")
+DECK_GLOBS = ("decks/*.json", "pirate_cards/*.json")
 
 
 def _quarters_of(raw):

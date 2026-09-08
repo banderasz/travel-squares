@@ -514,7 +514,7 @@ def main():
     
     print("\n✓ Deck generation complete!")
     print("\nNext step: Run simulation to verify actual values")
-    print(f"  python -m src.simulation.sim --json {args.output or 'deck.json'} "
+    print(f"  python -m src.deck.simulation --json {args.output or 'deck.json'} "
           f"--out data/placements_verify --placements 100000000 --sharded --n-shards 256 "
           f"--n-cards {len(selected)}")
 

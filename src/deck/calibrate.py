@@ -15,7 +15,7 @@ import sys
 import os
 
 sys.path.insert(0, os.path.dirname(__file__))
-from src.simulation.sim import ShardedPlacementStore, PlacementStore
+from src.deck.simulation import ShardedPlacementStore, PlacementStore
 from src.symbols import Symbols
 
 # Symbol categories. Note this deliberately leaves rum out of POSITIVE_SYMBOLS

@@ -89,7 +89,7 @@ def analyze_card_data(file_path):
 
 
 if __name__ == '__main__':
-    file_names = ['src/cards_20_25.json', 'src/cards_40_45.json']
+    file_names = ['decks/cards_20_25.json', 'decks/cards_40_45.json']
     for file_name in file_names:
         print(f"{file_name}\n")
         symbols_in_cards, symbols_in_quarters = analyze_card_data(file_name)

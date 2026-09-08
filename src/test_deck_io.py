@@ -9,7 +9,7 @@ import tempfile
 from unittest import TestCase
 
 from src.deck_io import card_from_dict, card_to_dict, load_deck, save_deck
-from src.square_card_generator import Card, Quarter
+from src.cards import Card, Quarter
 from src.symbols import Symbols
 
 REPO_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -73,7 +73,7 @@ class TestVocabularyCompatibility(TestCase):
     def test_all_checked_in_decks_load(self):
         import glob
         paths = sorted(
-            glob.glob(os.path.join(REPO_ROOT, "src", "cards*.json"))
+            glob.glob(os.path.join(REPO_ROOT, "decks", "*.json"))
             + glob.glob(os.path.join(REPO_ROOT, "pirate_cards", "*.json"))
         )
         self.assertTrue(paths, "expected some deck files in the repo")

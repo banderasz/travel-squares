@@ -5,10 +5,10 @@ from typing import List, Dict, Tuple
 import cv2
 import numpy as np
 
-from new_image_generator import (
+from src.training_images.composer import (
     Board, Card, QuarterLocation, BoundingBox, Coordinate
 )
-from image_effects import apply_camera_effects_to_composite
+from src.training_images.effects import apply_camera_effects_to_composite
 
 
 class TrainingDataGenerator:

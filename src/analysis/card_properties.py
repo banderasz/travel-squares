@@ -15,7 +15,7 @@ import numpy as np
 from itertools import combinations
 
 sys.path.insert(0, os.path.dirname(__file__))
-from src.simulation.sim import PlacementStore, ShardedPlacementStore, SCORE_DEFAULT, SYM_ORDER
+from src.deck.simulation import PlacementStore, ShardedPlacementStore, SCORE_DEFAULT, SYM_ORDER
 from src.symbols import Symbols
 
 # Derived from the scoring tables rather than hardcoded, so a rename or a

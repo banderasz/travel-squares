@@ -21,7 +21,7 @@ The on-disk shape is preserved from the original generator so existing readers
 import json
 from typing import Dict, List
 
-from src.square_card_generator import Card, Quarter
+from src.cards import Card, Quarter
 from src.symbols import Symbols
 
 QUARTER_NAMES = ("top_left", "top_right", "bottom_left", "bottom_right")

@@ -17,7 +17,7 @@ import time
 import numpy as np
 
 sys.path.insert(0, os.path.dirname(__file__))
-from src.simulation.sim import PLACEMENT_DTYPE, PlacementStore, ShardedPlacementStore
+from src.deck.simulation import PLACEMENT_DTYPE, PlacementStore, ShardedPlacementStore
 
 
 def reshard(src_dir, dst_dir, n_shards=4096, chunk_size=2_000_000):

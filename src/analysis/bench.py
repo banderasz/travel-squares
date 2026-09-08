@@ -1,5 +1,5 @@
 import time
-from src.simulation.sim import load_cards, get_paths, evaluate_scenario
+from src.deck.simulation import load_cards, get_paths, evaluate_scenario
 
 cd = load_cards('pirate_cards/pirate_20_25.json')
 paths = get_paths()

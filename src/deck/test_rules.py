@@ -1,7 +1,7 @@
 from unittest import TestCase
 
-from src.card_rules import ArrowBonusPoints
-from src.square_card_generator import Card, Quarter
+from src.deck.rules import ArrowBonusPoints
+from src.cards import Card, Quarter
 from src.symbols import Symbols
 
 

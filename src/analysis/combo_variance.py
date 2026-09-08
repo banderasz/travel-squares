@@ -14,7 +14,7 @@ import time
 import numpy as np
 
 sys.path.insert(0, os.path.dirname(__file__))
-from src.simulation.sim import PlacementStore, ShardedPlacementStore
+from src.deck.simulation import PlacementStore, ShardedPlacementStore
 
 
 def scan_combo_variance(store, min_count=2, trim_low=0, trim_high=100):
