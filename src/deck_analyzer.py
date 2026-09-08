@@ -2,7 +2,11 @@ import collections
 import json
 from collections import Counter
 
-symbols = ['anchor', 'shark', 'rat', 'kraken', 'map', 'coin', 'rum', 'parrot', 'arrow_left', 'arrow_right', 'arrow_up', 'arrow_down', 'spyglass']
+from src.symbols import Symbols
+
+# Derived from the enum rather than hardcoded, so a rename cannot leave this
+# list silently counting symbols that no longer exist. See src/symbols.py.
+symbols = [symbol for symbol in Symbols if symbol is not Symbols.NOTHING]
 
 class Card:
     """
@@ -10,7 +14,11 @@ class Card:
     """
     def __init__(self, dimensions, quarters):
         self.dimensions = dimensions
-        self.quarters = quarters
+        # Resolve names as they are read, so decks in any vocabulary work.
+        self.quarters = {
+            name: [Symbols.of(s) for s in quarter_symbols]
+            for name, quarter_symbols in quarters.items()
+        }
         self.symbols = []
         for quarter_symbols in self.quarters.values():
             self.symbols.extend(quarter_symbols)
@@ -67,19 +75,21 @@ def analyze_card_data(file_path):
                 else:
                     symbols_in_quarters[symbol][0] += 1
 
-    for symbol in symbols:
-        if "arrow" in symbol:
-            for no, occ in symbols_in_cards.pop(symbol).items():
-                symbols_in_cards["arrow"][no] += occ
-            for no, occ in symbols_in_quarters.pop(symbol).items():
-                symbols_in_quarters["arrow"][no] += occ
+    for symbol in Symbols.arrows():
+        for no, occ in symbols_in_cards.pop(symbol).items():
+            symbols_in_cards["arrow"][no] += occ
+        for no, occ in symbols_in_quarters.pop(symbol).items():
+            symbols_in_quarters["arrow"][no] += occ
 
+    # Report against display names; the Symbols members are the internal keys.
+    def relabel(counts):
+        return {getattr(k, "display", k): v for k, v in counts.items()}
 
-    return symbols_in_cards, symbols_in_quarters
+    return relabel(symbols_in_cards), relabel(symbols_in_quarters)
 
 
 if __name__ == '__main__':
-    file_names = ['cards_20_25.json', 'cards_40_45.json']
+    file_names = ['src/cards_20_25.json', 'src/cards_40_45.json']
     for file_name in file_names:
         print(f"{file_name}\n")
         symbols_in_cards, symbols_in_quarters = analyze_card_data(file_name)

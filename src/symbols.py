@@ -1,3 +1,28 @@
+"""Symbol definitions — the single source of truth for what a symbol is.
+
+Naming contract
+---------------
+Each symbol has three kinds of name, and they must not be confused:
+
+1. The **enum member name** (``CIRCLE``, ``SQUARE``, …) is a permanent, opaque
+   identifier. It is what gets written to disk. Treat it as an arbitrary ID, not
+   as a description of the artwork — never rename it.
+2. ``display`` is the current human-facing name (``food``, ``treasure``, …). It
+   belongs to the current theme and is expected to change.
+3. ``LEGACY_NAMES`` holds every name a symbol has previously had, plus any label
+   an external system emits for it.
+
+To rename a symbol: change its ``display`` and append the previous value to
+``LEGACY_NAMES``. Nothing else needs to change, and no stored data is invalidated.
+
+Read names with :meth:`Symbols.of`, which accepts any of the three forms. Write
+names as ``symbol.name`` (the stable ID). Never key data off ``display``.
+
+This matters because it has already gone wrong once: a previous rename
+(anchor->food, map->treasure, shark->snake, kraken->mask, spyglass->weapon)
+left most of the repo reading card files whose symbol names no longer matched,
+with no error raised anywhere.
+"""
 import collections
 import enum
 import math
@@ -17,34 +42,63 @@ from plotly.graph_objs.layout.map.layer import Circle
 
 NUMBER_OF_SYMBOLS_IN_PLAY = 96
 
+# Every name a symbol has previously been known by, keyed by its stable enum name.
+# These stay here forever: old card JSON files still use them, and the trained
+# object-detection model emits them as its class labels, so they cannot be
+# retired without retraining it.
+#
+# When you rename a symbol, append its previous `display` value here.
+LEGACY_NAMES: Dict[str, Tuple[str, ...]] = {
+    "CIRCLE":   ("anchor",),
+    "SQUARE":   ("map",),
+    "TRIANGLE": (),           # rum: never renamed
+    "STAR":     ("spyglass",),
+    "X":        (),           # rat: never renamed
+    "MOON":     ("shark",),
+    "DIAMOND":  (),           # parrot: never renamed
+    "SKULL":    ("kraken",),
+    "SUN":      (),           # coin: never renamed
+}
+
 # mixed_sim_5 and 6 are from monte-carlo simulations from the statistics.py and simulate_game.py
 
+# Member layout: (display, weight, points, colour, monte-carlo distributions)
+#
+# The points tables are the "small points" scoring used by src/simulation/sim.py
+# and pirate_sim_rs. Those define counts 0..11; index 12 is added here as the
+# saturating "12 or more" bucket the probability code expects. For most symbols
+# that repeats the count-11 value. Parrot is the exception: it only scores on odd
+# counts, so its index 12 is 0 to keep that rule intact rather than repeating 15.
+#
+# Note index 0 is the score for holding *none* of a symbol, and three of these are
+# non-zero (mask -4, snake -1, weapon +1), giving every board a constant -4 offset.
+# That is inherited verbatim from the simulation tables.
 class Symbols(enum.Enum):
-    CIRCLE = ("food", 7,       [0,3,7,12,18,25,33,42,52,63,75,88,102], "#F3A2BD", {
+    CIRCLE = ("food", 7,       [0,1,1,2,3,3,4,5,6,8,9,10,10], "#F3A2BD", {
     "mixed_sim_5": [0.0034999999999999996,0.018000000000000002,0.0513,0.0938,0.13935,0.16620000000000001,0.1595,0.14340000000000003,0.09709999999999999,0.0654,0.03635,0.017849999999999998,0.00825],
     "mixed_sim_6": [0.0014,0.0084,0.0238,0.0543,0.085,0.1287,0.1537,0.1471,0.1294,0.1093,0.0688,0.0447,0.045399999999999996]})
-    SQUARE = ("treasure", 5,    [0,1,4,9,16,25,36,49,64,81,100,121,144], "#EB7B36", {
+    SQUARE = ("treasure", 5,    [0,0,1,2,3,4,5,6,8,10,12,14,14], "#EB7B36", {
         "mixed_sim_5": [0.019,0.06925,0.138,0.1832,0.1917,0.15485,0.111,0.06785,0.0387,0.016300000000000002,0.00655,0.0029999999999999996,0.0006000000000000001],
     "mixed_sim_6": [0.0084,0.0436,0.093,0.1471,0.1686,0.1649,0.1407,0.1021,0.0618,0.0375,0.0191,0.0092,0.004]})
-    TRIANGLE = ("rum", 4,        [0,-20,-10,0,20,39,57,74,90,105,119,132,144], "#F7DCB4", {
+    TRIANGLE = ("rum", 4,        [-2,-1,0,2,4,6,8,10,11,12,13,14,14], "#F7DCB4", {
         "mixed_sim_5": [0.048,0.1011,0.17709999999999998,0.20825,0.1992,0.1381,0.07655,0.033100000000000004,0.01315,0.00395,0.00125,0,0.0001],
     "mixed_sim_6": [0.0396,0.0666,0.1324,0.1716,0.1959,0.1729,0.1183,0.061,0.0267,0.0106,0.0032,0.0012,0.0]})
-    STAR = ("weapon", 6,      [0,10,19,27,34,40,45,50,56,63,71,80,90], "#C2CCDA", {
+    STAR = ("weapon", 6,      [1,2,3,4,4,5,5,6,6,7,8,9,9], "#C2CCDA", {
         "mixed_sim_5": [0.0049,0.03055,0.08410000000000001,0.1419,0.1882,0.1809,0.14495,0.09945000000000001,0.0624,0.0342,0.01815,0.006999999999999999,0.0033],
     "mixed_sim_6": [0.0022,0.0145,0.039,0.0864,0.1428,0.1705,0.1704,0.1398,0.0965,0.0674,0.0363,0.0178,0.0164]})
-    X = ("rat", 8,             [0,-1,-3,-6,-10,-15,-21,-28,-36,-45,-55, -66, -78], "#739C41", {
+    X = ("rat", 8,             [0,0,-1,-1,-2,-2,-3,-4,-5,-6,-7,-8,-8], "#739C41", {
         "mixed_sim_5": [0,0.00435,0.0188,0.04195,0.09154999999999999,0.14275000000000002,0.16685,0.1641,0.14215,0.0973,0.0606,0.032299999999999995,0.036849999999999994],
     "mixed_sim_6": [0.0002,0.0005,0.0041,0.0166,0.0399,0.076,0.1186,0.1504,0.1577,0.1507,0.1115,0.0668,0.107]})
-    MOON = ("snake", 6,           [0,-10,-12,-14,-17,-20,-24,-28,-33,-38,-43,-48,-54], "#4E598B", {
+    MOON = ("snake", 6,           [-1,-1,-1,-2,-2,-2,-3,-3,-4,-4,-5,-5,-5], "#4E598B", {
         "mixed_sim_5": [0.0054,0.026250000000000002,0.07444999999999999,0.1377,0.1778,0.18645,0.15375,0.11325,0.06565,0.032600000000000004,0.0162,0.00655,0.00395],
     "mixed_sim_6": [0.0021,0.0097,0.0339,0.0811,0.1291,0.1623,0.1693,0.15,0.1081,0.0744,0.041,0.0204,0.0186]})
-    DIAMOND = ("parrot", 2,       [0,25,0,50,0,75,0,100,0,125,0,150,0], "#8D79B6", {
+    DIAMOND = ("parrot", 2,       [0,3,0,5,0,8,0,10,0,13,0,15,0], "#8D79B6", {
         "mixed_sim_5": [0.1786,0.36655,0.197,0.1945,0.031450000000000006,0.02775,0.00215,0.0019,0,0,0,0,0.0],
     "mixed_sim_6": [0.1047,0.3776,0.1404,0.2918,0.0249,0.0532,0.0021,0.0049,0.0001,0.0003,0,0,0.0]})
-    SKULL = ("mask", 3,       [0,-36,-27,-19,-12,-6,-1,0,0,0,0,0,0], "#0F1421", {
+    SKULL = ("mask", 3,       [-4,-3,-2,-1,-1,0,0,0,0,0,0,0,0], "#0F1421", {
         "mixed_sim_5": [0.11425,0.16365000000000002,0.2496,0.2281,0.1381,0.07095000000000001,0.025849999999999998,0.00735,0.0017499999999999998,0.00035,0,0,0.0],
     "mixed_sim_6": [0.0927,0.1114,0.2049,0.2242,0.1769,0.1091,0.0533,0.02,0.0059,0.0015,0.0001,0,0.0]})
-    SUN = ("coin", 5,           [0,2,8,18,32,50,72,50,32,18,8,2,0], "#88CDF3", {
+    SUN = ("coin", 5,           [0,1,2,3,5,7,5,3,2,1,0,0,0], "#88CDF3", {
         "mixed_sim_5": [0.01255,0.04635,0.10285,0.16904999999999998,0.23099999999999998,0.22920000000000001,0.13615,0.0444,0.01725,0.006999999999999999,0.0022,0.00135,0.0006500000000000001],
     "mixed_sim_6": [0.0065,0.0247,0.0613,0.1044,0.163,0.2122,0.2664,0.0946,0.0377,0.0158,0.0065,0.004,0.0029]})
     ARROW_LEFT = ("arrow_left", 1.5, [0]*13)
@@ -164,6 +218,29 @@ class Symbols(enum.Enum):
     def value_symbol(self) -> bool:
         return self not in [Symbols.NOTHING, Symbols.ARROW_UP, Symbols.ARROW_RIGHT, Symbols.ARROW_DOWN, Symbols.ARROW_LEFT]
 
+    @property
+    def aliases(self) -> Tuple[str, ...]:
+        """Names this symbol used to be known by. See LEGACY_NAMES."""
+        return LEGACY_NAMES.get(self.name, ())
+
+    @staticmethod
+    def of(name: str) -> "Symbols":
+        """Resolve a symbol from its stable ID, current display name, or any legacy name.
+
+        Use this for every name arriving from outside the code — card JSON files,
+        model predictions, CLI arguments. Matching is case-insensitive.
+
+        Raises ValueError on an unknown name rather than returning None, so a
+        future rename fails loudly instead of silently reading nothing.
+        """
+        try:
+            return _SYMBOL_LOOKUP[name.strip().casefold()]
+        except (KeyError, AttributeError):
+            raise ValueError(
+                f"Unknown symbol name {name!r}. Valid names are: "
+                + ", ".join(sorted(_SYMBOL_LOOKUP))
+            ) from None
+
     @staticmethod
     def arrows() -> List["Symbols"]:
         return [Symbols.ARROW_LEFT, Symbols.ARROW_UP, Symbols.ARROW_RIGHT, Symbols.ARROW_DOWN]
@@ -255,6 +332,36 @@ class Symbols(enum.Enum):
         return hash(self.name)
 
 assert sum([symbol.weight for symbol in Symbols]) == NUMBER_OF_SYMBOLS_IN_PLAY
+
+
+def _build_symbol_lookup() -> Dict[str, "Symbols"]:
+    """Index every symbol by stable ID, display name and legacy name.
+
+    Collisions are a hard error: if a new display name shadows another symbol's
+    legacy name, resolution would become order-dependent and silently wrong.
+    """
+    lookup: Dict[str, Symbols] = {}
+    for symbol in Symbols:
+        names = [symbol.name, *symbol.aliases]
+        if symbol.display:  # NOTHING has no display name
+            names.append(symbol.display)
+        for name in names:
+            key = name.casefold()
+            if key in lookup and lookup[key] is not symbol:
+                raise ValueError(
+                    f"Symbol name {name!r} maps to both {lookup[key].name} and {symbol.name}"
+                )
+            lookup[key] = symbol
+    return lookup
+
+
+_SYMBOL_LOOKUP: Dict[str, Symbols] = _build_symbol_lookup()
+
+# Points are indexed by count 0..12, where index 12 is a saturating "12 or more"
+# bucket (see the defaultdicts in symbol_on_card_value*). Keep all tables this
+# length: the probability vectors they are multiplied against are also 13 long.
+assert all(len(symbol.points) == 13 for symbol in Symbols), \
+    "every points table must have 13 entries (counts 0..12)"
 
 def create_df() -> pd.DataFrame:
     plot_data = []

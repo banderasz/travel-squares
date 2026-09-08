@@ -85,18 +85,10 @@ class Card:
         return Card(**{name:quarter for name, quarter in items})
 
     def __str__(self):
-        return """
-        {
-            "card": {
-                "dimensions": 
-                {
-                    "width": 135,
-                    "height": 135
-                },
-                "quarters": <quarters>
-            }
-        }
-        """.replace("<quarters>", str(self.quarters()).replace("'", '"'))
+        """Human-readable summary. To serialise a card, use src.deck_io."""
+        return "Card(" + ", ".join(
+            f"{name}={quarter}" for name, quarter in self.quarters().items()
+        ) + ")"
 
     def __eq__(self, other: "Card"):
         return (self.top_left == other.top_left
@@ -298,10 +290,10 @@ if __name__ == "__main__":
     chosen_values = [CardGenerator.calculate_card_point(card) for card in chosen_cards]
     # plt.hist(chosen_values, bins=[0+i for i in range(int(min(chosen_values)),int(max(chosen_values)+1))], edgecolor='black', alpha=0.7)
     # plt.show()
-    with open(f"cards_{MINIMUM_POINT}_{MAXIMUM_POINT}.json", "w") as file:
-        file.write("[\n")
-        file.write(",\n".join([str(card) for card in chosen_cards]))
-        file.write("\n]")
+    # Imported here rather than at module scope: deck_io imports Card/Quarter
+    # from this module, so a top-level import would be circular.
+    from src.deck_io import save_deck
+    save_deck(f"src/cards_{MINIMUM_POINT}_{MAXIMUM_POINT}.json", chosen_cards)
 
 
     test_card = Card(**{"top_left": Quarter([Symbols.CIRCLE, Symbols.CIRCLE, Symbols.CIRCLE, Symbols.CIRCLE]),

@@ -28,14 +28,47 @@ import sys
 import numpy as np
 import numba as nb
 
+from src.symbols import Symbols
+
 # ============================================================
 # CONSTANTS
 # ============================================================
-SYM_MAP = {'anchor':0,'shark':1,'rat':2,'kraken':3,'map':4,
-           'coin':5,'rum':6,'parrot':7,'spyglass':8,
-           'arrow_up':9,'arrow_down':10,'arrow_left':11,'arrow_right':12}
+# Symbol index order.
+#
+# THIS IS A WIRE FORMAT. These integers are baked into every placement shard
+# under data/ (~200 GB) and into pirate_sim_rs/src/main.rs. Reordering them
+# silently reinterprets all existing simulation output. Add new symbols at the
+# end; never move an existing one.
+#
+# The trailing comments are the names these indices were originally written
+# with, kept for cross-referencing the Rust port and older analysis scripts.
+SYM_ORDER = (
+    Symbols.CIRCLE,       # 0  anchor
+    Symbols.MOON,         # 1  shark
+    Symbols.X,            # 2  rat
+    Symbols.SKULL,        # 3  kraken
+    Symbols.SQUARE,       # 4  map
+    Symbols.SUN,          # 5  coin
+    Symbols.TRIANGLE,     # 6  rum
+    Symbols.DIAMOND,      # 7  parrot
+    Symbols.STAR,         # 8  spyglass
+    Symbols.ARROW_UP,     # 9
+    Symbols.ARROW_DOWN,   # 10
+    Symbols.ARROW_LEFT,   # 11
+    Symbols.ARROW_RIGHT,  # 12
+)
+SYM_MAP = {symbol.name: index for index, symbol in enumerate(SYM_ORDER)}
 N_SYM = 9
 MAX_CT = 11
+
+
+def symbol_index(name):
+    """Map a symbol name from card JSON to its wire index.
+
+    Accepts stable IDs, current display names and legacy names, so decks written
+    in any vocabulary load. See src/symbols.py for the naming contract.
+    """
+    return SYM_MAP[Symbols.of(name).name]
 ARROW_DIR_DX = np.array([0, 0, -1, 1], dtype=np.int8)   # up, down, left, right
 ARROW_DIR_DY = np.array([-1, 1, 0, 0], dtype=np.int8)
 Q_DX = np.array([0, 1, 0, 1], dtype=np.int8)  # TL TR BL BR
@@ -43,12 +76,11 @@ Q_DY = np.array([0, 0, 1, 1], dtype=np.int8)
 ROT_MAP = np.array([2, 0, 3, 1], dtype=np.int8)
 ARROW_ROT_MAP = {9:12, 12:10, 10:11, 11:9}
 
+# Scoring comes from src/symbols.py, which is the single source of truth.
+# Symbols.points is indexed by count 0..12 with a saturating final bucket; the
+# simulation only models counts 0..MAX_CT, so the tail is trimmed.
 SCORE_DEFAULT = {
-    "coin":[0,1,2,3,5,7,5,3,2,1,0,0], "map":[0,0,1,2,3,4,5,6,8,10,12,14],
-    "anchor":[0,1,1,2,3,3,4,5,6,8,9,10], "spyglass":[1,2,3,4,4,5,5,6,6,7,8,9],
-    "parrot":[0,3,0,5,0,8,0,10,0,13,0,15], "rum":[-2,-1,0,2,4,6,8,10,11,12,13,14],
-    "kraken":[-4,-3,-2,-1,-1,0,0,0,0,0,0,0], "rat":[0,0,-1,-1,-2,-2,-3,-4,-5,-6,-7,-8],
-    "shark":[-1,-1,-1,-2,-2,-2,-3,-3,-4,-4,-5,-5],
+    symbol.name: symbol.points[:MAX_CT + 1] for symbol in SYM_ORDER[:N_SYM]
 }
 
 # ============================================================
@@ -83,7 +115,7 @@ def load_cards(json_path):
 
     for ci, card in enumerate(raw):
         q = card['card']['quarters']
-        rot0 = [[SYM_MAP[s] for s in q[qn]] for qn in qnames]
+        rot0 = [[symbol_index(s) for s in q[qn]] for qn in qnames]
         cur = rot0
         for r in range(4):
             if r > 0:

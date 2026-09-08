@@ -1,3 +1,5 @@
+import os
+
 import pandas as pd
 import plotly.express as px
 
@@ -7,23 +9,23 @@ color_map = {symbol.display: symbol.color_hex for symbol in Symbols}
 
 # df = create_df()
 
+# The simulation CSVs sit next to this module. Resolve them from __file__ so the
+# module works from the repo root, which is where everything else is now run.
+_HERE = os.path.dirname(os.path.abspath(__file__))
 
 
-good_sim = pd.read_csv("simpler_simulate_5_10000_simulate_5_turn_mixed_game_less_evil.csv")
-good_sim = good_sim / good_sim.sum()
-good_sim.loc[12] = good_sim.loc[12:].sum()
+def _read_sim(name):
+    """Load a simulation CSV, normalise to probabilities and fold the tail into 12."""
+    frame = pd.read_csv(os.path.join(_HERE, name))
+    frame = frame / frame.sum()
+    frame.loc[12] = frame.loc[12:].sum()
+    return frame
 
-bad_sim = pd.read_csv("simpler_simulate_5_10000_simulate_5_turn_mixed_game_more_evil.csv")
-bad_sim = bad_sim / bad_sim.sum()
-bad_sim.loc[12] = bad_sim.loc[12:].sum()
 
-good_old_sim = pd.read_csv("simulate_5_10000_simulate_5_turn_mixed_game_less_evil.csv")
-good_old_sim = good_old_sim / good_old_sim.sum()
-good_old_sim.loc[12] = good_old_sim.loc[12:].sum()
-
-bad_old_sim = pd.read_csv("simulate_5_10000_simulate_5_turn_mixed_game_more_evil.csv")
-bad_old_sim = bad_old_sim / bad_old_sim.sum()
-bad_old_sim.loc[12] = bad_old_sim.loc[12:].sum()
+good_sim = _read_sim("simpler_simulate_5_10000_simulate_5_turn_mixed_game_less_evil.csv")
+bad_sim = _read_sim("simpler_simulate_5_10000_simulate_5_turn_mixed_game_more_evil.csv")
+good_old_sim = _read_sim("simulate_5_10000_simulate_5_turn_mixed_game_less_evil.csv")
+bad_old_sim = _read_sim("simulate_5_10000_simulate_5_turn_mixed_game_more_evil.csv")
 
 good_sim_column = good_sim.stack()
 good_sim_column.name = "GoodSimProbability"

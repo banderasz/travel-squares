@@ -13,8 +13,6 @@ if project_root not in sys.path:
 from src.symbols import Symbols
 JINJA_GLOBALS = {symbol.name: symbol.display for symbol in Symbols}
 
-print(JINJA_GLOBALS)
-
 PATH = 'content'
 ARTICLE_EXCLUDES = ['plotly_graphs']
 

@@ -50,21 +50,31 @@ const SCORING: [[f64; CT1]; N_SYM] = [
     [1.0, 2.0, 3.0, 4.0, 4.0, 5.0, 5.0, 6.0, 6.0, 7.0, 8.0, 9.0],
 ];
 
+/// Resolve a symbol name from card JSON to its wire index.
+///
+/// Mirrors `Symbols.of` in src/symbols.py: each arm accepts the stable enum ID
+/// (what deck_io writes today), the current display name, and any legacy name
+/// still present in older deck files. When a symbol is renamed in symbols.py,
+/// add the previous display name to the matching arm here.
+///
+/// The indices are a wire format shared with src/simulation/sim.py and every
+/// placement shard under data/. Never reorder them.
 fn sym_id(name: &str) -> usize {
     match name {
-        "anchor" => 0,
-        "shark" => 1,
-        "rat" => 2,
-        "kraken" => 3,
-        "map" => 4,
-        "coin" => 5,
-        "rum" => 6,
-        "parrot" => 7,
-        "spyglass" => 8,
-        "arrow_up" => 9,
-        "arrow_down" => 10,
-        "arrow_left" => 11,
-        "arrow_right" => 12,
+        // stable ID   | current display | legacy names
+        "CIRCLE" | "food" | "anchor" => 0,
+        "MOON" | "snake" | "shark" => 1,
+        "X" | "rat" => 2,
+        "SKULL" | "mask" | "kraken" => 3,
+        "SQUARE" | "treasure" | "map" => 4,
+        "SUN" | "coin" => 5,
+        "TRIANGLE" | "rum" => 6,
+        "DIAMOND" | "parrot" => 7,
+        "STAR" | "weapon" | "spyglass" => 8,
+        "ARROW_UP" | "arrow_up" => 9,
+        "ARROW_DOWN" | "arrow_down" => 10,
+        "ARROW_LEFT" | "arrow_left" => 11,
+        "ARROW_RIGHT" | "arrow_right" => 12,
         _ => panic!("Unknown symbol: {name}"),
     }
 }
