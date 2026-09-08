@@ -7,3 +7,4 @@ pelican-render-math
 plotly
 markdown
 Fabric
+google-cloud-aiplatform>=1.0.0

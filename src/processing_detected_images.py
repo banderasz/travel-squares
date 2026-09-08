@@ -1,11 +1,16 @@
 import json
 from typing import List, Set, Dict
 from PIL import Image, ImageDraw
+import math
 
 class Coordinate():
     def __init__(self, x, y):
         self.x = x
         self.y = y
+
+    def distance_to(self, other: 'Coordinate') -> float:
+        """Calculate Euclidean distance to another coordinate."""
+        return math.sqrt((self.x - other.x) ** 2 + (self.y - other.y) ** 2)
 
 class BoundingBox:
     def __init__(self, y_min: float, x_min: float, y_max: float, x_max: float):
@@ -89,12 +94,14 @@ class Detection:
         return best_detection
 
     def total_overlap_with_others(self, detections: List["Detection"]) -> float:
+        pass
 
 
 class Quarter(Detection):
-    def __init__(self, detection_score: float, bounding_box: BoundingBox, children: Set["Symbol"] = None):
+    def __init__(self, detection_score: float, bounding_box: BoundingBox, children: Set["Symbol"] = None, name: str = None):
         super().__init__("quarter", detection_score, bounding_box)
-        self.children = children if children else {}
+        self.children = children if children else set()
+        self.name = name  # Add name field
         self._up, self._down, self._right, self._left = [None] * 4
 
     @property
@@ -187,7 +194,20 @@ class Board:
         scores = predictions["detection_scores"]
         boxes = predictions["detection_boxes"]
         bounding_boxes = [BoundingBox(*box) for box in boxes]
-        return Board([Detection(symbols[i], scores[i], bounding_boxes[i]) for i in range(num_detections)])
+
+        # Create Quarter and Symbol instances instead of generic Detection
+        detections = []
+        for i in range(num_detections):
+            bbox = bounding_boxes[i]
+            symbol = symbols[i]
+            score = scores[i]
+
+            if symbol == "quarter":
+                detections.append(Quarter(score, bbox, set()))
+            else:
+                detections.append(Symbol(symbol, score, bbox))
+
+        return Board(detections)
 
     def filter_by_confidence_score(self, absolut_score: float = None, symbol_scores: Dict[str, float] = None):
         filtered_detections = []
@@ -202,9 +222,128 @@ class Board:
                 filtered_detections.append(detection)
         self.detections = filtered_detections
 
+    def assign_symbols_to_quarters(self):
+        """
+        Assigns each symbol detection to the quarter with the greatest overlap.
+        Symbols are added as children to Quarter objects.
+        """
+        # Get all quarters and symbols from detections
+        quarters = [d for d in self.detections if isinstance(d, Quarter)]
+        symbols = [d for d in self.detections if isinstance(d, Symbol)]
 
+        # For each symbol, find the quarter with greatest overlap
+        for symbol in symbols:
+            best_quarter = None
+            best_overlap = 0.0
 
+            for quarter in quarters:
+                # Calculate intersection over symbol area (how much of the symbol is covered by this quarter)
+                overlap = symbol.bounding_box.intersection_over_self_area(quarter.bounding_box)
 
+                if overlap > best_overlap:
+                    best_overlap = overlap
+                    best_quarter = quarter
+
+            # Add symbol to the quarter with best overlap (if any overlap exists)
+            if best_quarter and best_overlap > 0:
+                best_quarter.children.add(symbol)
+
+    def establish_quarter_connections(self, proximity_threshold: float = 0.25):
+        """
+        Establishes connections between quarters based on their proximity.
+        Uses corner points to determine if quarters are adjacent.
+
+        Args:
+            proximity_threshold: Maximum distance as a fraction of quarter size to consider quarters connected
+        """
+        quarters = [d for d in self.detections if isinstance(d, Quarter)]
+
+        if not quarters:
+            return
+
+        # Calculate average quarter size for threshold calculation
+        avg_quarter_width = sum(q.bounding_box.x_max - q.bounding_box.x_min for q in quarters) / len(quarters)
+        avg_quarter_height = sum(q.bounding_box.y_max - q.bounding_box.y_min for q in quarters) / len(quarters)
+        avg_quarter_size = (avg_quarter_width + avg_quarter_height) / 2
+        max_distance = proximity_threshold * avg_quarter_size
+
+        for quarter in quarters:
+            bbox = quarter.bounding_box
+            quarter_center_x = (bbox.x_min + bbox.x_max) / 2
+            quarter_center_y = (bbox.y_min + bbox.y_max) / 2
+
+            # Find quarters to the right
+            best_right_quarter = None
+            best_right_distance = float('inf')
+
+            for other_quarter in quarters:
+                if other_quarter == quarter:
+                    continue
+
+                other_bbox = other_quarter.bounding_box
+                other_center_x = (other_bbox.x_min + other_bbox.x_max) / 2
+                other_center_y = (other_bbox.y_min + other_bbox.y_max) / 2
+
+                # Check if other quarter is to the right (other's center is to the right of current)
+                if other_center_x > quarter_center_x:
+                    # Check vertical alignment (centers should be roughly at same height)
+                    vertical_distance = abs(quarter_center_y - other_center_y)
+                    horizontal_distance = abs(other_center_x - quarter_center_x)
+
+                    # Quarter should be roughly aligned vertically and close horizontally
+                    if (vertical_distance < max_distance and
+                        horizontal_distance < best_right_distance and
+                        horizontal_distance > max_distance * 0.5):  # Not too close (overlapping)
+
+                        best_right_distance = horizontal_distance
+                        best_right_quarter = other_quarter
+
+            if best_right_quarter:
+                quarter.right = best_right_quarter
+
+            # Find quarters below
+            best_down_quarter = None
+            best_down_distance = float('inf')
+
+            for other_quarter in quarters:
+                if other_quarter == quarter:
+                    continue
+
+                other_bbox = other_quarter.bounding_box
+                other_center_x = (other_bbox.x_min + other_bbox.x_max) / 2
+                other_center_y = (other_bbox.y_min + other_bbox.y_max) / 2
+
+                # Check if other quarter is below (other's center is below current)
+                if other_center_y > quarter_center_y:
+                    # Check horizontal alignment (centers should be roughly at same x position)
+                    horizontal_distance = abs(quarter_center_x - other_center_x)
+                    vertical_distance = abs(other_center_y - quarter_center_y)
+
+                    # Quarter should be roughly aligned horizontally and close vertically
+                    if (horizontal_distance < max_distance and
+                        vertical_distance < best_down_distance and
+                        vertical_distance > max_distance * 0.5):  # Not too close (overlapping)
+
+                        best_down_distance = vertical_distance
+                        best_down_quarter = other_quarter
+
+            if best_down_quarter:
+                quarter.down = best_down_quarter
+
+    def process_detections(self, absolut_score: float = None, symbol_scores: Dict[str, float] = None,
+                          proximity_threshold: float = 0.25):
+        """
+        First filters detections by confidence score, then assigns symbols to quarters,
+        and finally establishes connections between quarters.
+        """
+        # Filter by confidence score
+        self.filter_by_confidence_score(absolut_score, symbol_scores)
+
+        # Assign symbols to quarters
+        self.assign_symbols_to_quarters()
+
+        # Establish quarter connections
+        self.establish_quarter_connections(proximity_threshold)
 
 def parse_predictions(response: dict) -> List[Detection]:
     predictions = response["predictions"][0]
@@ -215,13 +354,18 @@ def parse_predictions(response: dict) -> List[Detection]:
     bounding_boxes = [BoundingBox(*box) for box in boxes]
     return [Detection(symbols[i], scores[i], bounding_boxes[i]) for i in range(num_detections)]
 
-def visualize_detections(detections: List[Detection], img_width: int = 512, img_height: int = 512):
+def visualize_detections(detections: List[Detection], img_width: int = 512, img_height: int = 512, title: str = "Detections"):
     """
     Visualizes a list of Detection objects on a blank canvas and shows the result.
     """
-    # Create a white canvas
-    img = Image.new('RGB', (img_width, img_height), color='white')
+    # Create a white canvas with extra space at top for title
+    title_height = 30
+    img = Image.new('RGB', (img_width, img_height + title_height), color='white')
     draw = ImageDraw.Draw(img)
+
+    # Draw title at the top
+    draw.text((img_width // 2 - 50, 5), title, fill="black")
+    draw.line([(0, title_height), (img_width, title_height)], fill="black", width=2)
 
     for detection in detections:
         # 1. De-normalize coordinates (convert 0-1 range to pixels)
@@ -229,9 +373,9 @@ def visualize_detections(detections: List[Detection], img_width: int = 512, img_
 
         # PIL expects [left, top, right, bottom] (x_min, y_min, x_max, y_max)
         left = box.x_min * img_width
-        top = box.y_min * img_height
+        top = box.y_min * img_height + title_height
         right = box.x_max * img_width
-        bottom = box.y_max * img_height
+        bottom = box.y_max * img_height + title_height
 
         # 2. Determine Color (Black for 'quarter', Green for others)
         color = "black" if detection.symbol == 'quarter' else "green"
