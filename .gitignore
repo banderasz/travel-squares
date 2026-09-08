@@ -205,3 +205,37 @@ cython_debug/
 marimo/_static/
 marimo/_lsp/
 __marimo__/
+
+# ============================================================
+# travel-squares: generated artifacts
+# Everything below is reproducible output, not source. As of the
+# last cleanup this amounted to ~264 GB on disk.
+# ============================================================
+
+# Placement simulation output + path caches.
+# Regenerate: python -m src.simulation.sim  /  cargo run --release (pirate_sim_rs)
+/data/
+
+# Synthetic training images, YOLO datasets and training runs.
+# Regenerate: src/training_data_generator/training-data-generator.py, train_yolo.py
+/src/training_data_generator/training_data/
+/src/training_data_generator/training_data_big/
+/src/training_data_generator/yolo_dataset/
+/src/training_data_generator/runs/
+# Pretrained YOLO weights, re-downloaded by ultralytics on demand
+/src/training_data_generator/*.pt
+
+# Pelican site build. Regenerate: pelican content
+/output/
+
+# Vertex AI upload manifest (55 MB). Regenerate: src/gcloud_stuff.py
+/src/square-pirates.jsonl
+
+# Rust build artifacts
+/pirate_sim_rs/target/
+
+# macOS Finder metadata
+.DS_Store
+
+# JetBrains project settings (workspace.xml is machine-specific)
+.idea/
