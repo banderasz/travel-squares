@@ -1,780 +1,182 @@
 [
   {
     "card": {
-      "dimensions": {
-        "width": 135,
-        "height": 135
-      },
-      "quarters": {
-        "top_left": [
-          "spyglass",
-          "shark"
-        ],
-        "top_right": [
-          "spyglass",
-          "rum",
-          "map"
-        ],
-        "bottom_left": [],
-        "bottom_right": [
-          "spyglass",
-          "coin"
-        ]
-      }
+      "dimensions": {"width": 135, "height": 135},
+      "quarters": {"top_left": ["STAR", "MOON"], "top_right": ["STAR", "TRIANGLE", "SQUARE"], "bottom_left": [], "bottom_right": ["STAR", "SUN"]}
     }
   },
   {
     "card": {
-      "dimensions": {
-        "width": 135,
-        "height": 135
-      },
-      "quarters": {
-        "top_left": [
-          "spyglass",
-          "shark",
-          "rum",
-          "spyglass"
-        ],
-        "top_right": [
-          "spyglass"
-        ],
-        "bottom_left": [
-          "spyglass"
-        ],
-        "bottom_right": []
-      }
+      "dimensions": {"width": 135, "height": 135},
+      "quarters": {"top_left": ["STAR", "MOON", "TRIANGLE", "STAR"], "top_right": ["STAR"], "bottom_left": ["STAR"], "bottom_right": []}
     }
   },
   {
     "card": {
-      "dimensions": {
-        "width": 135,
-        "height": 135
-      },
-      "quarters": {
-        "top_left": [
-          "spyglass"
-        ],
-        "top_right": [
-          "shark",
-          "spyglass"
-        ],
-        "bottom_left": [
-          "anchor",
-          "rum",
-          "map"
-        ],
-        "bottom_right": [
-          "map"
-        ]
-      }
+      "dimensions": {"width": 135, "height": 135},
+      "quarters": {"top_left": ["STAR"], "top_right": ["MOON", "STAR"], "bottom_left": ["CIRCLE", "TRIANGLE", "SQUARE"], "bottom_right": ["SQUARE"]}
     }
   },
   {
     "card": {
-      "dimensions": {
-        "width": 135,
-        "height": 135
-      },
-      "quarters": {
-        "top_left": [
-          "anchor"
-        ],
-        "top_right": [
-          "coin",
-          "coin",
-          "rum"
-        ],
-        "bottom_left": [
-          "coin"
-        ],
-        "bottom_right": [
-          "anchor"
-        ]
-      }
+      "dimensions": {"width": 135, "height": 135},
+      "quarters": {"top_left": ["CIRCLE"], "top_right": ["SUN", "SUN", "TRIANGLE"], "bottom_left": ["SUN"], "bottom_right": ["CIRCLE"]}
     }
   },
   {
     "card": {
-      "dimensions": {
-        "width": 135,
-        "height": 135
-      },
-      "quarters": {
-        "top_left": [
-          "anchor",
-          "arrow_up"
-        ],
-        "top_right": [
-          "map",
-          "kraken"
-        ],
-        "bottom_left": [
-          "arrow_down",
-          "coin"
-        ],
-        "bottom_right": [
-          "kraken",
-          "rum"
-        ]
-      }
+      "dimensions": {"width": 135, "height": 135},
+      "quarters": {"top_left": ["CIRCLE", "ARROW_UP"], "top_right": ["SQUARE", "SKULL"], "bottom_left": ["ARROW_DOWN", "SUN"], "bottom_right": ["SKULL", "TRIANGLE"]}
     }
   },
   {
     "card": {
-      "dimensions": {
-        "width": 135,
-        "height": 135
-      },
-      "quarters": {
-        "top_left": [
-          "map",
-          "parrot"
-        ],
-        "top_right": [
-          "anchor"
-        ],
-        "bottom_left": [
-          "shark"
-        ],
-        "bottom_right": [
-          "rat",
-          "arrow_left",
-          "map",
-          "kraken"
-        ]
-      }
+      "dimensions": {"width": 135, "height": 135},
+      "quarters": {"top_left": ["SQUARE", "DIAMOND"], "top_right": ["CIRCLE"], "bottom_left": ["MOON"], "bottom_right": ["X", "ARROW_LEFT", "SQUARE", "SKULL"]}
     }
   },
   {
     "card": {
-      "dimensions": {
-        "width": 135,
-        "height": 135
-      },
-      "quarters": {
-        "top_left": [
-          "rat",
-          "anchor",
-          "spyglass"
-        ],
-        "top_right": [
-          "spyglass",
-          "map"
-        ],
-        "bottom_left": [
-          "spyglass",
-          "map",
-          "arrow_right"
-        ],
-        "bottom_right": [
-          "coin",
-          "anchor"
-        ]
-      }
+      "dimensions": {"width": 135, "height": 135},
+      "quarters": {"top_left": ["X", "CIRCLE", "STAR"], "top_right": ["STAR", "SQUARE"], "bottom_left": ["STAR", "SQUARE", "ARROW_RIGHT"], "bottom_right": ["SUN", "CIRCLE"]}
     }
   },
   {
     "card": {
-      "dimensions": {
-        "width": 135,
-        "height": 135
-      },
-      "quarters": {
-        "top_left": [
-          "coin"
-        ],
-        "top_right": [
-          "rum",
-          "arrow_right"
-        ],
-        "bottom_left": [
-          "arrow_up"
-        ],
-        "bottom_right": [
-          "shark",
-          "rum",
-          "rum",
-          "rum"
-        ]
-      }
+      "dimensions": {"width": 135, "height": 135},
+      "quarters": {"top_left": ["SUN"], "top_right": ["TRIANGLE", "ARROW_RIGHT"], "bottom_left": ["ARROW_UP"], "bottom_right": ["MOON", "TRIANGLE", "TRIANGLE", "TRIANGLE"]}
     }
   },
   {
     "card": {
-      "dimensions": {
-        "width": 135,
-        "height": 135
-      },
-      "quarters": {
-        "top_left": [
-          "shark",
-          "arrow_right"
-        ],
-        "top_right": [
-          "arrow_down"
-        ],
-        "bottom_left": [
-          "coin",
-          "rum"
-        ],
-        "bottom_right": [
-          "coin",
-          "arrow_left",
-          "spyglass",
-          "map"
-        ]
-      }
+      "dimensions": {"width": 135, "height": 135},
+      "quarters": {"top_left": ["MOON", "ARROW_RIGHT"], "top_right": ["ARROW_DOWN"], "bottom_left": ["SUN", "TRIANGLE"], "bottom_right": ["SUN", "ARROW_LEFT", "STAR", "SQUARE"]}
     }
   },
   {
     "card": {
-      "dimensions": {
-        "width": 135,
-        "height": 135
-      },
-      "quarters": {
-        "top_left": [
-          "anchor",
-          "rum",
-          "arrow_right",
-          "spyglass"
-        ],
-        "top_right": [
-          "rum",
-          "spyglass"
-        ],
-        "bottom_left": [],
-        "bottom_right": [
-          "rum",
-          "shark",
-          "map"
-        ]
-      }
+      "dimensions": {"width": 135, "height": 135},
+      "quarters": {"top_left": ["CIRCLE", "TRIANGLE", "ARROW_RIGHT", "STAR"], "top_right": ["TRIANGLE", "STAR"], "bottom_left": [], "bottom_right": ["TRIANGLE", "MOON", "SQUARE"]}
     }
   },
   {
     "card": {
-      "dimensions": {
-        "width": 135,
-        "height": 135
-      },
-      "quarters": {
-        "top_left": [
-          "arrow_up",
-          "kraken"
-        ],
-        "top_right": [
-          "rat",
-          "rum",
-          "rum",
-          "anchor"
-        ],
-        "bottom_left": [
-          "parrot"
-        ],
-        "bottom_right": [
-          "map",
-          "kraken"
-        ]
-      }
+      "dimensions": {"width": 135, "height": 135},
+      "quarters": {"top_left": ["ARROW_UP", "SKULL"], "top_right": ["X", "TRIANGLE", "TRIANGLE", "CIRCLE"], "bottom_left": ["DIAMOND"], "bottom_right": ["SQUARE", "SKULL"]}
     }
   },
   {
     "card": {
-      "dimensions": {
-        "width": 135,
-        "height": 135
-      },
-      "quarters": {
-        "top_left": [
-          "shark",
-          "map",
-          "parrot"
-        ],
-        "top_right": [
-          "rat"
-        ],
-        "bottom_left": [
-          "rum"
-        ],
-        "bottom_right": [
-          "map",
-          "rum"
-        ]
-      }
+      "dimensions": {"width": 135, "height": 135},
+      "quarters": {"top_left": ["MOON", "SQUARE", "DIAMOND"], "top_right": ["X"], "bottom_left": ["TRIANGLE"], "bottom_right": ["SQUARE", "TRIANGLE"]}
     }
   },
   {
     "card": {
-      "dimensions": {
-        "width": 135,
-        "height": 135
-      },
-      "quarters": {
-        "top_left": [
-          "anchor",
-          "anchor"
-        ],
-        "top_right": [
-          "map"
-        ],
-        "bottom_left": [
-          "map"
-        ],
-        "bottom_right": [
-          "arrow_left",
-          "rum"
-        ]
-      }
+      "dimensions": {"width": 135, "height": 135},
+      "quarters": {"top_left": ["CIRCLE", "CIRCLE"], "top_right": ["SQUARE"], "bottom_left": ["SQUARE"], "bottom_right": ["ARROW_LEFT", "TRIANGLE"]}
     }
   },
   {
     "card": {
-      "dimensions": {
-        "width": 135,
-        "height": 135
-      },
-      "quarters": {
-        "top_left": [
-          "shark",
-          "rat",
-          "rat"
-        ],
-        "top_right": [
-          "parrot",
-          "arrow_up"
-        ],
-        "bottom_left": [
-          "coin",
-          "anchor"
-        ],
-        "bottom_right": [
-          "map"
-        ]
-      }
+      "dimensions": {"width": 135, "height": 135},
+      "quarters": {"top_left": ["MOON", "X", "X"], "top_right": ["DIAMOND", "ARROW_UP"], "bottom_left": ["SUN", "CIRCLE"], "bottom_right": ["SQUARE"]}
     }
   },
   {
     "card": {
-      "dimensions": {
-        "width": 135,
-        "height": 135
-      },
-      "quarters": {
-        "top_left": [
-          "spyglass"
-        ],
-        "top_right": [
-          "rum",
-          "shark",
-          "map",
-          "coin"
-        ],
-        "bottom_left": [
-          "spyglass"
-        ],
-        "bottom_right": [
-          "spyglass",
-          "spyglass"
-        ]
-      }
+      "dimensions": {"width": 135, "height": 135},
+      "quarters": {"top_left": ["STAR"], "top_right": ["TRIANGLE", "MOON", "SQUARE", "SUN"], "bottom_left": ["STAR"], "bottom_right": ["STAR", "STAR"]}
     }
   },
   {
     "card": {
-      "dimensions": {
-        "width": 135,
-        "height": 135
-      },
-      "quarters": {
-        "top_left": [
-          "anchor",
-          "coin",
-          "anchor",
-          "arrow_down"
-        ],
-        "top_right": [
-          "rat"
-        ],
-        "bottom_left": [
-          "coin",
-          "anchor",
-          "anchor"
-        ],
-        "bottom_right": [
-          "anchor"
-        ]
-      }
+      "dimensions": {"width": 135, "height": 135},
+      "quarters": {"top_left": ["CIRCLE", "SUN", "CIRCLE", "ARROW_DOWN"], "top_right": ["X"], "bottom_left": ["SUN", "CIRCLE", "CIRCLE"], "bottom_right": ["CIRCLE"]}
     }
   },
   {
     "card": {
-      "dimensions": {
-        "width": 135,
-        "height": 135
-      },
-      "quarters": {
-        "top_left": [
-          "rum"
-        ],
-        "top_right": [
-          "rum",
-          "kraken",
-          "shark",
-          "spyglass"
-        ],
-        "bottom_left": [
-          "arrow_up",
-          "rum",
-          "rum"
-        ],
-        "bottom_right": [
-          "coin"
-        ]
-      }
+      "dimensions": {"width": 135, "height": 135},
+      "quarters": {"top_left": ["TRIANGLE"], "top_right": ["TRIANGLE", "SKULL", "MOON", "STAR"], "bottom_left": ["ARROW_UP", "TRIANGLE", "TRIANGLE"], "bottom_right": ["SUN"]}
     }
   },
   {
     "card": {
-      "dimensions": {
-        "width": 135,
-        "height": 135
-      },
-      "quarters": {
-        "top_left": [
-          "rat",
-          "rum"
-        ],
-        "top_right": [
-          "arrow_left",
-          "shark",
-          "rum",
-          "kraken",
-          "parrot"
-        ],
-        "bottom_left": [],
-        "bottom_right": [
-          "coin",
-          "map"
-        ]
-      }
+      "dimensions": {"width": 135, "height": 135},
+      "quarters": {"top_left": ["X", "TRIANGLE"], "top_right": ["ARROW_LEFT", "MOON", "TRIANGLE", "SKULL", "DIAMOND"], "bottom_left": [], "bottom_right": ["SUN", "SQUARE"]}
     }
   },
   {
     "card": {
-      "dimensions": {
-        "width": 135,
-        "height": 135
-      },
-      "quarters": {
-        "top_left": [
-          "kraken",
-          "arrow_up"
-        ],
-        "top_right": [
-          "arrow_right",
-          "anchor",
-          "rum"
-        ],
-        "bottom_left": [
-          "rum"
-        ],
-        "bottom_right": [
-          "rum"
-        ]
-      }
+      "dimensions": {"width": 135, "height": 135},
+      "quarters": {"top_left": ["SKULL", "ARROW_UP"], "top_right": ["ARROW_RIGHT", "CIRCLE", "TRIANGLE"], "bottom_left": ["TRIANGLE"], "bottom_right": ["TRIANGLE"]}
     }
   },
   {
     "card": {
-      "dimensions": {
-        "width": 135,
-        "height": 135
-      },
-      "quarters": {
-        "top_left": [
-          "spyglass"
-        ],
-        "top_right": [
-          "arrow_left",
-          "anchor"
-        ],
-        "bottom_left": [
-          "spyglass",
-          "coin",
-          "kraken",
-          "arrow_right"
-        ],
-        "bottom_right": []
-      }
+      "dimensions": {"width": 135, "height": 135},
+      "quarters": {"top_left": ["STAR"], "top_right": ["ARROW_LEFT", "CIRCLE"], "bottom_left": ["STAR", "SUN", "SKULL", "ARROW_RIGHT"], "bottom_right": []}
     }
   },
   {
     "card": {
-      "dimensions": {
-        "width": 135,
-        "height": 135
-      },
-      "quarters": {
-        "top_left": [
-          "spyglass",
-          "arrow_left"
-        ],
-        "top_right": [
-          "spyglass",
-          "spyglass"
-        ],
-        "bottom_left": [
-          "rum"
-        ],
-        "bottom_right": [
-          "coin",
-          "kraken",
-          "kraken"
-        ]
-      }
+      "dimensions": {"width": 135, "height": 135},
+      "quarters": {"top_left": ["STAR", "ARROW_LEFT"], "top_right": ["STAR", "STAR"], "bottom_left": ["TRIANGLE"], "bottom_right": ["SUN", "SKULL", "SKULL"]}
     }
   },
   {
     "card": {
-      "dimensions": {
-        "width": 135,
-        "height": 135
-      },
-      "quarters": {
-        "top_left": [
-          "rum",
-          "kraken"
-        ],
-        "top_right": [
-          "rum"
-        ],
-        "bottom_left": [
-          "anchor",
-          "rum",
-          "kraken",
-          "arrow_right",
-          "shark"
-        ],
-        "bottom_right": [
-          "rum"
-        ]
-      }
+      "dimensions": {"width": 135, "height": 135},
+      "quarters": {"top_left": ["TRIANGLE", "SKULL"], "top_right": ["TRIANGLE"], "bottom_left": ["CIRCLE", "TRIANGLE", "SKULL", "ARROW_RIGHT", "MOON"], "bottom_right": ["TRIANGLE"]}
     }
   },
   {
     "card": {
-      "dimensions": {
-        "width": 135,
-        "height": 135
-      },
-      "quarters": {
-        "top_left": [
-          "anchor",
-          "kraken"
-        ],
-        "top_right": [
-          "kraken",
-          "anchor"
-        ],
-        "bottom_left": [
-          "rum"
-        ],
-        "bottom_right": [
-          "arrow_up",
-          "spyglass",
-          "rum"
-        ]
-      }
+      "dimensions": {"width": 135, "height": 135},
+      "quarters": {"top_left": ["CIRCLE", "SKULL"], "top_right": ["SKULL", "CIRCLE"], "bottom_left": ["TRIANGLE"], "bottom_right": ["ARROW_UP", "STAR", "TRIANGLE"]}
     }
   },
   {
     "card": {
-      "dimensions": {
-        "width": 135,
-        "height": 135
-      },
-      "quarters": {
-        "top_left": [
-          "shark",
-          "map",
-          "spyglass",
-          "shark"
-        ],
-        "top_right": [
-          "rum"
-        ],
-        "bottom_left": [
-          "coin",
-          "arrow_left",
-          "rum"
-        ],
-        "bottom_right": [
-          "rum",
-          "rum"
-        ]
-      }
+      "dimensions": {"width": 135, "height": 135},
+      "quarters": {"top_left": ["MOON", "SQUARE", "STAR", "MOON"], "top_right": ["TRIANGLE"], "bottom_left": ["SUN", "ARROW_LEFT", "TRIANGLE"], "bottom_right": ["TRIANGLE", "TRIANGLE"]}
     }
   },
   {
     "card": {
-      "dimensions": {
-        "width": 135,
-        "height": 135
-      },
-      "quarters": {
-        "top_left": [
-          "map"
-        ],
-        "top_right": [
-          "shark",
-          "spyglass",
-          "parrot"
-        ],
-        "bottom_left": [
-          "rat",
-          "rat",
-          "coin"
-        ],
-        "bottom_right": [
-          "spyglass"
-        ]
-      }
+      "dimensions": {"width": 135, "height": 135},
+      "quarters": {"top_left": ["SQUARE"], "top_right": ["MOON", "STAR", "DIAMOND"], "bottom_left": ["X", "X", "SUN"], "bottom_right": ["STAR"]}
     }
   },
   {
     "card": {
-      "dimensions": {
-        "width": 135,
-        "height": 135
-      },
-      "quarters": {
-        "top_left": [
-          "anchor",
-          "coin",
-          "parrot"
-        ],
-        "top_right": [
-          "rum"
-        ],
-        "bottom_left": [
-          "kraken",
-          "kraken"
-        ],
-        "bottom_right": [
-          "rum",
-          "map",
-          "shark",
-          "rat"
-        ]
-      }
+      "dimensions": {"width": 135, "height": 135},
+      "quarters": {"top_left": ["CIRCLE", "SUN", "DIAMOND"], "top_right": ["TRIANGLE"], "bottom_left": ["SKULL", "SKULL"], "bottom_right": ["TRIANGLE", "SQUARE", "MOON", "X"]}
     }
   },
   {
     "card": {
-      "dimensions": {
-        "width": 135,
-        "height": 135
-      },
-      "quarters": {
-        "top_left": [
-          "map",
-          "anchor",
-          "kraken",
-          "anchor"
-        ],
-        "top_right": [
-          "coin"
-        ],
-        "bottom_left": [
-          "anchor",
-          "kraken",
-          "spyglass"
-        ],
-        "bottom_right": [
-          "coin"
-        ]
-      }
+      "dimensions": {"width": 135, "height": 135},
+      "quarters": {"top_left": ["SQUARE", "CIRCLE", "SKULL", "CIRCLE"], "top_right": ["SUN"], "bottom_left": ["CIRCLE", "SKULL", "STAR"], "bottom_right": ["SUN"]}
     }
   },
   {
     "card": {
-      "dimensions": {
-        "width": 135,
-        "height": 135
-      },
-      "quarters": {
-        "top_left": [
-          "map",
-          "anchor",
-          "map"
-        ],
-        "top_right": [
-          "parrot"
-        ],
-        "bottom_left": [
-          "shark",
-          "spyglass",
-          "rat",
-          "arrow_down"
-        ],
-        "bottom_right": [
-          "kraken"
-        ]
-      }
+      "dimensions": {"width": 135, "height": 135},
+      "quarters": {"top_left": ["SQUARE", "CIRCLE", "SQUARE"], "top_right": ["DIAMOND"], "bottom_left": ["MOON", "STAR", "X", "ARROW_DOWN"], "bottom_right": ["SKULL"]}
     }
   },
   {
     "card": {
-      "dimensions": {
-        "width": 135,
-        "height": 135
-      },
-      "quarters": {
-        "top_left": [
-          "rum"
-        ],
-        "top_right": [
-          "shark"
-        ],
-        "bottom_left": [
-          "rat",
-          "anchor",
-          "coin"
-        ],
-        "bottom_right": [
-          "parrot",
-          "coin"
-        ]
-      }
+      "dimensions": {"width": 135, "height": 135},
+      "quarters": {"top_left": ["TRIANGLE"], "top_right": ["MOON"], "bottom_left": ["X", "CIRCLE", "SUN"], "bottom_right": ["DIAMOND", "SUN"]}
     }
   },
   {
     "card": {
-      "dimensions": {
-        "width": 135,
-        "height": 135
-      },
-      "quarters": {
-        "top_left": [
-          "anchor"
-        ],
-        "top_right": [
-          "arrow_up",
-          "parrot",
-          "anchor"
-        ],
-        "bottom_left": [
-          "shark",
-          "rat",
-          "rat"
-        ],
-        "bottom_right": [
-          "map"
-        ]
-      }
+      "dimensions": {"width": 135, "height": 135},
+      "quarters": {"top_left": ["CIRCLE"], "top_right": ["ARROW_UP", "DIAMOND", "CIRCLE"], "bottom_left": ["MOON", "X", "X"], "bottom_right": ["SQUARE"]}
     }
   }
 ]
