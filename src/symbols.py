@@ -337,6 +337,11 @@ class Symbols(enum.Enum):
         return self.display
 
     def __eq__(self, other):
+        # Return NotImplemented rather than raising on a non-Symbol: comparing
+        # against a bare string used to blow up with AttributeError, including
+        # inside `in` tests against a set of Symbols.
+        if not isinstance(other, Symbols):
+            return NotImplemented
         return self.name == other.name
 
     def __hash__(self):

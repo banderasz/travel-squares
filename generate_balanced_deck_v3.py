@@ -21,48 +21,37 @@ import math
 from collections import Counter, defaultdict
 from typing import List, Dict, Tuple
 import argparse
+import os
+import sys
+
 import numpy as np
 
-# ============================================================
-# SCORING TABLES (from symbol_points.py)
-# ============================================================
-SYMBOL_POINTS = {
-    "coin": [0,1,2,3,5,7,5,3,2,1,0,0],
-    "map": [0,0,1,2,3,4,5,6,8,10,12,14],
-    "anchor": [0,1,1,2,3,3,4,5,6,8,9,10],
-    "spyglass": [1,2,3,4,4,5,5,6,6,7,8,9],
-    "parrot": [0,3,0,5,0,8,0,10,0,13,0,15],
-    "rum": [-2,-1,0,2,4,6,8,10,11,12,13,14],
-    "kraken": [-4,-3,-2,-1,-1,0,0,0,0,0,0,0],
-    "rat": [0,0,-1,-1,-2,-2,-3,-4,-5,-6,-7,-8],
-    "shark": [-1,-1,-1,-2,-2,-2,-3,-3,-4,-4,-5,-5]
-}
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from src.symbols import Symbols  # noqa: E402
 
-# Target symbol distribution (how many per card on average, scaled from symbol_distribution)
-# Total slots = 16 per card, with some "nothing" slots
-SYMBOL_DISTRIBUTION = {
-    "coin": 5,      # 5% → ~0.8 per card
-    "map": 5,       # 5% → ~0.8 per card
-    "anchor": 7,    # 7% → ~1.1 per card
-    "spyglass": 6,  # 6% → ~1.0 per card
-    "parrot": 2,    # 2% → ~0.3 per card
-    "rum": 4,       # 4% → ~0.6 per card
-    "kraken": 3,    # 3% → ~0.5 per card
-    "rat": 8,       # 8% → ~1.3 per card
-    "shark": 6,     # 6% → ~1.0 per card
-    "arrow": 6,     # 6% → ~1.0 per card (split across 4 directions)
-    # nothing: 44% → ~7 empty slots per card
-}
+# ============================================================
+# SCORING TABLES — derived from src/symbols.py, the single source of truth
+# ============================================================
+SCORING_SYMBOLS = [x for x in Symbols if x.value_symbol()]
 
-# Normalize to per-card values (16 slots per card, 96 total symbol weight)
+# Points by count 0..11 (symbols.py carries a 13th saturating bucket we ignore here)
+SYMBOL_POINTS = {x: x.points[:12] for x in SCORING_SYMBOLS}
+
+# Target distribution: the generation weights, with the four arrows pooled.
+SYMBOL_DISTRIBUTION = {x: x.weight for x in SCORING_SYMBOLS}
+SYMBOL_DISTRIBUTION["arrow"] = sum(x.weight for x in Symbols.arrows())
+
+# Normalize to per-card values (16 slots per card)
 TOTAL_WEIGHT = sum(SYMBOL_DISTRIBUTION.values())
-SYMBOLS_PER_CARD = {k: v / TOTAL_WEIGHT * 16 for k, v in SYMBOL_DISTRIBUTION.items() if k != "nothing"}
+SYMBOLS_PER_CARD = {k: v / TOTAL_WEIGHT * 16 for k, v in SYMBOL_DISTRIBUTION.items()}
 NOTHING_PER_CARD = 16 - sum(SYMBOLS_PER_CARD.values())
 
-POSITIVE_SYMBOLS = ['anchor', 'spyglass', 'map', 'coin', 'parrot']
-NEGATIVE_SYMBOLS = ['shark', 'rat', 'kraken']
-ARROW_SYMBOLS = ['arrow_up', 'arrow_down', 'arrow_left', 'arrow_right']
-RUM = 'rum'
+# Note: rum is deliberately not in POSITIVE_SYMBOLS — it is a penalty at low
+# counts. That was the original modelling choice and is preserved.
+POSITIVE_SYMBOLS = [Symbols.CIRCLE, Symbols.STAR, Symbols.SQUARE, Symbols.SUN, Symbols.DIAMOND]
+NEGATIVE_SYMBOLS = [Symbols.MOON, Symbols.X, Symbols.SKULL]
+ARROW_SYMBOLS = Symbols.arrows()
+RUM = Symbols.TRIANGLE
 
 # ============================================================
 # VALUE FORMULA (calibrated from simulation)
@@ -96,13 +85,13 @@ def calculate_card_value(card: Dict) -> float:
     
     # Positive symbols (approximately +0.2 each)
     for sym in POSITIVE_SYMBOLS:
-        if sym == 'parrot':
+        if sym == Symbols.DIAMOND:
             base_value += counts.get(sym, 0) * 0.8  # Parrot bonus
         else:
             base_value += counts.get(sym, 0) * 0.25
     
     # Rum: complex scoring, approximated
-    rum_count = counts.get('rum', 0)
+    rum_count = counts.get(Symbols.TRIANGLE, 0)
     if rum_count == 1:
         base_value -= 0.3  # Slight penalty for 1 rum
     elif rum_count == 2:
@@ -112,18 +101,18 @@ def calculate_card_value(card: Dict) -> float:
     
     # Negative symbols
     # Kraken: penalty caps, so treat as ~-0.2 each (diminishes)
-    kraken_count = counts.get('kraken', 0)
+    kraken_count = counts.get(Symbols.SKULL, 0)
     if kraken_count == 1:
         base_value -= 0.5
     elif kraken_count >= 2:
         base_value -= 0.7  # Cap the penalty
     
     # Shark: flat -0.3 each
-    base_value -= counts.get('shark', 0) * 0.3
+    base_value -= counts.get(Symbols.MOON, 0) * 0.3
     
     # Rat: depends on distribution across quarters
-    rat_count = counts.get('rat', 0)
-    rat_quarters = sum(1 for qn in qnames if 'rat' in quarters.get(qn, []))
+    rat_count = counts.get(Symbols.X, 0)
+    rat_quarters = sum(1 for qn in qnames if Symbols.X in quarters.get(qn, []))
     if rat_quarters > 0:
         # Penalty per quarter with rats (spread is worse)
         base_value -= rat_quarters * 0.9
@@ -142,24 +131,24 @@ def calculate_symbol_value(symbol: str, context_counts: Dict[str, int] = None) -
     
     if symbol in ['arrow_up', 'arrow_down', 'arrow_left', 'arrow_right']:
         return 0.4
-    elif symbol == 'parrot':
+    elif symbol == Symbols.DIAMOND:
         return 0.8
-    elif symbol == 'rum':
-        rum_count = context_counts.get('rum', 0)
+    elif symbol == Symbols.TRIANGLE:
+        rum_count = context_counts.get(Symbols.TRIANGLE, 0)
         if rum_count >= 2:
             return 1.0  # Bonus for concentration
         elif rum_count == 1:
             return 0.3
         else:
             return -0.3  # First rum is often bad
-    elif symbol == 'kraken':
-        kraken_count = context_counts.get('kraken', 0)
+    elif symbol == Symbols.SKULL:
+        kraken_count = context_counts.get(Symbols.SKULL, 0)
         if kraken_count >= 1:
             return -0.1  # Diminishing penalty
         return -0.5
-    elif symbol == 'shark':
+    elif symbol == Symbols.MOON:
         return -0.3
-    elif symbol == 'rat':
+    elif symbol == Symbols.X:
         return -0.9  # Approximate (depends on quarter spread)
     elif symbol in POSITIVE_SYMBOLS:
         return 0.25
@@ -288,9 +277,9 @@ def concentrate_rats(card: Dict, rng: random.Random) -> Dict:
     # Collect all rats
     all_rats = []
     for qn in qnames:
-        while 'rat' in quarters[qn]:
-            quarters[qn].remove('rat')
-            all_rats.append('rat')
+        while Symbols.X in quarters[qn]:
+            quarters[qn].remove(Symbols.X)
+            all_rats.append(Symbols.X)
     
     # Put all rats in one quarter
     if all_rats:
@@ -407,13 +396,8 @@ def format_card(card: Dict, idx: int) -> str:
     """Format card for display."""
     q = card['card']['quarters']
     
-    sym_short = {
-        'anchor': 'Anc', 'shark': 'Shk', 'rat': 'Rat', 'kraken': 'Kra',
-        'map': 'Map', 'coin': 'Coi', 'rum': 'Rum', 'parrot': 'Par',
-        'spyglass': 'Spy', 'arrow_up': '↑', 'arrow_down': '↓',
-        'arrow_left': '←', 'arrow_right': '→'
-    }
-    
+    sym_short = {symbol: symbol.abbrev for symbol in Symbols if symbol.abbrev}
+
     parts = []
     for qn, qshort in [('top_left', 'TL'), ('top_right', 'TR'), 
                         ('bottom_left', 'BL'), ('bottom_right', 'BR')]:
@@ -514,9 +498,18 @@ def main():
     
     # Save to JSON
     if args.output:
-        clean_deck = [{'card': c['card']} for c in selected]
+        # Serialise symbols by stable ID (see src/deck_io.py)
+        from src.deck_io import dumps_deck
+        clean_deck = [
+            {'card': {
+                'dimensions': c['card'].get('dimensions', {'width': 135, 'height': 135}),
+                'quarters': {qn: [s.name for s in syms]
+                             for qn, syms in c['card']['quarters'].items()},
+            }}
+            for c in selected
+        ]
         with open(args.output, 'w') as f:
-            json.dump(clean_deck, f, indent=2)
+            f.write(dumps_deck(clean_deck))
         print(f"\nSaved to {args.output}")
     
     print("\n✓ Deck generation complete!")

@@ -1,15 +1,22 @@
 #!/usr/bin/env python3
 """Find counter-examples to disprove the updated findings from 30-card analysis."""
 import json
+import os
+import sys
 from collections import Counter
+
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from src.symbols import Symbols  # noqa: E402
 
 # Load all 120 cards
 with open('pirate_cards/pirate_20_25.json') as f:
     all_cards = json.load(f)
 
-POSITIVES = {'anchor', 'spyglass', 'map', 'coin', 'rum', 'parrot'}
-NEGATIVES = {'shark', 'rat', 'kraken'}
-ARROWS = {'arrow_up', 'arrow_down', 'arrow_left', 'arrow_right'}
+# Derived from the scoring tables; reproduces the original 6 positive /
+# 3 negative membership. See the naming contract in src/symbols.py.
+POSITIVES = {x for x in Symbols if x.value_symbol() and max(x.points) > 0}
+NEGATIVES = {x for x in Symbols if x.value_symbol() and max(x.points) <= 0}
+ARROWS = set(Symbols.arrows())
 
 def analyze_card(idx):
     """Analyze a single card and return its properties."""
@@ -19,7 +26,7 @@ def analyze_card(idx):
     all_symbols = []
     quarters = {}
     for qn in qnames:
-        syms = card.get(qn, [])
+        syms = [Symbols.of(x) for x in card.get(qn, [])]
         quarters[qn] = syms
         all_symbols.extend(syms)
     
@@ -29,17 +36,17 @@ def analyze_card(idx):
     pos_count = sum(counts[s] for s in POSITIVES)
     neg_count = sum(counts[s] for s in NEGATIVES)
     arrow_count = sum(counts[s] for s in ARROWS)
-    rat_count = counts.get('rat', 0)
-    kraken_count = counts.get('kraken', 0)
-    shark_count = counts.get('shark', 0)
-    parrot_count = counts.get('parrot', 0)
+    rat_count = counts.get(Symbols.X, 0)
+    kraken_count = counts.get(Symbols.SKULL, 0)
+    shark_count = counts.get(Symbols.MOON, 0)
+    parrot_count = counts.get(Symbols.DIAMOND, 0)
     
     # Count quarters with rats
-    rat_quarters = sum(1 for qn in qnames if 'rat' in card.get(qn, []))
+    rat_quarters = sum(1 for qn in qnames if Symbols.X in quarters[qn])
     
     # Count quarters with ANY negatives
     neg_quarters = sum(1 for qn in qnames 
-                       if any(s in NEGATIVES for s in card.get(qn, [])))
+                       if any(s in NEGATIVES for s in quarters[qn]))
     
     # Quarter values
     def quarter_val(syms):
@@ -51,7 +58,7 @@ def analyze_card(idx):
                 val -= 1
         return val
     
-    q_vals = [quarter_val(card.get(qn, [])) for qn in qnames]
+    q_vals = [quarter_val(quarters[qn]) for qn in qnames]
     worst_quarter = min(q_vals)
     best_3_sum = sum(sorted(q_vals, reverse=True)[:3])
     hide_gain = best_3_sum - sum(q_vals)  # = -worst_quarter if worst < 0
@@ -63,7 +70,7 @@ def analyze_card(idx):
     net = pos_count - neg_count
     
     # Find which quarter has the most rats
-    rat_per_quarter = {qn: card.get(qn, []).count('rat') for qn in qnames}
+    rat_per_quarter = {qn: quarters[qn].count(Symbols.X) for qn in qnames}
     max_rats_in_quarter = max(rat_per_quarter.values())
     rats_concentrated = (rat_count > 0 and max_rats_in_quarter >= rat_count * 0.67)
     
@@ -311,12 +318,7 @@ print("\n" + "=" * 80)
 print("NEW CARD DETAILS")
 print("=" * 80)
 qmap = {'top_left': 'TL', 'top_right': 'TR', 'bottom_left': 'BL', 'bottom_right': 'BR'}
-sym_short = {
-    'anchor': 'Anc', 'shark': 'Shk', 'rat': 'Rat', 'kraken': 'Kra',
-    'map': 'Map', 'coin': 'Coi', 'rum': 'Rum', 'parrot': 'Par',
-    'spyglass': 'Spy', 'arrow_up': '↑', 'arrow_down': '↓',
-    'arrow_left': '←', 'arrow_right': '→'
-}
+sym_short = {x.name: x.abbrev for x in Symbols if x.abbrev}
 
 for pos, orig_idx in enumerate(new_30[20:], start=20):
     card = all_cards[orig_idx]['card']['quarters']

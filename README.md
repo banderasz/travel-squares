@@ -204,12 +204,6 @@ None of this is in git; all of it is reproducible. It reached ~264 GB.
 
 ## Known rough edges
 
-- **The root analysis scripts still hardcode the old pirate names and their own
-  copies of the scoring tables** (`analyze_*.py`, `find_counter_examples*.py`,
-  `generate_balanced_deck*.py`, `recalibrate_formula.py`, `visualize_scenario.py`,
-  `symbol_points.py`). They read the migrated deck files, so they need porting to
-  `Symbols.of` before their output can be trusted. `src/` and the simulator are
-  done; these are not.
 - Root analysis scripts carry `sys.path.insert` preambles instead of being a package.
 - Several scripts are versioned by filename (`find_counter_examples{,_v2}`,
   `generate_balanced_deck{,_v3}` with no v2, `analyze_placement_variance{,_20}`).

@@ -16,11 +16,14 @@ import os
 
 sys.path.insert(0, os.path.dirname(__file__))
 from src.simulation.sim import ShardedPlacementStore, PlacementStore
+from src.symbols import Symbols
 
-# Symbol categories
-POSITIVE_SYMBOLS = ['anchor', 'spyglass', 'map', 'coin', 'parrot']
-NEGATIVE_SYMBOLS = ['shark', 'rat', 'kraken']
-ARROW_SYMBOLS = ['arrow_up', 'arrow_down', 'arrow_left', 'arrow_right']
+# Symbol categories. Note this deliberately leaves rum out of POSITIVE_SYMBOLS
+# (it is a penalty at low counts) — that was the original modelling choice and
+# is preserved here.
+POSITIVE_SYMBOLS = [Symbols.CIRCLE, Symbols.STAR, Symbols.SQUARE, Symbols.SUN, Symbols.DIAMOND]
+NEGATIVE_SYMBOLS = [Symbols.MOON, Symbols.X, Symbols.SKULL]
+ARROW_SYMBOLS = Symbols.arrows()
 
 def extract_features(card):
     """Extract numerical features from a card."""
@@ -29,7 +32,7 @@ def extract_features(card):
     
     all_symbols = []
     for qn in qnames:
-        all_symbols.extend(quarters.get(qn, []))
+        all_symbols.extend(Symbols.of(x) for x in quarters.get(qn, []))
     
     counts = Counter(all_symbols)
     
@@ -37,18 +40,18 @@ def extract_features(card):
     n_positives = sum(counts.get(s, 0) for s in POSITIVE_SYMBOLS)
     n_negatives = sum(counts.get(s, 0) for s in NEGATIVE_SYMBOLS)
     n_arrows = sum(counts.get(s, 0) for s in ARROW_SYMBOLS)
-    n_parrots = counts.get('parrot', 0)
-    n_rums = counts.get('rum', 0)
-    n_krakens = counts.get('kraken', 0)
-    n_rats = counts.get('rat', 0)
-    n_sharks = counts.get('shark', 0)
-    n_anchors = counts.get('anchor', 0)
-    n_maps = counts.get('map', 0)
-    n_coins = counts.get('coin', 0)
-    n_spyglasses = counts.get('spyglass', 0)
+    n_parrots = counts.get(Symbols.DIAMOND, 0)
+    n_rums = counts.get(Symbols.TRIANGLE, 0)
+    n_krakens = counts.get(Symbols.SKULL, 0)
+    n_rats = counts.get(Symbols.X, 0)
+    n_sharks = counts.get(Symbols.MOON, 0)
+    n_anchors = counts.get(Symbols.CIRCLE, 0)
+    n_maps = counts.get(Symbols.SQUARE, 0)
+    n_coins = counts.get(Symbols.SUN, 0)
+    n_spyglasses = counts.get(Symbols.STAR, 0)
     
     # Rat quarters (spread penalty)
-    rat_quarters = sum(1 for qn in qnames if 'rat' in quarters.get(qn, []))
+    rat_quarters = sum(1 for qn in qnames if Symbols.X in [Symbols.of(x) for x in quarters.get(qn, [])])
     
     # Rum concentration bonus
     rum_bonus = max(0, n_rums - 2)  # Bonus kicks in at 3+ rums
@@ -236,21 +239,21 @@ def calculate_card_value_calibrated(card):
     
     all_symbols = []
     for qn in qnames:
-        all_symbols.extend(quarters.get(qn, []))
+        all_symbols.extend(Symbols.of(x) for x in quarters.get(qn, []))
     
     counts = Counter(all_symbols)
     
     # Feature extraction
     total_symbols = len(all_symbols)
-    n_positives = sum(counts.get(s, 0) for s in ['anchor', 'spyglass', 'map', 'coin', 'parrot'])
-    n_negatives = sum(counts.get(s, 0) for s in ['shark', 'rat', 'kraken'])
-    n_arrows = sum(counts.get(s, 0) for s in ['arrow_up', 'arrow_down', 'arrow_left', 'arrow_right'])
-    n_parrots = counts.get('parrot', 0)
-    n_rums = counts.get('rum', 0)
-    n_krakens = counts.get('kraken', 0)
-    n_rats = counts.get('rat', 0)
-    n_sharks = counts.get('shark', 0)
-    rat_quarters = sum(1 for qn in qnames if 'rat' in quarters.get(qn, []))
+    n_positives = sum(counts.get(s, 0) for s in POSITIVE_SYMBOLS)
+    n_negatives = sum(counts.get(s, 0) for s in NEGATIVE_SYMBOLS)
+    n_arrows = sum(counts.get(s, 0) for s in ARROW_SYMBOLS)
+    n_parrots = counts.get(Symbols.DIAMOND, 0)
+    n_rums = counts.get(Symbols.TRIANGLE, 0)
+    n_krakens = counts.get(Symbols.SKULL, 0)
+    n_rats = counts.get(Symbols.X, 0)
+    n_sharks = counts.get(Symbols.MOON, 0)
+    rat_quarters = sum(1 for qn in qnames if Symbols.X in [Symbols.of(x) for x in quarters.get(qn, [])])
     rum_bonus = max(0, n_rums - 2)
     """)
     

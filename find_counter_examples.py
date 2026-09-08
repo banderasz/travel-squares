@@ -5,22 +5,18 @@ Analyzes all 120 cards to find counter-examples for each hypothesis.
 """
 import json
 
-# Scoring tables
-SCORE_DEFAULT = {
-    "coin": [0, 1, 2, 3, 5, 7, 5, 3, 2, 1, 0, 0],
-    "map": [0, 0, 1, 2, 3, 4, 5, 6, 8, 10, 12, 14],
-    "anchor": [0, 1, 1, 2, 3, 3, 4, 5, 6, 8, 9, 10],
-    "spyglass": [1, 2, 3, 4, 4, 5, 5, 6, 6, 7, 8, 9],
-    "parrot": [0, 3, 0, 5, 0, 8, 0, 10, 0, 13, 0, 15],
-    "rum": [-2, -1, 0, 2, 4, 6, 8, 10, 11, 12, 13, 14],
-    "kraken": [-4, -3, -2, -1, -1, 0, 0, 0, 0, 0, 0, 0],
-    "rat": [0, 0, -1, -1, -2, -2, -3, -4, -5, -6, -7, -8],
-    "shark": [-1, -1, -1, -2, -2, -2, -3, -3, -4, -4, -5, -5],
-}
+import os
+import sys
 
-POSITIVE = {'anchor', 'map', 'coin', 'rum', 'parrot', 'spyglass'}
-NEGATIVE = {'shark', 'rat', 'kraken'}
-ARROWS = {'arrow_up', 'arrow_down', 'arrow_left', 'arrow_right'}
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from src.simulation.sim import SCORE_DEFAULT  # noqa: E402  (keyed by stable symbol ID)
+from src.symbols import Symbols  # noqa: E402
+
+# Derived from the scoring tables so a rename or rebalance cannot leave these
+# stale. Reproduces the original membership: 6 positive, 3 negative.
+POSITIVE = {x for x in Symbols if x.value_symbol() and max(x.points) > 0}
+NEGATIVE = {x for x in Symbols if x.value_symbol() and max(x.points) <= 0}
+ARROWS = set(Symbols.arrows())
 
 def analyze_card(card_data, card_id):
     """Extract properties from a card."""
@@ -36,7 +32,7 @@ def analyze_card(card_data, card_id):
     quarter_vals = []
     
     for qn in qnames:
-        syms = quarters[qn]
+        syms = [Symbols.of(x) for x in quarters[qn]]
         qp = sum(1 for s in syms if s in POSITIVE)
         qn_neg = sum(1 for s in syms if s in NEGATIVE)
         qa = sum(1 for s in syms if s in ARROWS)
@@ -67,10 +63,10 @@ def analyze_card(card_data, card_id):
         'best_3_sum': sum(sorted(quarter_vals, reverse=True)[:3]),
         'worst_quarter': min(quarter_vals),
         'hide_gain': -min(quarter_vals),
-        'n_parrots': sym_counts.get('parrot', 0),
-        'n_rats': sym_counts.get('rat', 0),
-        'n_krakens': sym_counts.get('kraken', 0),
-        'n_sharks': sym_counts.get('shark', 0),
+        'n_parrots': sym_counts.get(Symbols.DIAMOND, 0),
+        'n_rats': sym_counts.get(Symbols.X, 0),
+        'n_krakens': sym_counts.get(Symbols.SKULL, 0),
+        'n_sharks': sym_counts.get(Symbols.MOON, 0),
         'neg_concentrated': max(quarter_neg) == total_neg if total_neg > 0 else True,
     }
 

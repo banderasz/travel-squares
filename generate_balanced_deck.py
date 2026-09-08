@@ -11,10 +11,15 @@ Generates cards with:
 Based on analysis of 1 billion simulated placements.
 """
 import json
+import os
 import random
+import sys
 from collections import Counter
 from typing import List, Dict, Tuple
 import argparse
+
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from src.symbols import Symbols  # noqa: E402
 
 # ============================================================
 # CONSTANTS FROM SIMULATION ANALYSIS
@@ -35,23 +40,11 @@ TARGET_MIN = 18.5
 TARGET_MAX = 19.5
 
 # Symbol sets
-POSITIVE_SYMBOLS = ['anchor', 'spyglass', 'map', 'coin', 'rum', 'parrot']
-NEGATIVE_SYMBOLS = ['shark', 'rat', 'kraken']
-ARROW_SYMBOLS = ['arrow_up', 'arrow_down', 'arrow_left', 'arrow_right']
+POSITIVE_SYMBOLS = [x for x in Symbols if x.value_symbol() and max(x.points) > 0]
+NEGATIVE_SYMBOLS = [x for x in Symbols if x.value_symbol() and max(x.points) <= 0]
+ARROW_SYMBOLS = Symbols.arrows()
 
-# Scoring reference (for validation)
-SCORE_TABLE = {
-    "coin": [0, 1, 2, 3, 5, 7, 5, 3, 2, 1, 0, 0],
-    "map": [0, 0, 1, 2, 3, 4, 5, 6, 8, 10, 12, 14],
-    "anchor": [0, 1, 1, 2, 3, 3, 4, 5, 6, 8, 9, 10],
-    "spyglass": [1, 2, 3, 4, 4, 5, 5, 6, 6, 7, 8, 9],
-    "parrot": [0, 3, 0, 5, 0, 8, 0, 10, 0, 13, 0, 15],
-    "rum": [-2, -1, 0, 2, 4, 6, 8, 10, 11, 12, 13, 14],
-    "kraken": [-4, -3, -2, -1, -1, 0, 0, 0, 0, 0, 0, 0],
-    "rat": [0, 0, -1, -1, -2, -2, -3, -4, -5, -6, -7, -8],
-    "shark": [-1, -1, -1, -2, -2, -2, -3, -3, -4, -4, -5, -5],
-}
-
+# Scoring lives in src/symbols.py; this file only generates cards.
 # ============================================================
 # CARD ARCHETYPES
 # ============================================================
@@ -174,25 +167,25 @@ def generate_card(archetype: str, rng: random.Random) -> Dict:
     negatives = []
     if cfg.get('prefer_krakens'):
         n_krakens = min(rng.randint(2, 3), n_negatives)
-        negatives.extend(['kraken'] * n_krakens)
+        negatives.extend([Symbols.SKULL] * n_krakens)
         remaining_neg = n_negatives - n_krakens
         for _ in range(remaining_neg):
-            negatives.append(rng.choice(['shark', 'rat']))
+            negatives.append(rng.choice([Symbols.MOON, Symbols.X]))
     else:
         for _ in range(n_negatives):
             negatives.append(rng.choice(NEGATIVE_SYMBOLS))
     
     # Count rats
-    n_rats = negatives.count('rat')
+    n_rats = negatives.count(Symbols.X)
     
     # If too many rats, replace some with sharks/krakens
     while n_rats > 2:
-        idx = negatives.index('rat')
-        negatives[idx] = rng.choice(['shark', 'kraken'])
+        idx = negatives.index(Symbols.X)
+        negatives[idx] = rng.choice([Symbols.MOON, Symbols.SKULL])
         n_rats -= 1
     
     # Choose positive types (excluding parrot, will add separately)
-    other_positives = [s for s in POSITIVE_SYMBOLS if s != 'parrot']
+    other_positives = [s for s in POSITIVE_SYMBOLS if s != Symbols.DIAMOND]
     positives = []
     
     # Handle rum specifically
@@ -202,16 +195,16 @@ def generate_card(archetype: str, rng: random.Random) -> Dict:
         # Limit rum to max_rum
         n_rum = min(rng.randint(0, 2), max_rum)
     
-    positives.extend(['rum'] * n_rum)
+    positives.extend([Symbols.TRIANGLE] * n_rum)
     remaining_pos = n_positives - n_rum - n_parrots
     
     # Fill remaining positives (excluding rum)
-    non_rum_positives = [s for s in other_positives if s != 'rum']
+    non_rum_positives = [s for s in other_positives if s != Symbols.TRIANGLE]
     for _ in range(max(0, remaining_pos)):
         positives.append(rng.choice(non_rum_positives))
     
     # Add parrots
-    positives.extend(['parrot'] * n_parrots)
+    positives.extend([Symbols.DIAMOND] * n_parrots)
     
     # Choose arrows
     arrows = rng.sample(ARROW_SYMBOLS, min(n_arrows, len(ARROW_SYMBOLS)))
@@ -225,14 +218,14 @@ def generate_card(archetype: str, rng: random.Random) -> Dict:
     negative_quarters = rng.sample(quarter_names, min(2, len(quarter_names)))
     
     for sym in all_symbols:
-        if sym == 'rat':
+        if sym == Symbols.X:
             # Concentrate rats
             quarters[rat_quarter].append(sym)
         elif sym in NEGATIVE_SYMBOLS:
             # Prefer concentrating negatives
             q = rng.choice(negative_quarters) if rng.random() < 0.7 else rng.choice(quarter_names)
             quarters[q].append(sym)
-        elif sym == 'parrot':
+        elif sym == Symbols.DIAMOND:
             # Put parrot in a good quarter (not with rats)
             good_quarters = [q for q in quarter_names if q != rat_quarter]
             q = rng.choice(good_quarters) if good_quarters else rng.choice(quarter_names)
@@ -247,16 +240,16 @@ def generate_card(archetype: str, rng: random.Random) -> Dict:
             quarters[q].append(sym)
     
     # Count rat quarters for validation
-    rat_quarters = sum(1 for q in quarters.values() if 'rat' in q)
+    rat_quarters = sum(1 for q in quarters.values() if Symbols.X in q)
     
     # If too many rat quarters, reconcentrate
     if rat_quarters > max_rat_q and n_rats > 0:
         # Move all rats to one quarter
         all_rats = []
         for qn in quarter_names:
-            while 'rat' in quarters[qn]:
-                quarters[qn].remove('rat')
-                all_rats.append('rat')
+            while Symbols.X in quarters[qn]:
+                quarters[qn].remove(Symbols.X)
+                all_rats.append(Symbols.X)
         target_q = rng.choice(quarter_names)
         quarters[target_q].extend(all_rats)
     
@@ -272,7 +265,7 @@ def generate_card(archetype: str, rng: random.Random) -> Dict:
             'parrots': n_parrots,
             'arrows': len(arrows),
             'rats': n_rats,
-            'krakens': negatives.count('kraken'),
+            'krakens': negatives.count(Symbols.SKULL),
             'rums': n_rum,
         }
     }
@@ -283,10 +276,10 @@ def validate_card(card: Dict) -> Tuple[bool, float, str]:
     stats = card['stats']
     
     # Count rat quarters
-    rat_quarters = sum(1 for q in card['card']['quarters'].values() if 'rat' in q)
+    rat_quarters = sum(1 for q in card['card']['quarters'].values() if Symbols.X in q)
     
     # Count rums
-    rums = sum(q.count('rum') for q in card['card']['quarters'].values())
+    rums = sum(q.count(Symbols.TRIANGLE) for q in card['card']['quarters'].values())
     
     predicted = predict_value(
         stats['positives'],
@@ -355,12 +348,7 @@ def format_card(card: Dict, idx: int) -> str:
     q = card['card']['quarters']
     stats = card['stats']
     
-    sym_short = {
-        'anchor': 'Anc', 'shark': 'Shk', 'rat': 'Rat', 'kraken': 'Kra',
-        'map': 'Map', 'coin': 'Coi', 'rum': 'Rum', 'parrot': 'Par',
-        'spyglass': 'Spy', 'arrow_up': '↑', 'arrow_down': '↓',
-        'arrow_left': '←', 'arrow_right': '→'
-    }
+    sym_short = {symbol: symbol.abbrev for symbol in Symbols if symbol.abbrev}
     
     parts = []
     for qn, qshort in [('top_left', 'TL'), ('top_right', 'TR'), 
@@ -431,10 +419,18 @@ def main():
     
     # Save to JSON
     if args.output:
-        # Strip metadata for clean JSON
-        clean_deck = [{'card': c['card']} for c in deck]
+        # Strip metadata, and serialise symbols by stable ID (see src/deck_io.py)
+        from src.deck_io import dumps_deck
+        clean_deck = [
+            {'card': {
+                'dimensions': c['card'].get('dimensions', {'width': 135, 'height': 135}),
+                'quarters': {qn: [s.name for s in syms]
+                             for qn, syms in c['card']['quarters'].items()},
+            }}
+            for c in deck
+        ]
         with open(args.output, 'w') as f:
-            json.dump(clean_deck, f, indent=2)
+            f.write(dumps_deck(clean_deck))
         print(f"\nSaved to {args.output}")
     
     print("\n" + "=" * 80)
