@@ -4,7 +4,7 @@ import enum
 from collections import defaultdict
 from typing import Tuple, Dict
 
-from symbols import Symbols
+from src.symbols import Symbols
 import numpy as np
 from scipy import signal
 

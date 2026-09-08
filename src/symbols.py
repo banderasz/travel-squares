@@ -254,7 +254,6 @@ class Symbols(enum.Enum):
     def __hash__(self):
         return hash(self.name)
 
-print(sum([symbol.weight for symbol in Symbols]))
 assert sum([symbol.weight for symbol in Symbols]) == NUMBER_OF_SYMBOLS_IN_PLAY
 
 def create_df() -> pd.DataFrame:

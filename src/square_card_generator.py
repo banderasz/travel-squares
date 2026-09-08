@@ -7,8 +7,8 @@ from typing import List, Dict, Tuple
 import numpy as np
 from scipy import signal
 
-from card_rules import CardRules, ArrowBonusPoints
-from symbols import Symbols, NUMBER_OF_SYMBOLS_IN_PLAY
+from src.card_rules import CardRules, ArrowBonusPoints
+from src.symbols import Symbols, NUMBER_OF_SYMBOLS_IN_PLAY
 import matplotlib.pyplot as plt
 
 class Quarter:
