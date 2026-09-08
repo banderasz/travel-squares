@@ -46,7 +46,12 @@ def _partition(n_cards, pool, met, rng, tries=40):
 
 
 def measure(deck_path, n_cards=None, pool=20, hands_per_pool=200, rounds=10,
-            placements=300, lo=0.50, hi=0.85, seed=0):
+            placements=300, lo=0.50, hi=0.85, seed=0, keep_values=True):
+    """keep_values=False accumulates running sums instead of every hand value.
+
+    At high precision the full lists are hundreds of MB of Python floats, and
+    a long run only needs the per-card mean and spread.
+    """
     card_data = load_cards(deck_path)
     paths = get_paths()
     total_cards = card_data['n_cards'] if n_cards is None else min(n_cards, card_data['n_cards'])
@@ -57,6 +62,7 @@ def measure(deck_path, n_cards=None, pool=20, hands_per_pool=200, rounds=10,
     full = [[] for _ in range(total_cards)]
     middle = [[] for _ in range(total_cards)]
     raw_sample = [[] for _ in range(total_cards)]
+    acc = np.zeros((total_cards, 4))   # n, sum_full, sum_mid, sumsq_mid
 
     lo_i, hi_i = int(placements * lo), int(placements * hi)
 
@@ -78,14 +84,27 @@ def measure(deck_path, n_cards=None, pool=20, hands_per_pool=200, rounds=10,
             hand_full = scores.mean(axis=1)
             hand_middle = scores[:, lo_i:hi_i].mean(axis=1)
 
-            for h, hand in enumerate(hands):
-                for card in hand:
-                    full[card].append(hand_full[h])
-                    middle[card].append(hand_middle[h])
-                    if len(raw_sample[card]) < 4000:
-                        raw_sample[card].extend(scores[h, ::20].tolist())
+            flat = hands.reshape(-1)
+            np.add.at(acc[:, 0], flat, 1)
+            np.add.at(acc[:, 1], flat, np.repeat(hand_full, HAND))
+            np.add.at(acc[:, 2], flat, np.repeat(hand_middle, HAND))
+            np.add.at(acc[:, 3], flat, np.repeat(hand_middle ** 2, HAND))
+            if keep_values:
+                for h, hand in enumerate(hands):
+                    for card in hand:
+                        full[card].append(hand_full[h])
+                        middle[card].append(hand_middle[h])
+                        if len(raw_sample[card]) < 4000:
+                            raw_sample[card].extend(scores[h, ::20].tolist())
 
+    n = np.maximum(acc[:, 0], 1)
+    mid_mean = acc[:, 2] / n
+    mid_var = np.maximum(acc[:, 3] / n - mid_mean ** 2, 0.0)
     return {
+        'count': acc[:, 0],
+        'full_mean': acc[:, 1] / n,
+        'middle_mean': mid_mean,
+        'middle_std': np.sqrt(mid_var),
         'full': [np.array(v) for v in full],
         'middle': [np.array(v) for v in middle],
         'raw': [np.array(v) for v in raw_sample],
