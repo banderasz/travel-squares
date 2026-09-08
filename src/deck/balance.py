@@ -54,6 +54,11 @@ RUM = Symbols.TRIANGLE
 # VALUE FORMULA (calibrated from simulation)
 # ============================================================
 
+def as_symbol(value) -> Symbols:
+    """Accept either a Symbols member or a name from card JSON."""
+    return value if isinstance(value, Symbols) else Symbols.of(value)
+
+
 def calculate_card_value(card: Dict) -> float:
     """
     Calculate expected card value using formula calibrated from simulation.
@@ -72,8 +77,8 @@ def calculate_card_value(card: Dict) -> float:
     # Count symbols
     all_symbols = []
     for qn in qnames:
-        all_symbols.extend(quarters.get(qn, []))
-    
+        all_symbols.extend(as_symbol(x) for x in quarters.get(qn, []))
+
     counts = Counter(all_symbols)
     
     # Base value: expected contribution in a 6-card game
@@ -321,7 +326,7 @@ def calculate_distribution_deviation(cards: List[Dict]) -> float:
     all_symbols = []
     for card in cards:
         for q in card['card']['quarters'].values():
-            all_symbols.extend(q)
+            all_symbols.extend(as_symbol(x) for x in q)
     
     counts = Counter(all_symbols)
     n_cards = len(cards)
@@ -467,7 +472,7 @@ def main():
     all_symbols = []
     for card in selected:
         for q in card['card']['quarters'].values():
-            all_symbols.extend(q)
+            all_symbols.extend(as_symbol(x) for x in q)
     
     counts = Counter(all_symbols)
     print(f"\nSymbol Distribution (total {len(all_symbols)} symbols across {len(selected)} cards):")

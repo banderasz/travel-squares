@@ -99,7 +99,6 @@ All of these read the simulation output and answer "is any card plainly better?"
 - **`combo_variance.py`** — score spread within a single 6-card combination.
 - **`outliers.py`** — placements that score unusually far from their combo's mean.
 - **`counter_examples.py`** — actively tries to falsify the current conclusions.
-- **`card_balance.py`** — what makes a card balanced yet skill-expressive.
 - **`deck_stats.py`** — symbol distribution across a deck, a sanity check on
   generation.
 - **`scenario.py`** — renders one specific placement step by step, for checking
@@ -159,6 +158,14 @@ Recoverable from git history if needed.
   scale change, so their numbers were wrong.
 
 ## Known rough edges
+
+- `src/deck/balance.py`'s value formula is off in absolute terms: it predicts
+  ~17 for cards the simulation measures at ~35. Relative ordering looks sane, so
+  it still separates good from bad, but run `src/deck/calibrate.py` against fresh
+  simulation output to refit the coefficients before trusting the numbers.
+- The training images under `src/training_images/training_data*/` were generated
+  before the arrow-rotation fix, so rotated cards carry wrong arrow labels.
+  Regenerate them.
 
 - `src/deck/simulation.py` still exposes `--sim-batch`, which switches to
   parallelising over scenarios. It measured 4.3× slower and is off by default;
