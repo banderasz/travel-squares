@@ -1,24 +1,12 @@
-# Core numerics — scoring model, simulation, analysis scripts
+# Core numerics — scoring model, simulation, analysis
 numpy
-scipy~=1.16.0
-pandas~=2.3.1
-numba          # JIT for src/simulation/sim.py
+pandas
+matplotlib
+numba          # JIT for src/deck/simulation.py
 
-# Plotting / reporting
-matplotlib~=3.10.3
-plotly
+# Training-image generation
+Pillow         # PIL
+opencv-python  # cv2
 
-# Board detection from photos
-Pillow         # PIL, used by processing_detected_images
-requests       # talks to the local TensorFlow Serving container
-google-cloud-aiplatform>=1.0.0
-
-# Static site (content/ -> output/)
-pelican
-pelican-jinja2content
-pelican-render-math
-markdown
-Fabric
-
-# YOLO training has heavier, separate deps:
-#   pip install -r src/training_data_generator/requirements_yolo.txt
+# Recognition training has heavier deps (torch, ultralytics):
+#   pip install -r src/recognition/requirements.txt
