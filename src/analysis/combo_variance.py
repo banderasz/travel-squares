@@ -8,12 +8,10 @@ Usage:
     python analyze_combo_variance.py [--store data/placements_sharded] [--shards 4096]
 """
 import argparse
-import os
 import sys
 import time
 import numpy as np
 
-sys.path.insert(0, os.path.dirname(__file__))
 from src.deck.simulation import PlacementStore, ShardedPlacementStore
 
 

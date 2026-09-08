@@ -9,12 +9,10 @@ Usage:
 """
 import argparse
 import json
-import os
 import sys
 import time
 import numpy as np
 
-sys.path.insert(0, os.path.dirname(__file__))
 from src.deck.simulation import PlacementStore, ShardedPlacementStore, SYM_MAP, load_cards
 from src.symbols import Symbols
 
@@ -277,7 +275,7 @@ def main():
     p.add_argument('--n-cards', type=int, default=20)
     p.add_argument('--trim-low', type=int, default=50)
     p.add_argument('--trim-high', type=int, default=75)
-    p.add_argument('--json', default='pirate_cards/pirate_20_25.json')
+    p.add_argument('--json', default='decks/pirate_20_25.json')
     a = p.parse_args()
 
     store = ShardedPlacementStore(a.store, n_shards=a.shards)

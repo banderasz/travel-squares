@@ -4,17 +4,14 @@ Recalibrate the card value formula using actual simulation data.
 
 Process:
 1. Load simulation results from data/placements_verify
-2. Extract card features from pirate_cards/pirate_120_balanced.json
+2. Extract card features from decks/pirate_120_balanced.json
 3. Fit a linear regression to find the best coefficients
 4. Output the calibrated formula
 """
 import json
 import numpy as np
 from collections import Counter
-import sys
-import os
 
-sys.path.insert(0, os.path.dirname(__file__))
 from src.deck.simulation import ShardedPlacementStore, PlacementStore
 from src.symbols import Symbols
 
@@ -145,7 +142,7 @@ def fit_linear_model(features_list, targets):
 
 def main():
     # Load cards
-    with open('pirate_cards/pirate_120_balanced.json') as f:
+    with open('decks/pirate_120_balanced.json') as f:
         cards = json.load(f)
     
     n_cards = len(cards)

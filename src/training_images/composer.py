@@ -984,7 +984,7 @@ if __name__ == "__main__":
 
     # Configuration
     CARDS_DIR = "pirate_cards"
-    JSON_PATH = "pirate_cards/pirate_20_25.json"
+    JSON_PATH = "decks/pirate_20_25.json"
     CARD_PREFIX = "pirate_card-"
 
     # Check if files exist

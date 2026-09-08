@@ -61,8 +61,8 @@ src/
   deck/             generating a balanced deck
   analysis/         checking that the deck is actually balanced
   training_images/  rendering labelled images from a deck
-decks/              generated decks
-pirate_cards/       card artwork (made in Illustrator) + the shipped decks
+decks/              all deck JSON
+pirate_cards/       card artwork (made in Illustrator)
 scripts/            one-off maintenance
 ```
 
@@ -160,8 +160,6 @@ Recoverable from git history if needed.
 
 ## Known rough edges
 
-- The analysis scripts have `sys.path.insert` preambles instead of relying on
-  the package.
-- `src/deck/simulation.py` documents an auto-select between its two parallel
-  modes; the code never enables batch mode. That's fine — batch measured 4.3×
-  slower — but the docstring is wrong.
+- `src/deck/simulation.py` still exposes `--sim-batch`, which switches to
+  parallelising over scenarios. It measured 4.3× slower and is off by default;
+  the flag is kept only because the code path exists.

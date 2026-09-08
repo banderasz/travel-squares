@@ -21,13 +21,10 @@ import math
 from collections import Counter, defaultdict
 from typing import List, Dict, Tuple
 import argparse
-import os
-import sys
 
 import numpy as np
 
-sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from src.symbols import Symbols  # noqa: E402
+from src.symbols import Symbols
 
 # ============================================================
 # SCORING TABLES — derived from src/symbols.py, the single source of truth

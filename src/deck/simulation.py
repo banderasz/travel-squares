@@ -8,14 +8,16 @@ Architecture:
      - Phase 1: batch visibility + cross-card arrow detection (merged, single grid pass)
      - Fast path (n_cross==0 per tb): direct 4×12 rotation convolution
      - Slow path (n_cross>0): union-find groups + grouped convolution
-  4. Two parallelism modes:
-     - Per-scenario (prange over paths): best for large path counts (729K)
-     - Batch (prange over scenarios): best for small path counts (1K-50K)
+  4. Parallelism: prange over paths, one scenario at a time.
   5. SQLite persistence for resumable runs
 
-M1 Max optimization notes:
-  --threads 8 skips 2 efficiency cores (avoids prange barrier bottleneck)
-  --sim-batch 0 auto-selects batch vs per-scenario based on path count
+Notes:
+  --threads 8 skips the 2 efficiency cores on an M1 Max (avoids a prange
+  barrier bottleneck); --threads 10 was slightly faster in practice.
+
+  --sim-batch >1 switches to parallelising over scenarios instead of paths.
+  Do not: it measured 4.3x slower (356s vs 82s on 4 scenarios x 100k paths).
+  The default leaves it off, despite an "auto-select" that never triggers.
 """
 import json
 import os
@@ -1566,7 +1568,7 @@ def _show_rankings(db, top=20):
 
 def main():
     p = argparse.ArgumentParser(description='Pirate Card Simulation')
-    p.add_argument('--json', default='pirate_cards/pirate_20_25.json')
+    p.add_argument('--json', default='decks/pirate_20_25.json')
     p.add_argument('--db', default='data/simulation.db')
     p.add_argument('--scenarios', type=int, default=100)
     p.add_argument('--seed', type=int, default=42)

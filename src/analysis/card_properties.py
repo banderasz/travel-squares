@@ -8,13 +8,10 @@ Usage:
     python analyze_card_properties.py --store data/placements_20 --shards 256
 """
 import json
-import os
-import sys
 import time
 import numpy as np
 from itertools import combinations
 
-sys.path.insert(0, os.path.dirname(__file__))
 from src.deck.simulation import PlacementStore, ShardedPlacementStore, SCORE_DEFAULT, SYM_ORDER
 from src.symbols import Symbols
 
@@ -174,7 +171,7 @@ def get_sim_scores(store, n_cards, trim_low=50, trim_high=75):
 
 def main():
     n_cards = 20
-    json_path = 'pirate_cards/pirate_20_25.json'
+    json_path = 'decks/pirate_20_25.json'
     store = ShardedPlacementStore('data/placements_20', n_shards=256)
 
     print("=" * 70)

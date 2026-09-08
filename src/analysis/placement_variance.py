@@ -9,12 +9,10 @@ Usage:
                                          [--threads 8] [--seed 42]
 """
 import argparse
-import os
 import sys
 import time
 import numpy as np
 
-sys.path.insert(0, os.path.dirname(__file__))
 from src.deck.simulation import (
     load_cards, get_paths, evaluate_placements_batch
 )
@@ -32,7 +30,7 @@ def run_analysis(n_combos, n_placements, seed, n_threads):
     print(f"  Combos: {n_combos} | Placements/combo: {n_placements:,} | Seed: {seed}")
     print(f"  Numba threads: {nb.get_num_threads()}")
 
-    cd = load_cards('pirate_cards/pirate_20_25.json')
+    cd = load_cards('decks/pirate_20_25.json')
     paths = get_paths()
     n_cards, n_paths = cd['n_cards'], len(paths)
     print(f"  {n_cards} cards, {n_paths:,} paths")

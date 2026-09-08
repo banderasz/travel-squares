@@ -10,12 +10,10 @@ Usage:
     python analyze_outliers.py --combo 33,29,79,1,14,109     # single combo
 """
 import argparse
-import os
 import sys
 import time
 import numpy as np
 
-sys.path.insert(0, os.path.dirname(__file__))
 from src.deck.simulation import (
     PLACEMENT_DTYPE, PlacementStore, ShardedPlacementStore
 )

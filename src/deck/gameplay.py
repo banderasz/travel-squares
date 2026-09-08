@@ -108,8 +108,6 @@ def run(num_games: int, game_style):
     df.to_csv(f"simpler_simulate_5_{num_games}_{game_style.__name__}.csv")
 
 
-
-
 if __name__ == "__main__":
     run(10000, simulate_5_turn_mixed_game_more_evil)
     run(10000, simulate_5_turn_mixed_game_less_evil)

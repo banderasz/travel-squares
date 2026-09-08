@@ -740,7 +740,7 @@ if __name__ == "__main__":
 
     # Configuration
     CARDS_DIR = "../../pirate_cards"
-    JSON_PATH = "../../pirate_cards/pirate_20_25.json"
+    JSON_PATH = "../../decks/pirate_20_25.json"
     OUTPUT_DIR = "other_data"
 
     # Create generator with configurable offset
