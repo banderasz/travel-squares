@@ -1,0 +1,55 @@
+Key Findings
+1. Positive symbol COUNT matters most. Not net value, not arrows — just having many positive symbols. Card 1 and Card 10 both have 8 positives and both rank top 3.
+2. Symbol diversity pays because of the scoring curves. Each symbol type has diminishing returns (e.g., 5 coins = 7 pts but 3+2 of something else scores more). Card 1 has 6 different positive types (Par, Coi, Rum, Spy, Map, Anc) — maximum diversity.
+3. Parrots are the best symbol (r=+0.585). Parrots score 3 pts for just 2, and scale to 15 pts for 12. Cards with parrots consistently rank higher.
+4. Rats are the worst symbol (r=−0.516). Rats are more damaging than sharks or krakens because they accumulate: each additional rat adds increasing penalty (−1, −1, −2, −2, −3...).
+5. Krakens show positive correlation (+0.201) which seems paradoxical. This is because krakens have a capped penalty (−4 for 1, flattening to 0 for 5+). A card with 1 kraken alongside many positives (like Card 14: Kra×2 + 6 positives) still performs well — the kraken damage is bounded.
+6. Hide gain is negatively correlated — cards that NEED quarter hiding (concentrated negatives) still perform worse than cards that don't need it at all. Having 3 negatives in one quarter is better than having them spread, but having 0 negatives is better still.
+7. Arrows are nearly uncorrelated with card value (r=−0.076). This is surprising — arrows add variance (as we saw earlier) but don't reliably add VALUE. Their worth depends entirely on what neighbors they copy, which is random. Card 18 has 2 arrows but ranks #19 because its base symbols are weak.
+8. Overperformers (better than stats predict): Cards 14 and 0 both overperform their raw stats. Card 14 has 4 negatives but still ranks #2 — its positive symbols (Rum, Anc, Par, Map, Coi) are high-diversity and high-value, and the negatives are in coverable positions. Card 0 has net −1 value but ranks #8 — hiding its TR quarter (Shk+Rat) turns it positive.
+
+======================================================================
+POTENTIAL COUNTER-EXAMPLES TO TEST (from cards 20-119)
+======================================================================
+
+Cards selected to potentially disprove findings:
+
+1. CHALLENGING "Positive count matters most":
+   - Card 7: 6 positives but only 3 types (Anc×3, Map×2, Spy) — low diversity might hurt
+   - Card 47: 6 positives but only 3 types (Anc×2, Coi×2, Rum×2) — concentrated types
+
+2. CHALLENGING "Parrots are best":
+   - Card 59: 2 parrots but 4 negatives (2 rats, 1 shark, 1 kraken) — parrots vs negatives
+   - Card 48: 2 parrots, 6 positives, only 3 negatives — should be VERY good if finding holds
+
+3. CHALLENGING "Rats are worst":
+   - Card 71: 3 rats but 6 positives (5 types, including parrot) — net=+3
+   - Card 94: 3 rats but 7 positives (Spy×3, Map×2, Coi, Anc) — net=+4
+   - Card 25: 3 rats + 2 krakens but 5 positives — extreme negative test
+
+4. CHALLENGING "Krakens are OK":
+   - Card 72: 3 krakens + 1 shark, 6 positives — extreme kraken test
+   - Card 116: 3 krakens + 1 shark, only 4 positives — should be bad
+
+5. CHALLENGING "Hide gain doesn't help":
+   - Card 28: hide_gain=3, best_3_sum=7 (quarters [1,2,-3,4]) — concentrated negatives
+   - Card 71: hide_gain=3, best_3_sum=6 — can hiding save it?
+
+6. CHALLENGING "Arrows don't add value":
+   - Card 97: 3 arrows, 4 positives, 4 negatives (incl 2 krakens) — arrows + bad base
+   - Card 52: 3 arrows, 4 positives, 3 negatives — do arrows help moderate cards?
+
+CARDS TO ADD TO 30-CARD TEST SET:
+[25, 28, 36, 48, 52, 59, 71, 72, 94, 97]
+
+Why each matters:
+- Card 25: extreme rats (3) + krakens (2) test
+- Card 28: best example of high hide-gain compensating for negatives
+- Card 36: 3 rats + parrot test
+- Card 48: 2 parrots should dominate — confirms or disproves finding 3
+- Card 52: 3 arrows, moderate stats — tests arrow value
+- Card 59: 2 parrots but 4 negatives — parrot vs negative battle
+- Card 71: 3 rats but strong overall (parrot + diversity) — tests rat penalty
+- Card 72: 3 krakens extreme test
+- Card 94: 3 rats but 7 positives — strongest rat-compensation candidate
+- Card 97: 3 arrows with mixed base — definitive arrow test

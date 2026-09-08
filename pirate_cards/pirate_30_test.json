@@ -1,0 +1,815 @@
+[
+  {
+    "card": {
+      "dimensions": {
+        "width": 135,
+        "height": 135
+      },
+      "quarters": {
+        "top_left": [
+          "anchor",
+          "shark",
+          "anchor",
+          "shark"
+        ],
+        "top_right": [
+          "shark",
+          "rat"
+        ],
+        "bottom_left": [
+          "kraken",
+          "map",
+          "kraken"
+        ],
+        "bottom_right": [
+          "coin",
+          "rum"
+        ]
+      }
+    }
+  },
+  {
+    "card": {
+      "dimensions": {
+        "width": 135,
+        "height": 135
+      },
+      "quarters": {
+        "top_left": [
+          "parrot",
+          "arrow_right",
+          "coin",
+          "rum"
+        ],
+        "top_right": [
+          "arrow_down",
+          "map"
+        ],
+        "bottom_left": [
+          "spyglass",
+          "coin",
+          "rat",
+          "spyglass"
+        ],
+        "bottom_right": [
+          "rat",
+          "anchor"
+        ]
+      }
+    }
+  },
+  {
+    "card": {
+      "dimensions": {
+        "width": 135,
+        "height": 135
+      },
+      "quarters": {
+        "top_left": [
+          "kraken",
+          "rat",
+          "arrow_up",
+          "spyglass"
+        ],
+        "top_right": [
+          "rum",
+          "parrot"
+        ],
+        "bottom_left": [
+          "shark",
+          "map"
+        ],
+        "bottom_right": [
+          "rat",
+          "coin",
+          "arrow_up"
+        ]
+      }
+    }
+  },
+  {
+    "card": {
+      "dimensions": {
+        "width": 135,
+        "height": 135
+      },
+      "quarters": {
+        "top_left": [],
+        "top_right": [
+          "spyglass",
+          "spyglass",
+          "map"
+        ],
+        "bottom_left": [
+          "arrow_right",
+          "rat"
+        ],
+        "bottom_right": [
+          "anchor",
+          "anchor"
+        ]
+      }
+    }
+  },
+  {
+    "card": {
+      "dimensions": {
+        "width": 135,
+        "height": 135
+      },
+      "quarters": {
+        "top_left": [
+          "rat",
+          "rat"
+        ],
+        "top_right": [
+          "arrow_down",
+          "rum",
+          "spyglass"
+        ],
+        "bottom_left": [
+          "rum",
+          "kraken"
+        ],
+        "bottom_right": []
+      }
+    }
+  },
+  {
+    "card": {
+      "dimensions": {
+        "width": 135,
+        "height": 135
+      },
+      "quarters": {
+        "top_left": [
+          "shark",
+          "anchor"
+        ],
+        "top_right": [
+          "spyglass",
+          "shark"
+        ],
+        "bottom_left": [
+          "parrot",
+          "anchor"
+        ],
+        "bottom_right": [
+          "shark",
+          "arrow_left",
+          "map",
+          "coin"
+        ]
+      }
+    }
+  },
+  {
+    "card": {
+      "dimensions": {
+        "width": 135,
+        "height": 135
+      },
+      "quarters": {
+        "top_left": [
+          "coin",
+          "spyglass",
+          "arrow_right"
+        ],
+        "top_right": [
+          "rat",
+          "shark"
+        ],
+        "bottom_left": [
+          "rum",
+          "rum"
+        ],
+        "bottom_right": [
+          "coin"
+        ]
+      }
+    }
+  },
+  {
+    "card": {
+      "dimensions": {
+        "width": 135,
+        "height": 135
+      },
+      "quarters": {
+        "top_left": [
+          "rat"
+        ],
+        "top_right": [
+          "anchor",
+          "anchor"
+        ],
+        "bottom_left": [
+          "kraken",
+          "rat",
+          "spyglass"
+        ],
+        "bottom_right": [
+          "map",
+          "map",
+          "anchor"
+        ]
+      }
+    }
+  },
+  {
+    "card": {
+      "dimensions": {
+        "width": 135,
+        "height": 135
+      },
+      "quarters": {
+        "top_left": [
+          "arrow_down",
+          "coin",
+          "kraken"
+        ],
+        "top_right": [
+          "shark"
+        ],
+        "bottom_left": [
+          "map",
+          "anchor"
+        ],
+        "bottom_right": [
+          "rat",
+          "shark",
+          "rat"
+        ]
+      }
+    }
+  },
+  {
+    "card": {
+      "dimensions": {
+        "width": 135,
+        "height": 135
+      },
+      "quarters": {
+        "top_left": [],
+        "top_right": [
+          "arrow_left",
+          "anchor",
+          "map"
+        ],
+        "bottom_left": [
+          "rat",
+          "rum",
+          "anchor"
+        ],
+        "bottom_right": [
+          "parrot",
+          "arrow_right",
+          "spyglass"
+        ]
+      }
+    }
+  },
+  {
+    "card": {
+      "dimensions": {
+        "width": 135,
+        "height": 135
+      },
+      "quarters": {
+        "top_left": [
+          "rat",
+          "coin"
+        ],
+        "top_right": [
+          "map"
+        ],
+        "bottom_left": [
+          "anchor",
+          "map",
+          "spyglass"
+        ],
+        "bottom_right": [
+          "coin",
+          "anchor",
+          "parrot"
+        ]
+      }
+    }
+  },
+  {
+    "card": {
+      "dimensions": {
+        "width": 135,
+        "height": 135
+      },
+      "quarters": {
+        "top_left": [
+          "rat"
+        ],
+        "top_right": [
+          "shark",
+          "spyglass"
+        ],
+        "bottom_left": [
+          "coin",
+          "spyglass",
+          "rum"
+        ],
+        "bottom_right": [
+          "shark",
+          "arrow_left"
+        ]
+      }
+    }
+  },
+  {
+    "card": {
+      "dimensions": {
+        "width": 135,
+        "height": 135
+      },
+      "quarters": {
+        "top_left": [
+          "rat",
+          "rat"
+        ],
+        "top_right": [
+          "coin",
+          "arrow_left",
+          "arrow_left",
+          "shark"
+        ],
+        "bottom_left": [
+          "rat",
+          "anchor",
+          "rum"
+        ],
+        "bottom_right": [
+          "map",
+          "rum",
+          "shark"
+        ]
+      }
+    }
+  },
+  {
+    "card": {
+      "dimensions": {
+        "width": 135,
+        "height": 135
+      },
+      "quarters": {
+        "top_left": [],
+        "top_right": [
+          "spyglass",
+          "map"
+        ],
+        "bottom_left": [
+          "anchor",
+          "spyglass"
+        ],
+        "bottom_right": [
+          "arrow_up",
+          "kraken"
+        ]
+      }
+    }
+  },
+  {
+    "card": {
+      "dimensions": {
+        "width": 135,
+        "height": 135
+      },
+      "quarters": {
+        "top_left": [
+          "rum",
+          "anchor"
+        ],
+        "top_right": [
+          "shark",
+          "arrow_up",
+          "parrot"
+        ],
+        "bottom_left": [
+          "kraken",
+          "anchor",
+          "coin"
+        ],
+        "bottom_right": [
+          "map",
+          "kraken",
+          "shark"
+        ]
+      }
+    }
+  },
+  {
+    "card": {
+      "dimensions": {
+        "width": 135,
+        "height": 135
+      },
+      "quarters": {
+        "top_left": [
+          "coin"
+        ],
+        "top_right": [
+          "anchor",
+          "map"
+        ],
+        "bottom_left": [
+          "rat",
+          "rat"
+        ],
+        "bottom_right": [
+          "arrow_up",
+          "spyglass"
+        ]
+      }
+    }
+  },
+  {
+    "card": {
+      "dimensions": {
+        "width": 135,
+        "height": 135
+      },
+      "quarters": {
+        "top_left": [
+          "coin",
+          "spyglass"
+        ],
+        "top_right": [
+          "spyglass",
+          "map",
+          "rum"
+        ],
+        "bottom_left": [
+          "spyglass"
+        ],
+        "bottom_right": [
+          "rat"
+        ]
+      }
+    }
+  },
+  {
+    "card": {
+      "dimensions": {
+        "width": 135,
+        "height": 135
+      },
+      "quarters": {
+        "top_left": [
+          "coin",
+          "map",
+          "kraken"
+        ],
+        "top_right": [
+          "arrow_down",
+          "shark"
+        ],
+        "bottom_left": [
+          "shark",
+          "rat",
+          "rat"
+        ],
+        "bottom_right": [
+          "anchor",
+          "anchor"
+        ]
+      }
+    }
+  },
+  {
+    "card": {
+      "dimensions": {
+        "width": 135,
+        "height": 135
+      },
+      "quarters": {
+        "top_left": [
+          "arrow_right",
+          "parrot",
+          "rat",
+          "rum"
+        ],
+        "top_right": [
+          "shark"
+        ],
+        "bottom_left": [
+          "arrow_up",
+          "anchor"
+        ],
+        "bottom_right": [
+          "spyglass",
+          "shark",
+          "rat"
+        ]
+      }
+    }
+  },
+  {
+    "card": {
+      "dimensions": {
+        "width": 135,
+        "height": 135
+      },
+      "quarters": {
+        "top_left": [
+          "parrot",
+          "spyglass"
+        ],
+        "top_right": [
+          "anchor",
+          "arrow_left",
+          "kraken"
+        ],
+        "bottom_left": [
+          "rum"
+        ],
+        "bottom_right": []
+      }
+    }
+  },
+  {
+    "card": {
+      "dimensions": {
+        "width": 135,
+        "height": 135
+      },
+      "quarters": {
+        "top_left": [
+          "rat",
+          "rat"
+        ],
+        "top_right": [
+          "anchor",
+          "anchor"
+        ],
+        "bottom_left": [
+          "kraken",
+          "rum",
+          "rat",
+          "anchor"
+        ],
+        "bottom_right": [
+          "spyglass",
+          "kraken"
+        ]
+      }
+    }
+  },
+  {
+    "card": {
+      "dimensions": {
+        "width": 135,
+        "height": 135
+      },
+      "quarters": {
+        "top_left": [
+          "coin"
+        ],
+        "top_right": [
+          "spyglass",
+          "map"
+        ],
+        "bottom_left": [
+          "rat",
+          "kraken",
+          "rat"
+        ],
+        "bottom_right": [
+          "anchor",
+          "spyglass",
+          "coin",
+          "anchor"
+        ]
+      }
+    }
+  },
+  {
+    "card": {
+      "dimensions": {
+        "width": 135,
+        "height": 135
+      },
+      "quarters": {
+        "top_left": [
+          "anchor",
+          "rat"
+        ],
+        "top_right": [
+          "rat",
+          "map"
+        ],
+        "bottom_left": [
+          "parrot",
+          "rum"
+        ],
+        "bottom_right": [
+          "arrow_up",
+          "arrow_left",
+          "rat"
+        ]
+      }
+    }
+  },
+  {
+    "card": {
+      "dimensions": {
+        "width": 135,
+        "height": 135
+      },
+      "quarters": {
+        "top_left": [
+          "parrot",
+          "anchor",
+          "coin"
+        ],
+        "top_right": [
+          "rat"
+        ],
+        "bottom_left": [
+          "shark",
+          "anchor"
+        ],
+        "bottom_right": [
+          "rum",
+          "parrot",
+          "kraken"
+        ]
+      }
+    }
+  },
+  {
+    "card": {
+      "dimensions": {
+        "width": 135,
+        "height": 135
+      },
+      "quarters": {
+        "top_left": [
+          "arrow_right",
+          "arrow_right",
+          "coin"
+        ],
+        "top_right": [
+          "spyglass",
+          "arrow_right"
+        ],
+        "bottom_left": [
+          "rat",
+          "rat"
+        ],
+        "bottom_right": [
+          "map",
+          "shark",
+          "rum"
+        ]
+      }
+    }
+  },
+  {
+    "card": {
+      "dimensions": {
+        "width": 135,
+        "height": 135
+      },
+      "quarters": {
+        "top_left": [
+          "rat",
+          "rat"
+        ],
+        "top_right": [
+          "coin",
+          "arrow_up",
+          "parrot"
+        ],
+        "bottom_left": [
+          "anchor",
+          "kraken",
+          "anchor"
+        ],
+        "bottom_right": [
+          "parrot",
+          "spyglass",
+          "shark"
+        ]
+      }
+    }
+  },
+  {
+    "card": {
+      "dimensions": {
+        "width": 135,
+        "height": 135
+      },
+      "quarters": {
+        "top_left": [
+          "coin",
+          "arrow_up",
+          "anchor"
+        ],
+        "top_right": [
+          "parrot"
+        ],
+        "bottom_left": [
+          "spyglass",
+          "anchor",
+          "map"
+        ],
+        "bottom_right": [
+          "rat",
+          "rat",
+          "rat"
+        ]
+      }
+    }
+  },
+  {
+    "card": {
+      "dimensions": {
+        "width": 135,
+        "height": 135
+      },
+      "quarters": {
+        "top_left": [
+          "spyglass",
+          "anchor",
+          "shark"
+        ],
+        "top_right": [
+          "kraken",
+          "coin"
+        ],
+        "bottom_left": [
+          "kraken",
+          "rum",
+          "kraken"
+        ],
+        "bottom_right": [
+          "coin",
+          "anchor"
+        ]
+      }
+    }
+  },
+  {
+    "card": {
+      "dimensions": {
+        "width": 135,
+        "height": 135
+      },
+      "quarters": {
+        "top_left": [
+          "rat",
+          "rat"
+        ],
+        "top_right": [
+          "spyglass",
+          "spyglass",
+          "coin"
+        ],
+        "bottom_left": [
+          "rat",
+          "anchor"
+        ],
+        "bottom_right": [
+          "map",
+          "spyglass",
+          "map"
+        ]
+      }
+    }
+  },
+  {
+    "card": {
+      "dimensions": {
+        "width": 135,
+        "height": 135
+      },
+      "quarters": {
+        "top_left": [
+          "shark",
+          "arrow_down",
+          "anchor",
+          "kraken"
+        ],
+        "top_right": [],
+        "bottom_left": [
+          "spyglass",
+          "coin",
+          "parrot",
+          "arrow_right"
+        ],
+        "bottom_right": [
+          "arrow_down",
+          "kraken",
+          "rat"
+        ]
+      }
+    }
+  }
+]
