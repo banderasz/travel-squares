@@ -45,6 +45,8 @@ JITTER_PCT = 10
 SCATTER_SPACING = (25 * 0.7 * 1.8, 22 * 0.7 * 1.8)
 SCATTER_ICON = 15 * 0.7
 SCATTER_OPACITY = 128                # the script uses opacity 50 (of 100)
+ROUGHEN_SIZE_PCT = 0.10              # Illustrator Roughen: size 10%, relative
+ROUGHEN_DETAIL = 6.0                 # anchors per inch (72pt), smooth points
 
 
 # Asset filenames, keyed by stable symbol ID. They mostly match the display
@@ -100,26 +102,49 @@ def _jitter(value, rng):
     return value * (1 + (rng.random() * 2 - 1) * JITTER_PCT / 100)
 
 
-def roughen(points, size, detail, rng):
-    """Illustrator's Roughen: resample the outline, then displace each point.
+def _catmull_rom(points, samples=12):
+    """Smooth closed curve through the points — Illustrator's "smooth" anchors."""
+    out, n = [], len(points)
+    for i in range(n):
+        p0, p1 = points[(i - 1) % n], points[i]
+        p2, p3 = points[(i + 1) % n], points[(i + 2) % n]
+        for s in range(samples):
+            t = s / samples
+            t2, t3 = t * t, t * t * t
+            out.append((
+                0.5 * ((2 * p1[0]) + (-p0[0] + p2[0]) * t
+                       + (2 * p0[0] - 5 * p1[0] + 4 * p2[0] - p3[0]) * t2
+                       + (-p0[0] + 3 * p1[0] - 3 * p2[0] + p3[0]) * t3),
+                0.5 * ((2 * p1[1]) + (-p0[1] + p2[1]) * t
+                       + (2 * p0[1] - 5 * p1[1] + 4 * p2[1] - p3[1]) * t2
+                       + (-p0[1] + 3 * p1[1] - 3 * p2[1] + p3[1]) * t3)))
+    return out
 
-    `size` is how far a point may move, `detail` the spacing between points.
-    Corner (not smooth) points, matching the hand-drawn look of the original.
+
+def roughen(points, scale, rng, size_pct=ROUGHEN_SIZE_PCT, detail_per_inch=ROUGHEN_DETAIL):
+    """Illustrator's Roughen, with its own parameters.
+
+    Size is a percentage of the shape's own size, Detail is anchors per inch
+    (72pt), and the anchors are *smooth* — so the edge undulates like a coastline
+    rather than turning into the jagged fringe a corner-point version produces.
     """
-    dense = []
+    xs = [p[0] for p in points]
+    ys = [p[1] for p in points]
+    size = size_pct * max(max(xs) - min(xs), max(ys) - min(ys))
+    spacing = (72.0 / detail_per_inch) * scale
+
+    anchors = []
     for i in range(len(points)):
         ax, ay = points[i]
         bx, by = points[(i + 1) % len(points)]
-        steps = max(1, int(math.hypot(bx - ax, by - ay) / detail))
+        steps = max(1, round(math.hypot(bx - ax, by - ay) / spacing))
         for s in range(steps):
             t = s / steps
-            dense.append((ax + (bx - ax) * t, ay + (by - ay) * t))
-    out = []
-    for x, y in dense:
-        angle = rng.random() * math.tau
-        r = rng.random() * size
-        out.append((x + math.cos(angle) * r, y + math.sin(angle) * r))
-    return out
+            x, y = ax + (bx - ax) * t, ay + (by - ay) * t
+            angle = rng.random() * math.tau
+            r = rng.random() * size
+            anchors.append((x + math.cos(angle) * r, y + math.sin(angle) * r))
+    return _catmull_rom(anchors)
 
 
 def _shape_points(n, cx, cy, pw, ph, rng):
@@ -134,12 +159,16 @@ def _shape_points(n, cx, cy, pw, ph, rng):
         w, h = _jitter(pw * k, rng), _jitter(ph * k, rng)
         return [(cx - w / 2, cy), (cx - w / 2, cy - h / 2), (cx, cy - h / 2),
                 (cx + w / 2, cy), (cx + w / 2, cy + h / 2), (cx, cy + h / 2)]
-    # 3 -> triangle pointing down
+    # 3 -> triangle with a flat top and the apex at the bottom. The script builds
+    # an upward polygon then rotates it 180. That orientation is what the symbol
+    # layout needs: two symbols sit along the wide top edge and one near the
+    # point, so an upward triangle leaves the top two hanging outside it.
     r = _jitter(pw * 0.5 * k, rng)
     h = _jitter(ph * 0.5 * k, rng)
-    cy2 = cy + h / 2.5
-    return [(cx + math.cos(a) * r, cy2 - math.sin(a) * r)
-            for a in (math.pi / 2 + math.tau / 3 * i for i in range(3))]
+    cy2 = cy - h / 2.5
+    return [(cx - r * math.cos(math.pi / 6), cy2 - r * math.sin(math.pi / 6)),
+            (cx + r * math.cos(math.pi / 6), cy2 - r * math.sin(math.pi / 6)),
+            (cx, cy2 + r)]
 
 
 def _scatter(size, outline, scale, rng):
@@ -194,8 +223,7 @@ def render_card(card, px=512, seed=None):
         pw = ph = q - 2 * pad
         cx, cy = qx + q / 2, qy + q / 2
         if n:
-            pts = roughen(_shape_points(n, cx, cy, pw, ph, rng),
-                          size=2.0 * scale, detail=4.0 * scale, rng=rng)
+            pts = roughen(_shape_points(n, cx, cy, pw, ph, rng), scale, rng)
             shape = Image.new('RGBA', img.size, (0, 0, 0, 0))
             ImageDraw.Draw(shape).polygon(pts, fill=LIGHT_BROWN, outline=DARK_BROWN,
                                           width=max(1, int(2 * scale)))
