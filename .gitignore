@@ -229,3 +229,6 @@ __marimo__/
 # Long-running deck growth: checkpoints and logs
 /data/grow_*.json
 /data/grow_*.log
+
+# scratch previews for picking a roughen setting
+variants/

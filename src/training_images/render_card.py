@@ -156,8 +156,7 @@ def _resample_even(points, count):
     return out
 
 
-def roughen(points, rng, amplitude=ROUGHEN_AMPLITUDE, harmonics=ROUGHEN_HARMONICS,
-            samples=512):
+def roughen(points, rng, amplitude=None, harmonics=None, samples=512):
     """Push the outline in and out along its own normal, smoothly.
 
     The displacement is a sum of sinusoids around the perimeter with random
@@ -168,7 +167,12 @@ def roughen(points, rng, amplitude=ROUGHEN_AMPLITUDE, harmonics=ROUGHEN_HARMONIC
     point no matter how smoothly the result is interpolated, which is what
     made earlier attempts look torn rather than weathered.
     """
-    dense = _resample_even(points, samples)
+    # Read the module globals here rather than as default arguments, which bind
+    # once at import and so cannot be overridden to try a different look.
+    amplitude = ROUGHEN_AMPLITUDE if amplitude is None else amplitude
+    harmonics = ROUGHEN_HARMONICS if harmonics is None else harmonics
+
+    dense = _round_corners(_resample_even(points, samples), samples // 20)
     cx = sum(p[0] for p in dense) / samples
     cy = sum(p[1] for p in dense) / samples
     radius = sum(math.dist(p, (cx, cy)) for p in dense) / samples
@@ -177,6 +181,7 @@ def roughen(points, rng, amplitude=ROUGHEN_AMPLITUDE, harmonics=ROUGHEN_HARMONIC
     waves = [(k, amplitude / k * radius, rng.random() * math.tau)
              for k in range(k_lo, k_hi + 1)]
 
+    span = max(2, samples // 32)
     out = []
     for i, (x, y) in enumerate(dense):
         t = i / samples * math.tau
@@ -184,8 +189,44 @@ def roughen(points, rng, amplitude=ROUGHEN_AMPLITUDE, harmonics=ROUGHEN_HARMONIC
         (ax, ay), (bx, by) = dense[(i - 1) % samples], dense[(i + 1) % samples]
         tx, ty = bx - ax, by - ay
         length = math.hypot(tx, ty) or 1.0
+        limit = _curve_radius(dense[(i - span) % samples], (x, y),
+                              dense[(i + span) % samples]) * 0.6
+        offset = max(-limit, min(limit, offset))
         out.append((x + ty / length * offset, y - tx / length * offset))
     return out
+
+
+def _round_corners(points, window):
+    """Blunt the base polygon's corners with a moving average.
+
+    The corners are where loops come from. A normal derived from neighbouring
+    samples swings through ninety degrees in the two samples either side of a
+    square's corner, so displacing along it folds the outline back over itself
+    and leaves a little knot in the coast. Rounded corners have a normal that
+    turns gradually, and the islands on the printed sheet are rounded anyway.
+    """
+    n = len(points)
+    if window < 1:
+        return points
+    return [(sum(points[(i + j) % n][0] for j in range(-window, window + 1))
+             / (2 * window + 1),
+             sum(points[(i + j) % n][1] for j in range(-window, window + 1))
+             / (2 * window + 1)) for i in range(n)]
+
+
+def _curve_radius(a, b, c):
+    """Radius of the circle through three points — how sharply the coast bends.
+
+    Displacing further than this towards the centre of the bend turns the
+    outline inside out, so it is the ceiling on how deep a bay can cut.
+    """
+    ax, ay = a
+    bx, by = b
+    cx_, cy_ = c
+    area = abs((bx - ax) * (cy_ - ay) - (cx_ - ax) * (by - ay)) / 2.0
+    if area < 1e-9:
+        return float('inf')
+    return math.dist(a, b) * math.dist(b, c) * math.dist(a, c) / (4.0 * area)
 
 
 def _shape_points(n, cx, cy, pw, ph, rng):
