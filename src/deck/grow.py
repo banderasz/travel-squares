@@ -122,7 +122,8 @@ def save(path, state):
 
 
 def run(n_cards, bench, target, iterations, max_replace, sigma, candidates,
-        pool, hands, rounds, placements, checkpoint, deck_out, seed, init_from):
+        pool, hands, rounds, placements, checkpoint, deck_out, seed, init_from,
+        calibration_rounds):
     # The roster carries `bench` more cards than the deck ships. Freshly
     # generated cards land on the bench, get measured there, and only join the
     # shipped deck if they earn it. Without that, every iteration's reported
@@ -130,8 +131,7 @@ def run(n_cards, bench, target, iterations, max_replace, sigma, candidates,
     roster_size = n_cards + bench
     heuristic = Heuristic()
     # records[key] = {'card': …, 'values': [means], 'sds': [per-measurement sd]}
-    records, deck_keys, history, start, aim = {}, [], [], 0, None
-    pending = set()   # cards added last iteration, used to measure the offset
+    records, deck_keys, history, start = {}, [], [], 0
 
     if os.path.exists(checkpoint):
         with open(checkpoint) as handle:
@@ -140,7 +140,6 @@ def run(n_cards, bench, target, iterations, max_replace, sigma, candidates,
         deck_keys = st['deck_keys']
         history = st['history']
         start = st['iteration']
-        aim = st.get('aim')
         target = st['target'] if target is None else target
         heuristic.load(st['heuristic_state'])
         print(f"  resuming at iteration {start}: {len(records)} distinct cards known",
@@ -157,26 +156,27 @@ def run(n_cards, bench, target, iterations, max_replace, sigma, candidates,
             heuristic.load(prior.get('heuristic_state'))
             print(f"  seeded the heuristic from {init_from}", flush=True)
 
-        # A card's measured value is a hand value, so it moves with the company
-        # it keeps: the same cards among stronger ones score higher across the
-        # board. Ranking survives that almost perfectly (r=0.98, slope 1.00) but
-        # the level does not, so a borrowed heuristic keeps its slopes and has
-        # its intercept refitted here.
+        # Measure a batch, fit the heuristic, build the opening roster from it.
+        #
+        # One round only. Repeating this oscillates: a heuristic fitted on a weak
+        # deck builds an over-strong one, refitting on that builds an over-weak
+        # one, and so on (12.6 -> 28.8 -> 4.8 -> 24.0 when tried with four). The
+        # main loop is stable precisely because it replaces a few cards at a
+        # time, so it damps the same feedback instead of amplifying it. Starting
+        # high and walking down is fine; starting from a full rebuild is not.
         calib = (propose(heuristic, target, roster_size, candidates)
                  if heuristic.state() else [random_card() for _ in range(roster_size)])
-        print(f"  calibrating on {len(calib)} cards", flush=True)
-        cal_result = measure_deck(calib, pool, hands, rounds, placements, seed)
-        cal_values = list(cal_result['middle_mean'])
-        heuristic.fit(calib, np.array(cal_values))
-        if target is None:
-            target = float(np.median(cal_values))
-        print(f"  calibration mean {np.mean(cal_values):.2f}, aiming at {target:.2f}",
-              flush=True)
+        for step in range(max(1, calibration_rounds)):
+            cal_values = list(measure_deck(calib, pool, hands, rounds,
+                                           placements, seed + step)['middle_mean'])
+            heuristic.fit(calib, np.array(cal_values))
+            if target is None:
+                target = float(np.median(cal_values))
+            print(f"  calibration {step + 1}/{calibration_rounds}: "
+                  f"deck mean {np.mean(cal_values):6.2f}, target {target:.2f}", flush=True)
+            calib = propose(heuristic, target, roster_size, candidates)
 
-        aim = target
-        initial = propose(heuristic, aim, roster_size, candidates)
-        pending = {card_key(c) for c in initial}
-        for c in initial:
+        for c in calib:
             records[card_key(c)] = {'card': c, 'values': [], 'sds': []}
         deck_keys = list(records)
 
@@ -226,43 +226,33 @@ def run(n_cards, bench, target, iterations, max_replace, sigma, candidates,
                         'typical_se': float(np.median(se)),
                         'distinct_cards': len(records)})
 
-        # Asking the heuristic for `target` does not produce cards measuring
-        # `target`: a deck of stronger cards lifts every hand it plays, so the
-        # level moves with the deck. The shift is a near-pure offset (slope
-        # 1.00), and it is measured here directly — from what the cards proposed
-        # last iteration actually scored, not from the deck mean. The deck mean
-        # lags behind by design, since only `--replace` cards change each round,
-        # and correcting against that lag overshoots wildly.
+        # No aim correction. The heuristic is refitted every iteration on
+        # measurements taken in the *current* deck, so asking it for `target`
+        # already means "a card that would measure target here", and swapping
+        # such cards in walks the deck to the target on its own. Correcting the
+        # aim from what fresh cards score does not work: a weak card in a strong
+        # deck still scores high, because the value is a hand value and includes
+        # its five companions. That offset is mostly the deck's level, and
+        # steering on it oscillates instead of converging.
         ship_mean = float(ship_est.mean())
-        fresh_vals = [float(result['middle_mean'][j])
-                      for j, k in enumerate(deck_keys) if k in pending]
-        if fresh_vals:
-            offset = float(np.mean(fresh_vals)) - (aim if aim is not None else target)
-            aim = target - offset
-        elif aim is None:
-            aim = target
 
         # cut only from the bench, and only where the miss beats the uncertainty
         z = np.abs(est - target) / np.maximum(se, 1e-9)
         bench_by_z = sorted(benched, key=lambda j: -z[j])
         doomed = [j for j in bench_by_z[:max_replace] if z[j] > sigma]
         print(f"  iter {i:>4}  mean {ship_mean:6.2f} (target {target:.1f})  "
-              f"spread {ship_est.max()-ship_est.min():5.2f}  sd {ship_est.std():4.2f}  aim {aim:5.1f}  "
+              f"spread {ship_est.max()-ship_est.min():5.2f}  sd {ship_est.std():4.2f}  "
               f"obs/card {int(np.median(n_obs)):>3}  replacing {len(doomed):>2}"
               f"  ({time.time()-t0:.0f}s)", flush=True)
 
         if doomed:
             keep = [k for j, k in enumerate(deck_keys) if j not in set(doomed)]
-            fresh = propose(heuristic, aim, len(doomed), candidates)
+            fresh = propose(heuristic, target, len(doomed), candidates)
             for c in fresh:
                 records.setdefault(card_key(c), {'card': c, 'values': [], 'sds': []})
-            pending = {card_key(c) for c in fresh}
             deck_keys = keep + [card_key(c) for c in fresh]
-        else:
-            pending = set()
 
-        save(checkpoint, {'iteration': i, 'target': target, 'aim': aim,
-                          'records': records,
+        save(checkpoint, {'iteration': i, 'target': target, 'records': records,
                           'deck_keys': deck_keys, 'history': history,
                           'heuristic_state': heuristic.state()})
         with open(deck_out, 'w') as handle:
@@ -291,6 +281,8 @@ def main():
                    help='Measurement precision. 1200 ~= 72,000 hands per card.')
     p.add_argument('--placements', type=int, default=300)
     p.add_argument('--seed', type=int, default=0)
+    p.add_argument('--calibration-rounds', type=int, default=1,
+                   help='Roster rebuilds before the main loop. More than 1 oscillates.')
     p.add_argument('--init-from', default='',
                    help="Another run's checkpoint to borrow the heuristic from")
     p.add_argument('--checkpoint', default='')
@@ -304,7 +296,7 @@ def main():
     os.makedirs(os.path.dirname(checkpoint) or '.', exist_ok=True)
     run(a.cards, a.bench, a.target, a.iterations, a.replace, a.sigma, a.candidates,
         a.pool, a.hands, a.rounds, a.placements, checkpoint, deck_out, a.seed,
-        a.init_from)
+        a.init_from, a.calibration_rounds)
 
 
 if __name__ == '__main__':
