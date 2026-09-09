@@ -58,10 +58,15 @@ PADDING = 8.0
 SHAPE_SCALE = {1: 0.60, 2: 1.15, 3: 1.60, 4: 1.25}
 SYMBOL_SCALE = 0.45 * 0.8            # tSize = qW*0.45, then symbolScale 0.8
 JITTER_PCT = 10
-SCATTER_SPACING = (25 * 0.7 * 1.8, 22 * 0.7 * 1.8)
-SCATTER_ICON = 15 * 0.4
-SCATTER_OPACITY = 128                # the script uses opacity 50 (of 100)
-STROKE_WIDTH = 0.025                 # of the card, measured off the example sheet
+SCATTER_SPACING = (25 * 0.7 * 0.7, 22 * 0.7 * 0.7)
+SCATTER_ICON = 15 * 0.45
+SCATTER_OPACITY = 235
+SCATTER_TRIES = 2000                 # dart throws per card
+SCATTER_MAX = 30                     # scenery pieces actually drawn
+# The example sheet's coast is 0.025 of the card wide, but its cards carry at
+# most one symbol per quarter. Ours carry four, so a line that heavy crowds
+# them; half of it reads the same at card size and leaves the artwork room.
+STROKE_WIDTH = 0.013
 SUPERSAMPLE = 2                      # the outline is thick; draw it big, scale down
 
 # Roughen, as a spectrum rather than a size and a detail. Taking the FFT of
@@ -71,8 +76,13 @@ SUPERSAMPLE = 2                      # the outline is thick; draw it big, scale 
 # over them, and nothing above ~16 bumps around the perimeter. Synthesising
 # that directly beats trying to reach it by stacking passes, which is what the
 # earlier size/detail pairs were groping towards.
-ROUGHEN_AMPLITUDE = 0.42
-ROUGHEN_HARMONICS = (4, 16)
+#
+# The measured figures are 0.42 over harmonics 4-16. These are dialled back to
+# a calmer coast with the fine structure carried further out, chosen off a
+# comparison sheet: the measured values are honest about the printed shapes but
+# read as fussy once four symbols share a quarter.
+ROUGHEN_AMPLITUDE = 0.22
+ROUGHEN_HARMONICS = (3, 14)
 
 # Wave glyphs on the open sea, as fractions of the card. A staggered grid,
 # every other row offset by half a step.
@@ -258,30 +268,66 @@ def _shape_points(n, cx, cy, pw, ph, rng):
             (cx, cy2 + r)]
 
 
-def _scatter(size, mask, scale, rng):
-    """Tile one environment symbol over the island, clipped to `mask`."""
+def _scatter(size, mask, scale, rng, keepout=()):
+    """Dot the island with pine/palm/tree/grass, avoiding the symbols.
+
+    The Illustrator script tiles a pattern across the whole shape and lets the
+    symbols land on top, which buries most of it — the visible scenery ends up
+    being whatever happens to fall in the gaps. Here each position is tested
+    first: it has to sit clear of every symbol's box and wholly on land, or it
+    is dropped. Fewer get drawn, but the ones that do are all visible, so they
+    can carry proper weight instead of being faded to near-nothing.
+    """
     target = SCATTER_ICON * scale
-    icon = _load(rng.choice(SCATTER), int(max(target, 4)))
-    ratio = target / max(icon.size)
-    icon = icon.resize((max(1, int(icon.width * ratio)), max(1, int(icon.height * ratio))),
-                       Image.LANCZOS)
-    sx, sy = SCATTER_SPACING[0] * scale, SCATTER_SPACING[1] * scale
-
+    icons = []
+    for name in SCATTER:
+        art = _load(name, int(max(target, 4)))
+        ratio = target / max(art.size)
+        icons.append(art.resize((max(1, int(art.width * ratio)),
+                                 max(1, int(art.height * ratio))), Image.LANCZOS))
+    probe = mask.load()
+    w, h = size
+    spacing = SCATTER_SPACING[0] * scale
     layer = Image.new('RGBA', size, (0, 0, 0, 0))
-    row, y = 0, -sy
-    while y < size[1] + sy:
-        offset = 0 if row % 2 == 0 else sx / 2
-        x = -sx
-        while x < size[0] + sx:
-            layer.alpha_composite(icon, (int(x + offset - icon.width / 2),
-                                         int(y - icon.height / 2)))
-            x += sx
-        y += sy
-        row += 1
 
-    clip = mask.point(lambda v: v * SCATTER_OPACITY // 255)
-    layer.putalpha(ImageChops.multiply(layer.getchannel('A'), clip))
+    # Dart-throwing rather than a grid. A card can carry sixteen symbols, and
+    # the boxes reserved for them leave the island so broken up that a regular
+    # grid lands almost every point on one and draws nothing at all. Trying
+    # many random spots and keeping those that clear the symbols, the coast and
+    # each other finds the gaps wherever they happen to be.
+    taken = []
+    for _ in range(SCATTER_TRIES):
+        if len(taken) >= SCATTER_MAX:
+            break
+        icon = icons[rng.randrange(len(icons))]
+        cx, cy = rng.uniform(0, w), rng.uniform(0, h)
+        box = (cx - icon.width / 2, cy - icon.height / 2,
+               cx + icon.width / 2, cy + icon.height / 2)
+        if not _on_land(probe, box, w, h):
+            continue
+        if _hits(box, keepout, target * 0.15) or _hits(box, taken, spacing * 0.5):
+            continue
+        taken.append(box)
+        layer.alpha_composite(icon, (int(box[0]), int(box[1])))
+
+    layer.putalpha(layer.getchannel('A').point(lambda v: v * SCATTER_OPACITY // 255))
     return layer
+
+
+def _on_land(probe, box, w, h):
+    """True when the whole icon sits inside the island, not over its coast."""
+    x0, y0, x1, y1 = box
+    if x0 < 0 or y0 < 0 or x1 >= w or y1 >= h:
+        return False
+    return all(probe[int(x), int(y)] > 200
+               for x in (x0, (x0 + x1) / 2, x1) for y in (y0, (y0 + y1) / 2, y1))
+
+
+def _hits(box, boxes, margin):
+    x0, y0, x1, y1 = box
+    return any(x0 < bx1 + margin and bx0 - margin < x1 and
+               y0 < by1 + margin and by0 - margin < y1
+               for bx0, by0, bx1, by1 in boxes)
 
 
 def _stroke(pen, points, width):
@@ -392,9 +438,16 @@ def render_card(card, px=512, seed=None):
         ink = ImageDraw.Draw(inland)
         for pts in scaled:
             ink.polygon(pts, fill=255)
+        # Every symbol is scaled to fit a target-by-target box, so reserving that
+        # box keeps the scenery out from under artwork that has not been drawn
+        # yet. Slightly generous for art that is not square, which is the right
+        # way to be wrong here.
+        half = q * SYMBOL_SCALE / 2
+        keepout = [(sx - half, sy - half, sx + half, sy + half)
+                   for _, sx, sy in placements]
         img.alpha_composite(island)
         img.alpha_composite(_scatter(img.size, inland.resize((px, px), Image.LANCZOS),
-                                     scale, rng))
+                                     scale, rng, keepout))
 
     target = q * SYMBOL_SCALE
     boxes = []
