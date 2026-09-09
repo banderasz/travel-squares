@@ -39,13 +39,14 @@ DARK_BROWN = (77, 45, 20, 255)       # CMYK 50/70/90/50
 # All from the Illustrator script, expressed against its 135pt card.
 REF_CARD = 135.0
 PADDING = 8.0
-SHAPE_SCALE = {1: 0.60, 2: 1.00, 3: 1.70, 4: 2.00}
+SHAPE_SCALE = {1: 0.60, 2: 1.00, 3: 2.00, 4: 2.00}
 SYMBOL_SCALE = 0.45 * 0.8            # tSize = qW*0.45, then symbolScale 0.8
 JITTER_PCT = 10
 SCATTER_SPACING = (25 * 0.7 * 1.8, 22 * 0.7 * 1.8)
 SCATTER_ICON = 15 * 0.7
 SCATTER_OPACITY = 128                # the script uses opacity 50 (of 100)
 ROUGHEN_SIZE_PCT = 0.10              # Illustrator Roughen: size 10%, relative
+                                     # (relative to the bounding-box diagonal)
 ROUGHEN_DETAIL = 6.0                 # anchors per inch (72pt), smooth points
 
 
@@ -130,7 +131,7 @@ def roughen(points, scale, rng, size_pct=ROUGHEN_SIZE_PCT, detail_per_inch=ROUGH
     """
     xs = [p[0] for p in points]
     ys = [p[1] for p in points]
-    size = size_pct * max(max(xs) - min(xs), max(ys) - min(ys))
+    size = size_pct * math.hypot(max(xs) - min(xs), max(ys) - min(ys))
     spacing = (72.0 / detail_per_inch) * scale
 
     anchors = []
@@ -163,9 +164,14 @@ def _shape_points(n, cx, cy, pw, ph, rng):
     # an upward polygon then rotates it 180. That orientation is what the symbol
     # layout needs: two symbols sit along the wide top edge and one near the
     # point, so an upward triangle leaves the top two hanging outside it.
+    #
+    # Its scale is 2.0, not the script's 1.7. At 1.7 the triangle has already
+    # narrowed to about the width of one symbol by the time it reaches the
+    # bottom one, so that symbol overhangs the edge -- and the roughen then eats
+    # into what little margin is left. 2.0 keeps the apex wide enough to hold it.
     r = _jitter(pw * 0.5 * k, rng)
     h = _jitter(ph * 0.5 * k, rng)
-    cy2 = cy - h / 2.5
+    cy2 = cy - h / 8
     return [(cx - r * math.cos(math.pi / 6), cy2 - r * math.sin(math.pi / 6)),
             (cx + r * math.cos(math.pi / 6), cy2 - r * math.sin(math.pi / 6)),
             (cx, cy2 + r)]
