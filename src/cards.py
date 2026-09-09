@@ -18,10 +18,15 @@ class Quarter:
 
     @staticmethod
     def generate_quarter() -> "Quarter":
-        symbols = choices([symbol for symbol in Symbols], weights=[symbol.weight for symbol in Symbols], k=4)
-        while Counter(symbols)[Symbols.DIAMOND] > 1:
-            symbols = choices([symbol for symbol in Symbols], weights=[symbol.weight for symbol in Symbols], k=4)
-        return Quarter(symbols)
+        """Four slots drawn independently by symbol weight.
+
+        There used to be a rule here rejecting any quarter with more than one
+        parrot, rerolling the whole quarter. It capped parrot at 4 per card and
+        left it about 6% rarer than its weight of 2 implies. Removed, so every
+        symbol now appears at its stated rate.
+        """
+        return Quarter(choices([symbol for symbol in Symbols],
+                               weights=[symbol.weight for symbol in Symbols], k=4))
 
     def is_empty(self):
         return not [symbol for symbol in self.symbols if symbol != Symbols.NOTHING]

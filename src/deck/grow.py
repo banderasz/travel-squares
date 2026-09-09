@@ -28,8 +28,7 @@ Every iteration is written atomically before the next begins, so the run can be
 killed at any point: the deck on disk is complete, and restarting continues
 from the same place.
 
-    python -m src.deck.grow --heuristic measured --cards 120
-    python -m src.deck.grow --heuristic analytic --cards 120
+    python -m src.deck.grow --cards 120 --target 20
 """
 import argparse
 import hashlib
@@ -40,17 +39,12 @@ import tempfile
 import time
 
 import numpy as np
-from scipy.stats import binom
 
 from src.deck.evaluate import measure
 from src.deck.tune import random_card
 from src.deck.value_model import ValueModel
 from src.deck_io import dumps_deck
-from src.symbols import Symbols, NUMBER_OF_SYMBOLS_IN_PLAY as TOTAL
 
-CAP = 11
-SLOTS = 16
-SCORING_SYMBOLS = [s for s in Symbols if s.value_symbol()]
 _stop = False
 
 
@@ -68,66 +62,36 @@ def card_key(card):
     return hashlib.sha1(canon.encode()).hexdigest()[:16]
 
 
-def analytic_tables(others=5):
-    """Marginal value of holding k of each symbol, given `others` random cards."""
-    tables = {}
-    for s in SCORING_SYMBOLS:
-        p = s.weight / TOTAL
-        pts = np.array(s.points, dtype=float)
-        d = binom.pmf(np.arange(SLOTS * others + 1), SLOTS * others, p)
-        tables[s] = np.array([sum(d[i] * pts[min(i + k, CAP)] for i in range(len(d)))
-                              for k in range(SLOTS + 1)])
-    return tables
-
-
-ANALYTIC = analytic_tables()
-
-
-def analytic_raw(card):
-    counts = {s: 0 for s in SCORING_SYMBOLS}
-    for syms in card['card']['quarters'].values():
-        for name in syms:
-            s = Symbols.of(name)
-            if s.value_symbol():
-                counts[s] += 1
-    return sum(ANALYTIC[s][counts[s]] for s in SCORING_SYMBOLS)
-
-
 class Heuristic:
-    def __init__(self, kind):
-        self.kind = kind
+    """Prices a card so candidates can be filtered without measuring them.
+
+    A linear model over symbol counts, refitted on every measurement taken so
+    far. There used to be an analytic alternative here, deriving marginal value
+    from the scoring tables instead of from data; it was measurably worse (0.864
+    against 0.900 predictive accuracy, and a final deck spread of 1.85 against
+    0.40) and is kept only in the git history. Its supposed advantage — pricing
+    a card configuration never observed — does not apply to a linear model,
+    which extrapolates to any count.
+    """
+
+    def __init__(self):
         self.model = None
-        self.scale = (0.0, 1.0)
 
     def fit(self, cards, values):
-        if self.kind == 'measured':
-            self.model = ValueModel.fit(cards, np.asarray(values), ridge=1.0)
-        else:
-            x = np.array([analytic_raw(c) for c in cards])
-            slope, offset = np.polyfit(x, np.asarray(values), 1)
-            self.scale = (float(offset), float(slope))
+        self.model = ValueModel.fit(cards, np.asarray(values), ridge=1.0)
 
     def predict(self, cards):
-        if self.kind == 'measured':
-            if self.model is None:
-                return np.zeros(len(cards))
-            return self.model.predict_many(cards)
-        offset, slope = self.scale
-        return offset + slope * np.array([analytic_raw(c) for c in cards])
+        if self.model is None:
+            return np.zeros(len(cards))
+        return self.model.predict_many(cards)
 
     def state(self):
-        if self.kind == 'measured':
-            return None if self.model is None else {
-                'intercept': self.model.intercept, 'coefficients': self.model.coefficients}
-        return {'offset': self.scale[0], 'slope': self.scale[1]}
+        return None if self.model is None else {
+            'intercept': self.model.intercept, 'coefficients': self.model.coefficients}
 
     def load(self, state):
-        if state is None:
-            return
-        if self.kind == 'measured':
+        if state is not None:
             self.model = ValueModel(state['intercept'], state['coefficients'])
-        else:
-            self.scale = (state['offset'], state['slope'])
 
 
 def measure_deck(cards, pool, hands, rounds, placements, seed):
@@ -157,16 +121,17 @@ def save(path, state):
     os.replace(tmp, path)
 
 
-def run(kind, n_cards, bench, target, iterations, max_replace, sigma, candidates,
-        pool, hands, rounds, placements, checkpoint, deck_out, seed):
+def run(n_cards, bench, target, iterations, max_replace, sigma, candidates,
+        pool, hands, rounds, placements, checkpoint, deck_out, seed, init_from):
     # The roster carries `bench` more cards than the deck ships. Freshly
     # generated cards land on the bench, get measured there, and only join the
     # shipped deck if they earn it. Without that, every iteration's reported
     # spread included cards with a single observation to their name.
     roster_size = n_cards + bench
-    heuristic = Heuristic(kind)
+    heuristic = Heuristic()
     # records[key] = {'card': …, 'values': [means], 'sds': [per-measurement sd]}
-    records, deck_keys, history, start = {}, [], [], 0
+    records, deck_keys, history, start, aim = {}, [], [], 0, None
+    pending = set()   # cards added last iteration, used to measure the offset
 
     if os.path.exists(checkpoint):
         with open(checkpoint) as handle:
@@ -175,18 +140,48 @@ def run(kind, n_cards, bench, target, iterations, max_replace, sigma, candidates
         deck_keys = st['deck_keys']
         history = st['history']
         start = st['iteration']
+        aim = st.get('aim')
         target = st['target'] if target is None else target
         heuristic.load(st['heuristic_state'])
-        print(f"  resuming {kind} at iteration {start}: {len(records)} distinct cards known",
+        print(f"  resuming at iteration {start}: {len(records)} distinct cards known",
               flush=True)
 
     if not deck_keys:
-        for c in [random_card() for _ in range(roster_size)]:
+        # Bootstrap. Without this the first roster is unfiltered random, and the
+        # loop spends ~20 iterations dragging it to the target six cards at a
+        # time — a phase where the reported spread describes a mixture of old
+        # and new cards rather than the balance of anything.
+        if init_from and os.path.exists(init_from):
+            with open(init_from) as handle:
+                prior = json.load(handle)
+            heuristic.load(prior.get('heuristic_state'))
+            print(f"  seeded the heuristic from {init_from}", flush=True)
+
+        # A card's measured value is a hand value, so it moves with the company
+        # it keeps: the same cards among stronger ones score higher across the
+        # board. Ranking survives that almost perfectly (r=0.98, slope 1.00) but
+        # the level does not, so a borrowed heuristic keeps its slopes and has
+        # its intercept refitted here.
+        calib = (propose(heuristic, target, roster_size, candidates)
+                 if heuristic.state() else [random_card() for _ in range(roster_size)])
+        print(f"  calibrating on {len(calib)} cards", flush=True)
+        cal_result = measure_deck(calib, pool, hands, rounds, placements, seed)
+        cal_values = list(cal_result['middle_mean'])
+        heuristic.fit(calib, np.array(cal_values))
+        if target is None:
+            target = float(np.median(cal_values))
+        print(f"  calibration mean {np.mean(cal_values):.2f}, aiming at {target:.2f}",
+              flush=True)
+
+        aim = target
+        initial = propose(heuristic, aim, roster_size, candidates)
+        pending = {card_key(c) for c in initial}
+        for c in initial:
             records[card_key(c)] = {'card': c, 'values': [], 'sds': []}
         deck_keys = list(records)
 
     hands_per_card = rounds * hands * 6 // pool
-    print(f"  [{kind}] roster {roster_size} -> ships best {n_cards}, "
+    print(f"  roster {roster_size} -> ships best {n_cards}, "
           f"{hands_per_card:,} hands per card per iteration, "
           f"replace<={max_replace} at >{sigma} sigma", flush=True)
 
@@ -231,37 +226,55 @@ def run(kind, n_cards, bench, target, iterations, max_replace, sigma, candidates
                         'typical_se': float(np.median(se)),
                         'distinct_cards': len(records)})
 
+        # Asking the heuristic for `target` does not produce cards measuring
+        # `target`: a deck of stronger cards lifts every hand it plays, so the
+        # level moves with the deck. The shift is a near-pure offset (slope
+        # 1.00), and it is measured here directly — from what the cards proposed
+        # last iteration actually scored, not from the deck mean. The deck mean
+        # lags behind by design, since only `--replace` cards change each round,
+        # and correcting against that lag overshoots wildly.
+        ship_mean = float(ship_est.mean())
+        fresh_vals = [float(result['middle_mean'][j])
+                      for j, k in enumerate(deck_keys) if k in pending]
+        if fresh_vals:
+            offset = float(np.mean(fresh_vals)) - (aim if aim is not None else target)
+            aim = target - offset
+        elif aim is None:
+            aim = target
+
         # cut only from the bench, and only where the miss beats the uncertainty
         z = np.abs(est - target) / np.maximum(se, 1e-9)
         bench_by_z = sorted(benched, key=lambda j: -z[j])
         doomed = [j for j in bench_by_z[:max_replace] if z[j] > sigma]
-        print(f"  [{kind:>8}] iter {i:>4}  deck spread {ship_est.max()-ship_est.min():5.2f}  "
-              f"sd {ship_est.std():4.2f}  se {np.median(se):.3f}  "
+        print(f"  iter {i:>4}  mean {ship_mean:6.2f} (target {target:.1f})  "
+              f"spread {ship_est.max()-ship_est.min():5.2f}  sd {ship_est.std():4.2f}  aim {aim:5.1f}  "
               f"obs/card {int(np.median(n_obs)):>3}  replacing {len(doomed):>2}"
               f"  ({time.time()-t0:.0f}s)", flush=True)
 
         if doomed:
             keep = [k for j, k in enumerate(deck_keys) if j not in set(doomed)]
-            fresh = propose(heuristic, target, len(doomed), candidates)
+            fresh = propose(heuristic, aim, len(doomed), candidates)
             for c in fresh:
                 records.setdefault(card_key(c), {'card': c, 'values': [], 'sds': []})
+            pending = {card_key(c) for c in fresh}
             deck_keys = keep + [card_key(c) for c in fresh]
+        else:
+            pending = set()
 
-        save(checkpoint, {'iteration': i, 'target': target, 'records': records,
+        save(checkpoint, {'iteration': i, 'target': target, 'aim': aim,
+                          'records': records,
                           'deck_keys': deck_keys, 'history': history,
-                          'heuristic_kind': kind,
                           'heuristic_state': heuristic.state()})
         with open(deck_out, 'w') as handle:
             handle.write(dumps_deck([records[deck_keys[j]]['card'] for j in shipped]))
 
-    print(f"  [{kind}] stopped at iteration {history[-1]['iteration'] if history else start}",
+    print(f"  stopped at iteration {history[-1]['iteration'] if history else start}",
           flush=True)
 
 
 def main():
     p = argparse.ArgumentParser(description=__doc__,
                                 formatter_class=argparse.RawDescriptionHelpFormatter)
-    p.add_argument('--heuristic', choices=['measured', 'analytic'], required=True)
     p.add_argument('--cards', type=int, default=120, help='Deck size to ship')
     p.add_argument('--bench', type=int, default=12,
                    help='Extra cards carried and measured but not shipped')
@@ -278,17 +291,20 @@ def main():
                    help='Measurement precision. 1200 ~= 72,000 hands per card.')
     p.add_argument('--placements', type=int, default=300)
     p.add_argument('--seed', type=int, default=0)
+    p.add_argument('--init-from', default='',
+                   help="Another run's checkpoint to borrow the heuristic from")
     p.add_argument('--checkpoint', default='')
     p.add_argument('--deck-out', default='')
     a = p.parse_args()
 
     signal.signal(signal.SIGINT, _on_signal)
     signal.signal(signal.SIGTERM, _on_signal)
-    checkpoint = a.checkpoint or f'data/grow_{a.heuristic}.json'
-    deck_out = a.deck_out or f'decks/grown_{a.heuristic}.json'
+    checkpoint = a.checkpoint or 'data/grow.json'
+    deck_out = a.deck_out or 'decks/grown.json'
     os.makedirs(os.path.dirname(checkpoint) or '.', exist_ok=True)
-    run(a.heuristic, a.cards, a.bench, a.target, a.iterations, a.replace, a.sigma, a.candidates,
-        a.pool, a.hands, a.rounds, a.placements, checkpoint, deck_out, a.seed)
+    run(a.cards, a.bench, a.target, a.iterations, a.replace, a.sigma, a.candidates,
+        a.pool, a.hands, a.rounds, a.placements, checkpoint, deck_out, a.seed,
+        a.init_from)
 
 
 if __name__ == '__main__':
