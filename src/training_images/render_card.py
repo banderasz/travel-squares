@@ -46,12 +46,13 @@ SCATTER_SPACING = (25 * 0.7 * 1.8, 22 * 0.7 * 1.8)
 SCATTER_ICON = 15 * 0.7
 SCATTER_OPACITY = 128                # the script uses opacity 50 (of 100)
 # Roughen, as (size, detail) passes applied one after another. Size is a
-# fraction of the shape's bounding-box diagonal; detail is anchors per inch
-# (72pt). Illustrator's own effect is a single pass, but one pass can only
-# produce one wavelength: crank the size and you get a few huge lobes, crank
-# the detail and you get an even fuzz. A coastline has both, so the coarse
-# pass sets the silhouette and the fine pass crinkles the edge it leaves.
-ROUGHEN_PASSES = ((0.070, 5.0, 12), (0.026, 14.0, 5))   # size, detail, curve samples
+# fraction of the shape's bounding-box diagonal; detail is bumps per inch
+# (72pt), so it sets the wavelength. Illustrator's own effect is a single
+# pass, but one pass can only produce one wavelength: crank the size and you
+# get a few huge lobes, crank the detail and you get an even fuzz. A coastline
+# has both, so the coarse pass sets the silhouette and the fine pass crinkles
+# the edge it leaves.
+ROUGHEN_PASSES = ((0.075, 4.5), (0.022, 13.0))          # size, detail
 
 
 # Asset filenames, keyed by stable symbol ID. They mostly match the display
@@ -107,55 +108,75 @@ def _jitter(value, rng):
     return value * (1 + (rng.random() * 2 - 1) * JITTER_PCT / 100)
 
 
-def _catmull_rom(points, samples=12):
-    """Smooth closed curve through the points — Illustrator's "smooth" anchors."""
-    out, n = [], len(points)
-    for i in range(n):
-        p0, p1 = points[(i - 1) % n], points[i]
-        p2, p3 = points[(i + 1) % n], points[(i + 2) % n]
-        for s in range(samples):
-            t = s / samples
-            t2, t3 = t * t, t * t * t
-            out.append((
-                0.5 * ((2 * p1[0]) + (-p0[0] + p2[0]) * t
-                       + (2 * p0[0] - 5 * p1[0] + 4 * p2[0] - p3[0]) * t2
-                       + (-p0[0] + 3 * p1[0] - 3 * p2[0] + p3[0]) * t3),
-                0.5 * ((2 * p1[1]) + (-p0[1] + p2[1]) * t
-                       + (2 * p0[1] - 5 * p1[1] + 4 * p2[1] - p3[1]) * t2
-                       + (-p0[1] + 3 * p1[1] - 3 * p2[1] + p3[1]) * t3)))
-    return out
-
-
-def _roughen_pass(points, size, spacing, samples, rng):
-    """Resample the outline at `spacing`, jog every anchor by up to `size`."""
-    anchors = []
+def _resample(points, spacing):
+    """Walk the closed outline and drop a point every `spacing` along it."""
+    out = []
     for i in range(len(points)):
         ax, ay = points[i]
         bx, by = points[(i + 1) % len(points)]
         steps = max(1, round(math.hypot(bx - ax, by - ay) / spacing))
         for s in range(steps):
             t = s / steps
-            x, y = ax + (bx - ax) * t, ay + (by - ay) * t
-            angle = rng.random() * math.tau
-            r = rng.random() * size
-            anchors.append((x + math.cos(angle) * r, y + math.sin(angle) * r))
-    return _catmull_rom(anchors, samples)
+            out.append((ax + (bx - ax) * t, ay + (by - ay) * t))
+    return out
+
+
+def _loop_noise(n_out, n_control, rng):
+    """`n_out` smooth values in roughly [-1, 1], wrapping seamlessly.
+
+    A few random control values with a Catmull-Rom spline read off between
+    them, so neighbouring samples move *together*. This is the whole trick:
+    displacing each point independently gives white noise, and white noise
+    reverses direction at every point no matter how smoothly you interpolate
+    the result — which is what made earlier versions look torn.
+    """
+    ctrl = [rng.uniform(-1.0, 1.0) for _ in range(n_control)]
+    out = []
+    for i in range(n_out):
+        u = i / n_out * n_control
+        k = int(u)
+        t = u - k
+        p0, p1 = ctrl[(k - 1) % n_control], ctrl[k % n_control]
+        p2, p3 = ctrl[(k + 1) % n_control], ctrl[(k + 2) % n_control]
+        t2, t3 = t * t, t * t * t
+        out.append(0.5 * ((2 * p1) + (-p0 + p2) * t
+                          + (2 * p0 - 5 * p1 + 4 * p2 - p3) * t2
+                          + (-p0 + 3 * p1 - 3 * p2 + p3) * t3))
+    return out
+
+
+def _roughen_pass(points, size, wavelength, rng):
+    """Push the outline in and out along its own normal, smoothly."""
+    dense = _resample(points, max(wavelength / 10.0, 0.4))
+    n = len(dense)
+    perimeter = sum(math.dist(dense[i], dense[(i + 1) % n]) for i in range(n))
+    noise = _loop_noise(n, max(3, round(perimeter / wavelength)), rng)
+
+    out = []
+    for i in range(n):
+        (ax, ay), (bx, by) = dense[(i - 1) % n], dense[(i + 1) % n]
+        tx, ty = bx - ax, by - ay
+        length = math.hypot(tx, ty) or 1.0
+        nx, ny = ty / length, -tx / length          # outward normal
+        x, y = dense[i]
+        out.append((x + nx * size * noise[i], y + ny * size * noise[i]))
+    return out
 
 
 def roughen(points, scale, rng, passes=ROUGHEN_PASSES):
     """Illustrator's Roughen, run at more than one wavelength.
 
-    The anchors are *smooth*, not corners — a corner-point version at this
-    density gives a jagged fringe rather than an edge. Size stays measured
-    against the original bounding box so a later pass does not compound the
-    displacement an earlier one already added.
+    Each pass displaces the outline along its normal by smooth noise of one
+    wavelength: the coarse pass shapes the silhouette, the fine one crinkles
+    the edge it leaves. Size stays measured against the original bounding box
+    so a later pass does not compound the displacement of an earlier one.
     """
     xs = [p[0] for p in points]
     ys = [p[1] for p in points]
     diagonal = math.hypot(max(xs) - min(xs), max(ys) - min(ys))
-    for size_pct, detail_per_inch, samples in passes:
+    for size_pct, detail_per_inch in passes:
         points = _roughen_pass(points, size_pct * diagonal,
-                               (72.0 / detail_per_inch) * scale, samples, rng)
+                               (72.0 / detail_per_inch) * scale, rng)
     return points
 
 
