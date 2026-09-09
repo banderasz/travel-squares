@@ -243,6 +243,36 @@ def _scatter(size, mask, scale, rng):
     return layer
 
 
+def _stroke(pen, points, width):
+    """Draw a closed outline by stamping a round brush along it.
+
+    Not ImageDraw.line: a thick polyline is drawn as one quad per segment, and
+    on the outside of a bend consecutive quads fan apart and leave a wedge of
+    background showing. Its joint='curve' does not close those at the shallow
+    turn angles a 512-point outline produces, so the coast ends up combed with
+    radial slits. Stamping overlapping discs cannot gap, and gives the round
+    join and cap the original has anyway.
+    """
+    step = max(1.0, width / 6.0)
+    radius = width / 2.0
+    n = len(points)
+    seg = [math.dist(points[i], points[(i + 1) % n]) for i in range(n)]
+
+    walked, i = 0.0, 0                  # `want` only grows, so walk once
+    want = 0.0
+    while i < n:
+        if want > walked + seg[i]:
+            walked += seg[i]
+            i += 1
+            continue
+        t = (want - walked) / (seg[i] or 1.0)
+        ax, ay = points[i]
+        bx, by = points[(i + 1) % n]
+        x, y = ax + (bx - ax) * t, ay + (by - ay) * t
+        pen.ellipse((x - radius, y - radius, x + radius, y + radius), fill=OUTLINE)
+        want += step
+
+
 def _sea(size, scale, rng):
     """The parchment the island sits on, sprinkled with little wave glyphs."""
     px = size[0]
@@ -310,8 +340,7 @@ def render_card(card, px=512, seed=None):
         pen = ImageDraw.Draw(big)
         scaled = [[(x * ss, y * ss) for x, y in pts] for pts in outlines]
         for pts in scaled:      # stroke double width; the fill eats the inner half
-            pen.line(pts + pts[:1], fill=OUTLINE,
-                     width=max(1, round(2 * STROKE_WIDTH * px * ss)), joint='curve')
+            _stroke(pen, pts, max(1, round(2 * STROKE_WIDTH * px * ss)))
         for pts in scaled:
             pen.polygon(pts, fill=ISLAND)
         island = big.resize((px, px), Image.LANCZOS)
