@@ -11,11 +11,17 @@ Per quarter it draws a "landmark" whose shape says how many symbols are there:
     1 symbol   small square        3 symbols  triangle, pointing down
     2 symbols  hexagon             4 symbols  large square
 
-filled light brown, stroked dark brown, with every dimension jittered +-10% so
-no two cards look stamped out. The outline is then roughened — Illustrator's
-Roughen effect, which walks the perimeter and displaces each point — and the
-inside is scattered with one of pine/palm/tree/grass at half opacity, clipped
-to the shape. Symbols sit at fixed positions on top.
+with every dimension jittered +-10% so no two cards look stamped out. The
+outlines are roughened, merged into one island, and stroked once around the
+whole coast; inside, one of pine/palm/tree/grass is scattered at half opacity
+and clipped to the land. The card itself is parchment with wave glyphs on the
+open sea. Symbols sit at fixed positions on top.
+
+Palette, stroke weight and roughen spectrum are measured off
+image_generator/example_image.ai, a printed sheet of finished cards, rather
+than converted from the values in the script — those came out far too
+saturated. Where the script's own numbers disagree with the sheet, the sheet
+wins, and the difference is noted at the constant.
 
     python -m src.training_images.render_card --deck decks/grown_t20.json --out cards/
 """
@@ -25,7 +31,7 @@ import math
 import os
 import random
 
-from PIL import Image, ImageDraw
+from PIL import Image, ImageChops, ImageDraw
 
 from src.symbols import Symbols
 
@@ -33,26 +39,46 @@ ASSETS = 'image_generator/symbols'
 SCATTER = ['bg_1', 'bg_2', 'bg_3', 'bg_4']      # pine, palm, tree, grass
 QUARTERS = ('top_left', 'top_right', 'bottom_left', 'bottom_right')
 
-LIGHT_BROWN = (168, 118, 68, 255)    # CMYK 30/50/70/10
-DARK_BROWN = (77, 45, 20, 255)       # CMYK 50/70/90/50
+# Sampled straight off image_generator/example_image.ai, a printed sheet of
+# finished cards. These replace values converted from the CMYK in the script,
+# which came out far too saturated — the real palette is muted.
+SEA = (251, 236, 203, 255)           # the card itself: parchment
+ISLAND = (199, 176, 142, 255)
+OUTLINE = (80, 71, 58, 255)
+SEA_MARK = (224, 208, 178, 255)      # the little wave glyphs on the open sea
 
 # All from the Illustrator script, expressed against its 135pt card.
 REF_CARD = 135.0
 PADDING = 8.0
-SHAPE_SCALE = {1: 0.60, 2: 1.00, 3: 2.00, 4: 2.00}
+# The script's own scales are {1: 0.6, 2: 1.0, 3: 1.7, 4: 2.0}, but those were
+# drawn against a deck whose quarters held at most one symbol. Ours hold up to
+# four, and at scale 2.0 a quarter's shape is twice the size its symbols need,
+# so the four of them merge into one slab covering the whole card instead of an
+# island with sea around it. These are sized to clear the symbols they contain.
+SHAPE_SCALE = {1: 0.60, 2: 1.15, 3: 1.60, 4: 1.25}
 SYMBOL_SCALE = 0.45 * 0.8            # tSize = qW*0.45, then symbolScale 0.8
 JITTER_PCT = 10
 SCATTER_SPACING = (25 * 0.7 * 1.8, 22 * 0.7 * 1.8)
-SCATTER_ICON = 15 * 0.7
+SCATTER_ICON = 15 * 0.4
 SCATTER_OPACITY = 128                # the script uses opacity 50 (of 100)
-# Roughen, as (size, detail) passes applied one after another. Size is a
-# fraction of the shape's bounding-box diagonal; detail is bumps per inch
-# (72pt), so it sets the wavelength. Illustrator's own effect is a single
-# pass, but one pass can only produce one wavelength: crank the size and you
-# get a few huge lobes, crank the detail and you get an even fuzz. A coastline
-# has both, so the coarse pass sets the silhouette and the fine pass crinkles
-# the edge it leaves.
-ROUGHEN_PASSES = ((0.075, 4.5), (0.022, 13.0))          # size, detail
+STROKE_WIDTH = 0.025                 # of the card, measured off the example sheet
+SUPERSAMPLE = 2                      # the outline is thick; draw it big, scale down
+
+# Roughen, as a spectrum rather than a size and a detail. Taking the FFT of
+# the island outlines in example_image.ai gives amplitudes falling off as 1/k
+# from about the 4th harmonic to the 16th, at 0.42/k of the shape's mean
+# radius — so a handful of broad lobes with progressively finer structure laid
+# over them, and nothing above ~16 bumps around the perimeter. Synthesising
+# that directly beats trying to reach it by stacking passes, which is what the
+# earlier size/detail pairs were groping towards.
+ROUGHEN_AMPLITUDE = 0.42
+ROUGHEN_HARMONICS = (4, 16)
+
+# Wave glyphs on the open sea, as fractions of the card. A staggered grid,
+# every other row offset by half a step.
+WAVE_STEP = (0.50, 0.43)
+WAVE_SIZE = 0.22
+WAVE_HUMPS = 4
 
 
 # Asset filenames, keyed by stable symbol ID. They mostly match the display
@@ -108,76 +134,58 @@ def _jitter(value, rng):
     return value * (1 + (rng.random() * 2 - 1) * JITTER_PCT / 100)
 
 
-def _resample(points, spacing):
-    """Walk the closed outline and drop a point every `spacing` along it."""
-    out = []
-    for i in range(len(points)):
-        ax, ay = points[i]
-        bx, by = points[(i + 1) % len(points)]
-        steps = max(1, round(math.hypot(bx - ax, by - ay) / spacing))
-        for s in range(steps):
-            t = s / steps
-            out.append((ax + (bx - ax) * t, ay + (by - ay) * t))
-    return out
+def _resample_even(points, count):
+    """`count` points spaced equally along the closed outline.
 
-
-def _loop_noise(n_out, n_control, rng):
-    """`n_out` smooth values in roughly [-1, 1], wrapping seamlessly.
-
-    A few random control values with a Catmull-Rom spline read off between
-    them, so neighbouring samples move *together*. This is the whole trick:
-    displacing each point independently gives white noise, and white noise
-    reverses direction at every point no matter how smoothly you interpolate
-    the result — which is what made earlier versions look torn.
+    Equal spacing is what lets the index double as the arc-length parameter,
+    so harmonic k really is k bumps around the perimeter.
     """
-    ctrl = [rng.uniform(-1.0, 1.0) for _ in range(n_control)]
-    out = []
-    for i in range(n_out):
-        u = i / n_out * n_control
-        k = int(u)
-        t = u - k
-        p0, p1 = ctrl[(k - 1) % n_control], ctrl[k % n_control]
-        p2, p3 = ctrl[(k + 1) % n_control], ctrl[(k + 2) % n_control]
-        t2, t3 = t * t, t * t * t
-        out.append(0.5 * ((2 * p1) + (-p0 + p2) * t
-                          + (2 * p0 - 5 * p1 + 4 * p2 - p3) * t2
-                          + (-p0 + 3 * p1 - 3 * p2 + p3) * t3))
+    n = len(points)
+    seg = [math.dist(points[i], points[(i + 1) % n]) for i in range(n)]
+    perimeter = sum(seg) or 1.0
+    out, i, walked = [], 0, 0.0
+    for s in range(count):
+        want = s / count * perimeter
+        while walked + seg[i] < want and i < n - 1:
+            walked += seg[i]
+            i += 1
+        t = (want - walked) / (seg[i] or 1.0)
+        ax, ay = points[i]
+        bx, by = points[(i + 1) % n]
+        out.append((ax + (bx - ax) * t, ay + (by - ay) * t))
     return out
 
 
-def _roughen_pass(points, size, wavelength, rng):
-    """Push the outline in and out along its own normal, smoothly."""
-    dense = _resample(points, max(wavelength / 10.0, 0.4))
-    n = len(dense)
-    perimeter = sum(math.dist(dense[i], dense[(i + 1) % n]) for i in range(n))
-    noise = _loop_noise(n, max(3, round(perimeter / wavelength)), rng)
+def roughen(points, rng, amplitude=ROUGHEN_AMPLITUDE, harmonics=ROUGHEN_HARMONICS,
+            samples=512):
+    """Push the outline in and out along its own normal, smoothly.
+
+    The displacement is a sum of sinusoids around the perimeter with random
+    phases and 1/k amplitudes — the spectrum measured off the example sheet.
+    Building it this way rather than by jogging individual points is the whole
+    trick: neighbouring samples then move *together*. Independent per-point
+    randomness is white noise, and white noise reverses direction at every
+    point no matter how smoothly the result is interpolated, which is what
+    made earlier attempts look torn rather than weathered.
+    """
+    dense = _resample_even(points, samples)
+    cx = sum(p[0] for p in dense) / samples
+    cy = sum(p[1] for p in dense) / samples
+    radius = sum(math.dist(p, (cx, cy)) for p in dense) / samples
+
+    k_lo, k_hi = harmonics
+    waves = [(k, amplitude / k * radius, rng.random() * math.tau)
+             for k in range(k_lo, k_hi + 1)]
 
     out = []
-    for i in range(n):
-        (ax, ay), (bx, by) = dense[(i - 1) % n], dense[(i + 1) % n]
+    for i, (x, y) in enumerate(dense):
+        t = i / samples * math.tau
+        offset = sum(amp * math.sin(k * t + phase) for k, amp, phase in waves)
+        (ax, ay), (bx, by) = dense[(i - 1) % samples], dense[(i + 1) % samples]
         tx, ty = bx - ax, by - ay
         length = math.hypot(tx, ty) or 1.0
-        nx, ny = ty / length, -tx / length          # outward normal
-        x, y = dense[i]
-        out.append((x + nx * size * noise[i], y + ny * size * noise[i]))
+        out.append((x + ty / length * offset, y - tx / length * offset))
     return out
-
-
-def roughen(points, scale, rng, passes=ROUGHEN_PASSES):
-    """Illustrator's Roughen, run at more than one wavelength.
-
-    Each pass displaces the outline along its normal by smooth noise of one
-    wavelength: the coarse pass shapes the silhouette, the fine one crinkles
-    the edge it leaves. Size stays measured against the original bounding box
-    so a later pass does not compound the displacement of an earlier one.
-    """
-    xs = [p[0] for p in points]
-    ys = [p[1] for p in points]
-    diagonal = math.hypot(max(xs) - min(xs), max(ys) - min(ys))
-    for size_pct, detail_per_inch in passes:
-        points = _roughen_pass(points, size_pct * diagonal,
-                               (72.0 / detail_per_inch) * scale, rng)
-    return points
 
 
 def _shape_points(n, cx, cy, pw, ph, rng):
@@ -209,8 +217,8 @@ def _shape_points(n, cx, cy, pw, ph, rng):
             (cx, cy2 + r)]
 
 
-def _scatter(size, outline, scale, rng):
-    """Tile one environment symbol across the shape, clipped to it."""
+def _scatter(size, mask, scale, rng):
+    """Tile one environment symbol over the island, clipped to `mask`."""
     target = SCATTER_ICON * scale
     icon = _load(rng.choice(SCATTER), int(max(target, 4)))
     ratio = target / max(icon.size)
@@ -219,31 +227,49 @@ def _scatter(size, outline, scale, rng):
     sx, sy = SCATTER_SPACING[0] * scale, SCATTER_SPACING[1] * scale
 
     layer = Image.new('RGBA', size, (0, 0, 0, 0))
-    xs = [p[0] for p in outline]
-    ys = [p[1] for p in outline]
-    row = 0
-    y = min(ys) - sy
-    while y < max(ys) + sy:
+    row, y = 0, -sy
+    while y < size[1] + sy:
         offset = 0 if row % 2 == 0 else sx / 2
-        x = min(xs) - sx
-        while x < max(xs) + sx:
+        x = -sx
+        while x < size[0] + sx:
             layer.alpha_composite(icon, (int(x + offset - icon.width / 2),
                                          int(y - icon.height / 2)))
             x += sx
         y += sy
         row += 1
 
-    mask = Image.new('L', size, 0)
-    ImageDraw.Draw(mask).polygon(outline, fill=SCATTER_OPACITY)
-    layer.putalpha(Image.composite(layer.getchannel('A').point(lambda v: v), mask,
-                                   mask.point(lambda v: 255 if v else 0)))
+    clip = mask.point(lambda v: v * SCATTER_OPACITY // 255)
+    layer.putalpha(ImageChops.multiply(layer.getchannel('A'), clip))
     return layer
+
+
+def _sea(size, scale, rng):
+    """The parchment the island sits on, sprinkled with little wave glyphs."""
+    px = size[0]
+    img = Image.new('RGBA', size, SEA)
+    draw = ImageDraw.Draw(img)
+    step_x, step_y = WAVE_STEP[0] * px, WAVE_STEP[1] * px
+    width = max(1, round(0.004 * px))
+    row, y = 0, rng.uniform(-step_y, 0)
+    while y < px + step_y:
+        offset = (0 if row % 2 == 0 else step_x / 2) + rng.uniform(-0.02, 0.02) * px
+        x = -step_x
+        while x < px + step_x:
+            span, amp = WAVE_SIZE * px, 0.012 * px
+            pts = [(x + offset + span * t / 40,
+                    y + math.sin(t / 40 * WAVE_HUMPS * math.tau) * amp)
+                   for t in range(41)]
+            draw.line(pts, fill=SEA_MARK, width=width, joint='curve')
+            x += step_x
+        y += step_y
+        row += 1
+    return img
 
 
 def render_card(card, px=512, seed=None):
     rng = random.Random(seed)
     scale = px / REF_CARD
-    img = Image.new('RGBA', (px, px), (0, 0, 0, 0))
+    img = _sea((px, px), scale, rng)
     q = px / 2
     pad = PADDING * scale
 
@@ -253,7 +279,7 @@ def render_card(card, px=512, seed=None):
     # do overlap. That matters here because the annotations would still call
     # those symbols visible, which is exactly the mislabelling this renderer
     # exists to avoid.
-    placements = []
+    placements, outlines = [], []
     for qi, name in enumerate(QUARTERS):
         symbols = [Symbols.of(x) for x in card['card']['quarters'].get(name, [])]
         n = len(symbols)
@@ -261,12 +287,7 @@ def render_card(card, px=512, seed=None):
         pw = ph = q - 2 * pad
         cx, cy = qx + q / 2, qy + q / 2
         if n:
-            pts = roughen(_shape_points(n, cx, cy, pw, ph, rng), scale, rng)
-            shape = Image.new('RGBA', img.size, (0, 0, 0, 0))
-            ImageDraw.Draw(shape).polygon(pts, fill=LIGHT_BROWN, outline=DARK_BROWN,
-                                          width=max(1, int(2 * scale)))
-            img.alpha_composite(shape)
-            img.alpha_composite(_scatter(img.size, pts, scale, rng))
+            outlines.append(roughen(_shape_points(n, cx, cy, pw, ph, rng), rng))
         spots = {
             1: [(0.50, 0.50)],
             2: [(0.25, 0.25), (0.75, 0.75)],
@@ -275,6 +296,35 @@ def render_card(card, px=512, seed=None):
         }.get(n, [])
         for symbol, (fx, fy) in zip(symbols, spots):
             placements.append((symbol, qx + pad + pw * fx, qy + pad + ph * fy))
+
+    # One island, not four landmarks. Neighbouring quarters' shapes overlap, and
+    # stroking each on its own leaves the seams showing as lines across the
+    # middle of the island; the example sheet has a single unbroken coastline.
+    # Stroking every outline first and only then filling them all hides each
+    # seam under the next shape's fill, which unions them without needing any
+    # polygon arithmetic. Drawn at SUPERSAMPLE and scaled down, because a hard
+    # -edged 2.5%-of-card stroke aliases badly.
+    if outlines:
+        ss = SUPERSAMPLE
+        big = Image.new('RGBA', (px * ss, px * ss), (0, 0, 0, 0))
+        pen = ImageDraw.Draw(big)
+        scaled = [[(x * ss, y * ss) for x, y in pts] for pts in outlines]
+        for pts in scaled:      # stroke double width; the fill eats the inner half
+            pen.line(pts + pts[:1], fill=OUTLINE,
+                     width=max(1, round(2 * STROKE_WIDTH * px * ss)), joint='curve')
+        for pts in scaled:
+            pen.polygon(pts, fill=ISLAND)
+        island = big.resize((px, px), Image.LANCZOS)
+        # Clip the scatter to the fill, not to the island's alpha: the alpha
+        # includes the outline and its soft downsampled edge, which puts trees
+        # on the coast and a few pixels out to sea.
+        inland = Image.new('L', (px * ss, px * ss), 0)
+        ink = ImageDraw.Draw(inland)
+        for pts in scaled:
+            ink.polygon(pts, fill=255)
+        img.alpha_composite(island)
+        img.alpha_composite(_scatter(img.size, inland.resize((px, px), Image.LANCZOS),
+                                     scale, rng))
 
     target = q * SYMBOL_SCALE
     boxes = []
