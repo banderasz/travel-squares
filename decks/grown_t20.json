@@ -2,721 +2,721 @@
   {
     "card": {
       "dimensions": {"width": 135, "height": 135},
-      "quarters": {"top_left": ["SUN"], "top_right": ["ARROW_DOWN"], "bottom_left": ["MOON", "TRIANGLE"], "bottom_right": ["SUN", "ARROW_RIGHT", "TRIANGLE"]}
+      "quarters": {"top_left": ["TRIANGLE", "STAR", "STAR"], "top_right": ["SUN", "SQUARE", "MOON", "TRIANGLE"], "bottom_left": ["X"], "bottom_right": ["X", "SQUARE"]}
     }
   },
   {
     "card": {
       "dimensions": {"width": 135, "height": 135},
-      "quarters": {"top_left": ["CIRCLE", "STAR", "SUN", "STAR"], "top_right": ["TRIANGLE", "CIRCLE"], "bottom_left": ["MOON", "MOON", "DIAMOND"], "bottom_right": ["ARROW_LEFT"]}
+      "quarters": {"top_left": ["CIRCLE", "CIRCLE", "MOON", "SKULL"], "top_right": ["MOON", "STAR", "ARROW_LEFT"], "bottom_left": ["STAR", "ARROW_LEFT"], "bottom_right": ["X", "DIAMOND", "STAR"]}
     }
   },
   {
     "card": {
       "dimensions": {"width": 135, "height": 135},
-      "quarters": {"top_left": ["TRIANGLE", "ARROW_DOWN"], "top_right": ["X", "X"], "bottom_left": ["SKULL", "SKULL", "X"], "bottom_right": ["ARROW_LEFT", "SUN"]}
+      "quarters": {"top_left": ["DIAMOND", "STAR", "SKULL", "MOON"], "top_right": ["TRIANGLE", "SQUARE", "SKULL"], "bottom_left": ["MOON", "STAR"], "bottom_right": ["SUN"]}
     }
   },
   {
     "card": {
       "dimensions": {"width": 135, "height": 135},
-      "quarters": {"top_left": ["SUN", "TRIANGLE", "CIRCLE", "SQUARE"], "top_right": ["SUN", "CIRCLE", "TRIANGLE"], "bottom_left": ["X", "CIRCLE"], "bottom_right": ["SQUARE", "X", "SQUARE", "MOON"]}
+      "quarters": {"top_left": ["CIRCLE", "STAR", "SUN"], "top_right": ["X"], "bottom_left": ["CIRCLE", "ARROW_DOWN", "CIRCLE"], "bottom_right": ["MOON", "TRIANGLE", "STAR"]}
     }
   },
   {
     "card": {
       "dimensions": {"width": 135, "height": 135},
-      "quarters": {"top_left": ["CIRCLE", "CIRCLE", "X"], "top_right": ["X", "SQUARE"], "bottom_left": ["DIAMOND", "TRIANGLE", "X"], "bottom_right": ["SKULL", "SKULL"]}
+      "quarters": {"top_left": ["X", "TRIANGLE", "STAR"], "top_right": ["MOON", "DIAMOND", "CIRCLE"], "bottom_left": ["SKULL", "STAR", "STAR", "MOON"], "bottom_right": ["SUN", "CIRCLE"]}
     }
   },
   {
     "card": {
       "dimensions": {"width": 135, "height": 135},
-      "quarters": {"top_left": ["TRIANGLE", "X", "X", "TRIANGLE"], "top_right": ["X", "SUN"], "bottom_left": ["ARROW_LEFT", "CIRCLE"], "bottom_right": ["ARROW_DOWN", "SQUARE"]}
+      "quarters": {"top_left": ["X", "SQUARE"], "top_right": ["STAR", "CIRCLE"], "bottom_left": ["STAR", "ARROW_RIGHT"], "bottom_right": ["SUN", "CIRCLE", "SKULL"]}
     }
   },
   {
     "card": {
       "dimensions": {"width": 135, "height": 135},
-      "quarters": {"top_left": ["STAR", "SUN", "X"], "top_right": ["STAR", "CIRCLE"], "bottom_left": ["ARROW_RIGHT", "SQUARE"], "bottom_right": ["STAR"]}
+      "quarters": {"top_left": ["TRIANGLE", "SQUARE"], "top_right": ["MOON", "STAR", "STAR"], "bottom_left": ["MOON", "CIRCLE"], "bottom_right": ["TRIANGLE", "MOON", "SUN"]}
     }
   },
   {
     "card": {
       "dimensions": {"width": 135, "height": 135},
-      "quarters": {"top_left": ["ARROW_RIGHT", "X"], "top_right": ["CIRCLE", "SUN"], "bottom_left": ["ARROW_RIGHT", "SQUARE"], "bottom_right": ["ARROW_DOWN", "MOON", "TRIANGLE"]}
+      "quarters": {"top_left": ["SUN", "STAR", "CIRCLE"], "top_right": ["ARROW_DOWN", "CIRCLE", "ARROW_UP"], "bottom_left": ["STAR"], "bottom_right": ["STAR", "STAR"]}
     }
   },
   {
     "card": {
       "dimensions": {"width": 135, "height": 135},
-      "quarters": {"top_left": ["STAR", "ARROW_RIGHT"], "top_right": ["DIAMOND"], "bottom_left": ["SUN", "SKULL"], "bottom_right": ["STAR", "CIRCLE"]}
+      "quarters": {"top_left": ["STAR", "STAR", "CIRCLE", "X"], "top_right": ["X", "ARROW_LEFT", "CIRCLE", "CIRCLE"], "bottom_left": ["SUN"], "bottom_right": ["STAR", "STAR", "SUN", "ARROW_RIGHT"]}
     }
   },
   {
     "card": {
       "dimensions": {"width": 135, "height": 135},
-      "quarters": {"top_left": ["X"], "top_right": ["SKULL"], "bottom_left": ["STAR"], "bottom_right": ["SUN", "TRIANGLE", "CIRCLE", "SKULL"]}
+      "quarters": {"top_left": ["X", "SUN"], "top_right": ["TRIANGLE", "TRIANGLE"], "bottom_left": ["SQUARE", "CIRCLE", "STAR"], "bottom_right": ["STAR", "X"]}
     }
   },
   {
     "card": {
       "dimensions": {"width": 135, "height": 135},
-      "quarters": {"top_left": ["SKULL", "CIRCLE"], "top_right": ["X", "MOON"], "bottom_left": ["CIRCLE"], "bottom_right": ["SUN", "SUN", "SQUARE"]}
+      "quarters": {"top_left": ["STAR", "SQUARE"], "top_right": ["ARROW_LEFT"], "bottom_left": ["TRIANGLE", "STAR"], "bottom_right": ["MOON", "MOON", "SUN", "SQUARE"]}
     }
   },
   {
     "card": {
       "dimensions": {"width": 135, "height": 135},
-      "quarters": {"top_left": ["X", "ARROW_RIGHT", "CIRCLE"], "top_right": ["SQUARE", "X"], "bottom_left": ["MOON", "CIRCLE", "SQUARE"], "bottom_right": ["STAR", "SQUARE", "STAR"]}
+      "quarters": {"top_left": ["X", "SKULL", "SUN"], "top_right": ["CIRCLE", "CIRCLE"], "bottom_left": ["TRIANGLE", "CIRCLE", "CIRCLE"], "bottom_right": ["MOON"]}
     }
   },
   {
     "card": {
       "dimensions": {"width": 135, "height": 135},
-      "quarters": {"top_left": ["CIRCLE", "SQUARE", "CIRCLE"], "top_right": ["STAR", "STAR", "TRIANGLE"], "bottom_left": ["ARROW_DOWN"], "bottom_right": ["DIAMOND", "CIRCLE", "SKULL"]}
+      "quarters": {"top_left": ["TRIANGLE"], "top_right": ["STAR"], "bottom_left": ["SKULL", "CIRCLE"], "bottom_right": ["ARROW_UP", "ARROW_LEFT"]}
     }
   },
   {
     "card": {
       "dimensions": {"width": 135, "height": 135},
-      "quarters": {"top_left": [], "top_right": ["CIRCLE", "STAR", "ARROW_DOWN"], "bottom_left": ["SUN", "SUN", "STAR"], "bottom_right": ["TRIANGLE", "X"]}
+      "quarters": {"top_left": ["CIRCLE", "ARROW_UP", "X"], "top_right": ["SQUARE", "SQUARE"], "bottom_left": ["X", "CIRCLE"], "bottom_right": ["CIRCLE", "ARROW_UP", "MOON"]}
     }
   },
   {
     "card": {
       "dimensions": {"width": 135, "height": 135},
-      "quarters": {"top_left": [], "top_right": ["SUN", "CIRCLE"], "bottom_left": ["TRIANGLE"], "bottom_right": ["TRIANGLE", "CIRCLE", "CIRCLE"]}
+      "quarters": {"top_left": ["STAR", "TRIANGLE", "STAR"], "top_right": ["STAR"], "bottom_left": ["X", "STAR", "STAR"], "bottom_right": ["TRIANGLE"]}
     }
   },
   {
     "card": {
       "dimensions": {"width": 135, "height": 135},
-      "quarters": {"top_left": ["STAR", "ARROW_UP"], "top_right": ["MOON", "ARROW_RIGHT", "CIRCLE"], "bottom_left": ["SQUARE", "X", "SUN"], "bottom_right": ["ARROW_LEFT", "STAR"]}
+      "quarters": {"top_left": ["MOON", "SUN", "STAR"], "top_right": ["SKULL", "STAR", "SKULL"], "bottom_left": ["SUN", "DIAMOND"], "bottom_right": ["DIAMOND", "DIAMOND", "SQUARE"]}
     }
   },
   {
     "card": {
       "dimensions": {"width": 135, "height": 135},
-      "quarters": {"top_left": ["ARROW_LEFT", "SUN", "X"], "top_right": ["SKULL", "STAR"], "bottom_left": ["SQUARE", "SUN"], "bottom_right": ["MOON", "STAR", "X", "ARROW_LEFT"]}
+      "quarters": {"top_left": ["MOON", "CIRCLE", "X"], "top_right": ["SKULL", "SUN", "MOON"], "bottom_left": ["TRIANGLE", "TRIANGLE"], "bottom_right": ["MOON", "SQUARE", "DIAMOND"]}
     }
   },
   {
     "card": {
       "dimensions": {"width": 135, "height": 135},
-      "quarters": {"top_left": ["ARROW_UP", "TRIANGLE"], "top_right": ["SUN", "X", "CIRCLE"], "bottom_left": ["MOON", "ARROW_DOWN"], "bottom_right": ["ARROW_RIGHT", "SQUARE"]}
+      "quarters": {"top_left": ["ARROW_DOWN"], "top_right": ["X", "SUN"], "bottom_left": ["CIRCLE", "TRIANGLE"], "bottom_right": ["ARROW_RIGHT", "SQUARE"]}
     }
   },
   {
     "card": {
       "dimensions": {"width": 135, "height": 135},
-      "quarters": {"top_left": ["STAR"], "top_right": ["CIRCLE", "DIAMOND"], "bottom_left": ["STAR", "DIAMOND"], "bottom_right": ["SUN"]}
+      "quarters": {"top_left": ["DIAMOND", "TRIANGLE", "CIRCLE"], "top_right": ["TRIANGLE", "SUN"], "bottom_left": ["X", "SQUARE"], "bottom_right": ["MOON", "STAR", "MOON"]}
     }
   },
   {
     "card": {
       "dimensions": {"width": 135, "height": 135},
-      "quarters": {"top_left": ["STAR", "ARROW_DOWN"], "top_right": ["ARROW_RIGHT", "SQUARE", "SKULL"], "bottom_left": ["CIRCLE", "SUN", "CIRCLE"], "bottom_right": ["TRIANGLE", "MOON"]}
+      "quarters": {"top_left": ["X", "TRIANGLE"], "top_right": ["CIRCLE"], "bottom_left": ["SUN"], "bottom_right": ["CIRCLE", "STAR", "CIRCLE", "CIRCLE"]}
     }
   },
   {
     "card": {
       "dimensions": {"width": 135, "height": 135},
-      "quarters": {"top_left": ["SKULL", "X"], "top_right": ["TRIANGLE", "TRIANGLE", "DIAMOND"], "bottom_left": ["DIAMOND"], "bottom_right": ["CIRCLE"]}
+      "quarters": {"top_left": ["CIRCLE", "SUN", "MOON"], "top_right": ["TRIANGLE", "SQUARE"], "bottom_left": ["X", "CIRCLE", "MOON"], "bottom_right": ["STAR", "TRIANGLE", "MOON"]}
     }
   },
   {
     "card": {
       "dimensions": {"width": 135, "height": 135},
-      "quarters": {"top_left": ["CIRCLE", "ARROW_DOWN"], "top_right": ["TRIANGLE", "ARROW_LEFT"], "bottom_left": ["SUN", "SQUARE", "SKULL"], "bottom_right": ["MOON", "SUN", "SQUARE"]}
+      "quarters": {"top_left": ["SUN", "CIRCLE", "SUN", "X"], "top_right": ["DIAMOND", "DIAMOND"], "bottom_left": ["CIRCLE"], "bottom_right": ["STAR", "ARROW_LEFT", "STAR", "CIRCLE"]}
     }
   },
   {
     "card": {
       "dimensions": {"width": 135, "height": 135},
-      "quarters": {"top_left": ["MOON"], "top_right": ["X", "SUN", "SUN"], "bottom_left": ["ARROW_RIGHT", "SUN", "TRIANGLE"], "bottom_right": ["TRIANGLE", "SKULL"]}
+      "quarters": {"top_left": ["SUN", "STAR"], "top_right": ["CIRCLE", "X"], "bottom_left": ["CIRCLE", "CIRCLE"], "bottom_right": ["CIRCLE", "TRIANGLE"]}
     }
   },
   {
     "card": {
       "dimensions": {"width": 135, "height": 135},
-      "quarters": {"top_left": ["STAR"], "top_right": ["DIAMOND", "STAR", "SUN", "SQUARE"], "bottom_left": ["MOON", "X"], "bottom_right": ["SKULL", "DIAMOND"]}
+      "quarters": {"top_left": ["CIRCLE", "SQUARE"], "top_right": ["MOON"], "bottom_left": ["SUN"], "bottom_right": ["STAR", "TRIANGLE", "CIRCLE", "STAR"]}
     }
   },
   {
     "card": {
       "dimensions": {"width": 135, "height": 135},
-      "quarters": {"top_left": ["X", "TRIANGLE", "CIRCLE"], "top_right": ["TRIANGLE", "SKULL"], "bottom_left": ["SKULL", "SUN", "CIRCLE"], "bottom_right": ["ARROW_UP", "CIRCLE", "TRIANGLE"]}
+      "quarters": {"top_left": ["ARROW_RIGHT", "CIRCLE", "ARROW_LEFT"], "top_right": ["ARROW_DOWN", "ARROW_LEFT"], "bottom_left": ["MOON", "X"], "bottom_right": ["STAR", "TRIANGLE"]}
     }
   },
   {
     "card": {
       "dimensions": {"width": 135, "height": 135},
-      "quarters": {"top_left": ["ARROW_UP", "STAR"], "top_right": ["MOON", "TRIANGLE"], "bottom_left": ["SUN", "CIRCLE", "STAR", "DIAMOND"], "bottom_right": ["MOON", "CIRCLE"]}
+      "quarters": {"top_left": ["STAR", "SKULL"], "top_right": ["SQUARE", "STAR", "ARROW_LEFT", "DIAMOND"], "bottom_left": ["SQUARE", "X", "STAR"], "bottom_right": ["MOON", "SUN"]}
     }
   },
   {
     "card": {
       "dimensions": {"width": 135, "height": 135},
-      "quarters": {"top_left": ["CIRCLE", "MOON"], "top_right": ["CIRCLE"], "bottom_left": ["SKULL", "CIRCLE", "X", "STAR"], "bottom_right": ["TRIANGLE", "MOON", "STAR"]}
+      "quarters": {"top_left": ["CIRCLE", "ARROW_DOWN"], "top_right": ["ARROW_RIGHT", "ARROW_LEFT", "ARROW_RIGHT"], "bottom_left": ["TRIANGLE", "X"], "bottom_right": ["STAR", "SUN"]}
     }
   },
   {
     "card": {
       "dimensions": {"width": 135, "height": 135},
-      "quarters": {"top_left": ["ARROW_UP", "STAR", "CIRCLE", "SQUARE"], "top_right": ["X", "TRIANGLE"], "bottom_left": ["X", "X"], "bottom_right": ["STAR", "TRIANGLE", "X"]}
+      "quarters": {"top_left": ["SQUARE", "SUN", "CIRCLE"], "top_right": ["ARROW_UP", "X", "STAR"], "bottom_left": ["X", "TRIANGLE"], "bottom_right": ["ARROW_LEFT", "SKULL", "SUN"]}
     }
   },
   {
     "card": {
       "dimensions": {"width": 135, "height": 135},
-      "quarters": {"top_left": ["SUN"], "top_right": ["CIRCLE", "SKULL", "SQUARE"], "bottom_left": [], "bottom_right": ["TRIANGLE", "MOON", "CIRCLE"]}
+      "quarters": {"top_left": ["CIRCLE", "ARROW_UP"], "top_right": ["SKULL", "SQUARE"], "bottom_left": ["ARROW_UP", "X"], "bottom_right": ["SUN", "TRIANGLE"]}
     }
   },
   {
     "card": {
       "dimensions": {"width": 135, "height": 135},
-      "quarters": {"top_left": ["STAR"], "top_right": ["TRIANGLE", "TRIANGLE"], "bottom_left": ["TRIANGLE"], "bottom_right": ["X", "CIRCLE", "SUN", "DIAMOND"]}
+      "quarters": {"top_left": ["STAR", "TRIANGLE"], "top_right": ["SUN", "ARROW_DOWN", "ARROW_UP"], "bottom_left": ["CIRCLE"], "bottom_right": ["STAR", "STAR", "SUN"]}
     }
   },
   {
     "card": {
       "dimensions": {"width": 135, "height": 135},
-      "quarters": {"top_left": ["TRIANGLE", "DIAMOND"], "top_right": ["SUN", "SKULL"], "bottom_left": ["CIRCLE"], "bottom_right": ["X", "SUN", "SKULL"]}
+      "quarters": {"top_left": ["STAR", "CIRCLE"], "top_right": ["STAR", "SUN", "SKULL"], "bottom_left": ["DIAMOND", "STAR", "STAR"], "bottom_right": ["CIRCLE"]}
     }
   },
   {
     "card": {
       "dimensions": {"width": 135, "height": 135},
-      "quarters": {"top_left": ["X", "TRIANGLE"], "top_right": ["SUN", "ARROW_RIGHT", "TRIANGLE"], "bottom_left": ["CIRCLE", "X", "SUN"], "bottom_right": ["CIRCLE", "STAR"]}
+      "quarters": {"top_left": ["SUN", "SKULL"], "top_right": ["SUN", "SQUARE", "X"], "bottom_left": ["STAR"], "bottom_right": ["CIRCLE", "TRIANGLE", "CIRCLE"]}
     }
   },
   {
     "card": {
       "dimensions": {"width": 135, "height": 135},
-      "quarters": {"top_left": ["X", "ARROW_DOWN"], "top_right": ["MOON", "CIRCLE"], "bottom_left": ["ARROW_UP", "SUN", "TRIANGLE"], "bottom_right": ["DIAMOND", "X"]}
+      "quarters": {"top_left": ["CIRCLE"], "top_right": ["SKULL", "SQUARE", "TRIANGLE"], "bottom_left": ["SUN"], "bottom_right": ["CIRCLE"]}
     }
   },
   {
     "card": {
       "dimensions": {"width": 135, "height": 135},
-      "quarters": {"top_left": ["X", "ARROW_LEFT", "CIRCLE", "STAR"], "top_right": ["CIRCLE", "SKULL"], "bottom_left": ["SQUARE", "SQUARE"], "bottom_right": ["X", "ARROW_RIGHT", "X"]}
+      "quarters": {"top_left": ["MOON", "TRIANGLE", "X", "TRIANGLE"], "top_right": ["X", "ARROW_RIGHT", "TRIANGLE"], "bottom_left": ["STAR", "SUN"], "bottom_right": ["MOON", "SQUARE"]}
     }
   },
   {
     "card": {
       "dimensions": {"width": 135, "height": 135},
-      "quarters": {"top_left": ["MOON"], "top_right": ["STAR", "ARROW_DOWN"], "bottom_left": ["SQUARE", "SQUARE", "MOON"], "bottom_right": ["MOON", "SQUARE", "CIRCLE"]}
+      "quarters": {"top_left": ["STAR", "SQUARE", "MOON"], "top_right": ["SUN", "ARROW_DOWN"], "bottom_left": [], "bottom_right": ["TRIANGLE", "SKULL"]}
     }
   },
   {
     "card": {
       "dimensions": {"width": 135, "height": 135},
-      "quarters": {"top_left": ["ARROW_DOWN", "X", "SUN"], "top_right": ["SQUARE", "CIRCLE"], "bottom_left": ["CIRCLE", "CIRCLE"], "bottom_right": ["STAR", "MOON", "SKULL"]}
+      "quarters": {"top_left": ["STAR", "SUN"], "top_right": ["CIRCLE", "STAR", "TRIANGLE"], "bottom_left": ["CIRCLE"], "bottom_right": ["SQUARE", "MOON"]}
     }
   },
   {
     "card": {
       "dimensions": {"width": 135, "height": 135},
-      "quarters": {"top_left": ["SUN", "MOON", "TRIANGLE", "STAR"], "top_right": ["SQUARE", "CIRCLE", "ARROW_RIGHT"], "bottom_left": ["STAR", "SUN", "X"], "bottom_right": ["SUN", "MOON"]}
+      "quarters": {"top_left": ["SQUARE", "SUN"], "top_right": ["STAR", "X"], "bottom_left": ["DIAMOND", "TRIANGLE"], "bottom_right": ["SUN", "SQUARE", "SKULL"]}
     }
   },
   {
     "card": {
       "dimensions": {"width": 135, "height": 135},
-      "quarters": {"top_left": ["SUN", "SQUARE", "X"], "top_right": ["TRIANGLE"], "bottom_left": ["SQUARE", "MOON", "CIRCLE"], "bottom_right": ["X", "SUN"]}
+      "quarters": {"top_left": ["ARROW_RIGHT", "DIAMOND", "MOON"], "top_right": ["DIAMOND"], "bottom_left": ["TRIANGLE", "STAR"], "bottom_right": ["CIRCLE", "STAR"]}
     }
   },
   {
     "card": {
       "dimensions": {"width": 135, "height": 135},
-      "quarters": {"top_left": ["CIRCLE", "SKULL"], "top_right": ["X", "SUN"], "bottom_left": ["SUN"], "bottom_right": ["TRIANGLE", "SQUARE"]}
+      "quarters": {"top_left": ["TRIANGLE", "TRIANGLE"], "top_right": ["CIRCLE", "X", "X", "TRIANGLE"], "bottom_left": ["DIAMOND", "STAR"], "bottom_right": ["MOON"]}
     }
   },
   {
     "card": {
       "dimensions": {"width": 135, "height": 135},
-      "quarters": {"top_left": ["DIAMOND", "X", "ARROW_RIGHT"], "top_right": ["TRIANGLE", "SUN", "CIRCLE"], "bottom_left": ["X", "ARROW_DOWN"], "bottom_right": ["TRIANGLE"]}
+      "quarters": {"top_left": ["STAR"], "top_right": ["ARROW_UP", "STAR", "SQUARE", "SUN"], "bottom_left": ["SUN", "SKULL"], "bottom_right": ["TRIANGLE", "DIAMOND", "X"]}
     }
   },
   {
     "card": {
       "dimensions": {"width": 135, "height": 135},
-      "quarters": {"top_left": ["SQUARE", "SUN"], "top_right": ["CIRCLE", "STAR", "ARROW_LEFT"], "bottom_left": ["CIRCLE"], "bottom_right": ["SUN"]}
+      "quarters": {"top_left": ["ARROW_UP", "CIRCLE", "ARROW_RIGHT"], "top_right": ["TRIANGLE", "STAR"], "bottom_left": ["ARROW_DOWN", "X", "X"], "bottom_right": ["X", "STAR", "CIRCLE"]}
     }
   },
   {
     "card": {
       "dimensions": {"width": 135, "height": 135},
-      "quarters": {"top_left": ["MOON", "SKULL", "DIAMOND", "CIRCLE"], "top_right": ["SKULL", "X", "SKULL"], "bottom_left": ["SUN"], "bottom_right": ["SQUARE"]}
+      "quarters": {"top_left": ["SUN", "CIRCLE"], "top_right": ["SKULL", "STAR"], "bottom_left": ["X", "SUN"], "bottom_right": ["SQUARE", "CIRCLE", "TRIANGLE"]}
     }
   },
   {
     "card": {
       "dimensions": {"width": 135, "height": 135},
-      "quarters": {"top_left": ["SQUARE"], "top_right": ["STAR"], "bottom_left": ["MOON", "ARROW_DOWN", "TRIANGLE", "TRIANGLE"], "bottom_right": ["MOON", "X", "CIRCLE"]}
+      "quarters": {"top_left": ["CIRCLE", "CIRCLE"], "top_right": ["SUN", "SQUARE"], "bottom_left": ["STAR", "X", "SUN"], "bottom_right": ["SKULL", "TRIANGLE"]}
     }
   },
   {
     "card": {
       "dimensions": {"width": 135, "height": 135},
-      "quarters": {"top_left": ["X", "X"], "top_right": ["ARROW_DOWN", "SQUARE"], "bottom_left": ["DIAMOND", "SQUARE"], "bottom_right": ["X", "ARROW_LEFT"]}
+      "quarters": {"top_left": ["SKULL"], "top_right": ["SKULL", "DIAMOND", "STAR"], "bottom_left": ["X", "SQUARE", "MOON"], "bottom_right": ["DIAMOND", "SQUARE", "ARROW_UP", "MOON"]}
     }
   },
   {
     "card": {
       "dimensions": {"width": 135, "height": 135},
-      "quarters": {"top_left": ["SKULL", "MOON", "STAR"], "top_right": ["ARROW_LEFT", "CIRCLE"], "bottom_left": ["X", "X"], "bottom_right": ["SKULL", "SKULL", "TRIANGLE"]}
+      "quarters": {"top_left": ["DIAMOND", "MOON", "SUN"], "top_right": ["ARROW_UP", "SKULL", "CIRCLE"], "bottom_left": ["STAR"], "bottom_right": ["MOON", "TRIANGLE", "SUN", "CIRCLE"]}
     }
   },
   {
     "card": {
       "dimensions": {"width": 135, "height": 135},
-      "quarters": {"top_left": ["CIRCLE"], "top_right": ["CIRCLE", "MOON", "ARROW_RIGHT", "TRIANGLE"], "bottom_left": ["TRIANGLE", "MOON", "X"], "bottom_right": ["STAR", "STAR", "SKULL"]}
+      "quarters": {"top_left": ["X", "SUN", "TRIANGLE", "TRIANGLE"], "top_right": ["STAR"], "bottom_left": ["X", "DIAMOND"], "bottom_right": ["STAR", "SKULL", "ARROW_LEFT"]}
     }
   },
   {
     "card": {
       "dimensions": {"width": 135, "height": 135},
-      "quarters": {"top_left": ["SQUARE", "ARROW_UP", "SUN"], "top_right": ["CIRCLE"], "bottom_left": ["DIAMOND"], "bottom_right": ["MOON", "SQUARE", "X"]}
+      "quarters": {"top_left": ["TRIANGLE", "STAR"], "top_right": ["ARROW_RIGHT", "TRIANGLE", "STAR"], "bottom_left": ["SUN", "X"], "bottom_right": ["CIRCLE"]}
     }
   },
   {
     "card": {
       "dimensions": {"width": 135, "height": 135},
-      "quarters": {"top_left": ["SQUARE", "SQUARE", "X"], "top_right": ["X", "SUN", "SUN"], "bottom_left": ["SQUARE", "DIAMOND", "X"], "bottom_right": ["X", "SUN", "CIRCLE"]}
+      "quarters": {"top_left": ["CIRCLE", "STAR", "STAR"], "top_right": ["SUN", "SQUARE"], "bottom_left": ["TRIANGLE", "CIRCLE"], "bottom_right": ["MOON"]}
     }
   },
   {
     "card": {
       "dimensions": {"width": 135, "height": 135},
-      "quarters": {"top_left": ["SQUARE", "SUN", "CIRCLE", "X"], "top_right": ["SUN", "X", "CIRCLE", "SKULL"], "bottom_left": ["MOON", "CIRCLE", "STAR", "ARROW_DOWN"], "bottom_right": ["DIAMOND", "TRIANGLE"]}
+      "quarters": {"top_left": ["TRIANGLE", "TRIANGLE"], "top_right": ["SUN", "SUN", "SQUARE"], "bottom_left": ["X", "TRIANGLE", "SUN"], "bottom_right": ["SUN", "SKULL"]}
     }
   },
   {
     "card": {
       "dimensions": {"width": 135, "height": 135},
-      "quarters": {"top_left": ["ARROW_UP", "STAR"], "top_right": ["SUN", "TRIANGLE"], "bottom_left": ["MOON", "SKULL", "DIAMOND"], "bottom_right": ["CIRCLE"]}
+      "quarters": {"top_left": ["SUN", "TRIANGLE"], "top_right": ["CIRCLE", "SQUARE"], "bottom_left": ["STAR", "MOON", "CIRCLE"], "bottom_right": ["STAR"]}
     }
   },
   {
     "card": {
       "dimensions": {"width": 135, "height": 135},
-      "quarters": {"top_left": ["ARROW_RIGHT", "SKULL", "MOON"], "top_right": ["TRIANGLE", "X"], "bottom_left": ["DIAMOND", "SQUARE", "TRIANGLE", "SQUARE"], "bottom_right": ["X", "MOON", "SQUARE"]}
+      "quarters": {"top_left": ["CIRCLE", "SUN"], "top_right": ["SKULL", "CIRCLE"], "bottom_left": ["TRIANGLE", "X", "CIRCLE", "MOON"], "bottom_right": ["CIRCLE"]}
     }
   },
   {
     "card": {
       "dimensions": {"width": 135, "height": 135},
-      "quarters": {"top_left": ["SKULL"], "top_right": ["ARROW_LEFT", "TRIANGLE", "X", "X"], "bottom_left": ["MOON", "TRIANGLE", "ARROW_RIGHT"], "bottom_right": ["ARROW_LEFT", "STAR", "ARROW_UP"]}
+      "quarters": {"top_left": ["SQUARE", "STAR"], "top_right": ["SUN", "SUN"], "bottom_left": ["SQUARE", "TRIANGLE"], "bottom_right": ["STAR", "STAR"]}
     }
   },
   {
     "card": {
       "dimensions": {"width": 135, "height": 135},
-      "quarters": {"top_left": ["STAR"], "top_right": ["SQUARE", "SQUARE"], "bottom_left": ["MOON", "ARROW_UP"], "bottom_right": ["ARROW_UP", "X", "SQUARE", "ARROW_LEFT"]}
+      "quarters": {"top_left": ["MOON", "CIRCLE"], "top_right": ["CIRCLE"], "bottom_left": ["ARROW_RIGHT", "CIRCLE", "X", "SQUARE"], "bottom_right": ["SUN", "MOON", "TRIANGLE"]}
     }
   },
   {
     "card": {
       "dimensions": {"width": 135, "height": 135},
-      "quarters": {"top_left": ["CIRCLE", "TRIANGLE"], "top_right": [], "bottom_left": ["ARROW_DOWN", "TRIANGLE"], "bottom_right": ["CIRCLE", "TRIANGLE"]}
+      "quarters": {"top_left": ["ARROW_DOWN", "TRIANGLE"], "top_right": ["TRIANGLE"], "bottom_left": ["SQUARE", "X"], "bottom_right": ["ARROW_UP"]}
     }
   },
   {
     "card": {
       "dimensions": {"width": 135, "height": 135},
-      "quarters": {"top_left": ["SUN", "CIRCLE", "SQUARE"], "top_right": ["ARROW_RIGHT", "X", "ARROW_UP"], "bottom_left": ["TRIANGLE"], "bottom_right": ["TRIANGLE", "TRIANGLE"]}
+      "quarters": {"top_left": ["TRIANGLE", "CIRCLE", "DIAMOND"], "top_right": ["STAR"], "bottom_left": ["X"], "bottom_right": ["CIRCLE", "SUN", "SQUARE"]}
     }
   },
   {
     "card": {
       "dimensions": {"width": 135, "height": 135},
-      "quarters": {"top_left": [], "top_right": ["SUN", "SQUARE", "SKULL", "X"], "bottom_left": ["ARROW_RIGHT", "TRIANGLE"], "bottom_right": ["MOON", "CIRCLE", "X"]}
+      "quarters": {"top_left": ["SQUARE"], "top_right": ["STAR"], "bottom_left": ["SUN", "CIRCLE", "MOON", "CIRCLE"], "bottom_right": ["TRIANGLE", "STAR"]}
     }
   },
   {
     "card": {
       "dimensions": {"width": 135, "height": 135},
-      "quarters": {"top_left": ["SQUARE", "X", "ARROW_UP"], "top_right": ["MOON"], "bottom_left": ["CIRCLE", "TRIANGLE", "CIRCLE", "CIRCLE"], "bottom_right": ["ARROW_UP", "ARROW_DOWN"]}
+      "quarters": {"top_left": ["MOON", "X", "CIRCLE", "TRIANGLE"], "top_right": ["SUN", "STAR", "STAR"], "bottom_left": ["X", "DIAMOND", "SKULL"], "bottom_right": ["CIRCLE", "SKULL", "SUN"]}
     }
   },
   {
     "card": {
       "dimensions": {"width": 135, "height": 135},
-      "quarters": {"top_left": ["CIRCLE", "MOON"], "top_right": [], "bottom_left": ["X", "MOON", "X"], "bottom_right": ["CIRCLE", "X", "CIRCLE"]}
+      "quarters": {"top_left": ["SKULL", "TRIANGLE", "SUN"], "top_right": ["DIAMOND", "CIRCLE", "STAR"], "bottom_left": ["MOON", "SKULL", "CIRCLE"], "bottom_right": ["X"]}
     }
   },
   {
     "card": {
       "dimensions": {"width": 135, "height": 135},
-      "quarters": {"top_left": ["TRIANGLE", "SUN", "SQUARE"], "top_right": ["DIAMOND", "SUN", "SQUARE"], "bottom_left": ["STAR", "CIRCLE"], "bottom_right": ["DIAMOND", "STAR", "MOON"]}
+      "quarters": {"top_left": ["MOON"], "top_right": ["SUN", "SQUARE"], "bottom_left": ["DIAMOND", "TRIANGLE"], "bottom_right": ["ARROW_RIGHT", "TRIANGLE", "SUN"]}
     }
   },
   {
     "card": {
       "dimensions": {"width": 135, "height": 135},
-      "quarters": {"top_left": ["ARROW_DOWN", "SUN", "X"], "top_right": ["CIRCLE", "X", "TRIANGLE"], "bottom_left": ["CIRCLE", "ARROW_RIGHT", "TRIANGLE"], "bottom_right": ["CIRCLE", "ARROW_UP"]}
+      "quarters": {"top_left": ["ARROW_LEFT", "TRIANGLE", "STAR"], "top_right": ["SUN", "STAR"], "bottom_left": ["STAR", "ARROW_RIGHT", "SUN"], "bottom_right": ["CIRCLE"]}
     }
   },
   {
     "card": {
       "dimensions": {"width": 135, "height": 135},
-      "quarters": {"top_left": ["X"], "top_right": ["SKULL", "SUN"], "bottom_left": [], "bottom_right": ["MOON"]}
+      "quarters": {"top_left": ["SQUARE", "CIRCLE", "STAR"], "top_right": ["SUN"], "bottom_left": ["SUN", "CIRCLE", "CIRCLE"], "bottom_right": ["CIRCLE"]}
     }
   },
   {
     "card": {
       "dimensions": {"width": 135, "height": 135},
-      "quarters": {"top_left": ["X", "TRIANGLE", "MOON"], "top_right": ["STAR", "MOON", "ARROW_RIGHT"], "bottom_left": ["TRIANGLE", "SUN"], "bottom_right": ["CIRCLE", "TRIANGLE", "TRIANGLE"]}
+      "quarters": {"top_left": ["SUN", "STAR", "STAR"], "top_right": ["CIRCLE", "ARROW_RIGHT"], "bottom_left": ["ARROW_LEFT"], "bottom_right": ["STAR", "TRIANGLE", "SUN"]}
     }
   },
   {
     "card": {
       "dimensions": {"width": 135, "height": 135},
-      "quarters": {"top_left": ["MOON", "STAR"], "top_right": ["X", "SQUARE"], "bottom_left": ["DIAMOND", "SUN"], "bottom_right": ["ARROW_UP", "TRIANGLE"]}
+      "quarters": {"top_left": ["SKULL", "SQUARE"], "top_right": ["STAR", "SUN", "MOON", "ARROW_DOWN"], "bottom_left": ["X", "STAR"], "bottom_right": ["TRIANGLE", "ARROW_LEFT"]}
     }
   },
   {
     "card": {
       "dimensions": {"width": 135, "height": 135},
-      "quarters": {"top_left": ["ARROW_DOWN", "TRIANGLE", "DIAMOND", "TRIANGLE"], "top_right": ["DIAMOND", "TRIANGLE", "SQUARE"], "bottom_left": ["MOON", "CIRCLE"], "bottom_right": ["MOON", "MOON"]}
+      "quarters": {"top_left": ["TRIANGLE", "TRIANGLE", "SUN"], "top_right": ["X", "ARROW_UP"], "bottom_left": ["CIRCLE"], "bottom_right": ["SUN", "SQUARE"]}
     }
   },
   {
     "card": {
       "dimensions": {"width": 135, "height": 135},
-      "quarters": {"top_left": ["TRIANGLE", "STAR", "ARROW_DOWN"], "top_right": ["TRIANGLE", "SUN"], "bottom_left": ["SUN", "X"], "bottom_right": ["TRIANGLE", "TRIANGLE"]}
+      "quarters": {"top_left": ["MOON", "SQUARE"], "top_right": ["CIRCLE", "X", "STAR"], "bottom_left": ["MOON", "SUN"], "bottom_right": ["DIAMOND", "TRIANGLE", "TRIANGLE"]}
     }
   },
   {
     "card": {
       "dimensions": {"width": 135, "height": 135},
-      "quarters": {"top_left": ["STAR", "CIRCLE"], "top_right": ["SQUARE"], "bottom_left": ["TRIANGLE", "SUN"], "bottom_right": ["TRIANGLE", "CIRCLE", "CIRCLE"]}
+      "quarters": {"top_left": ["SQUARE", "X", "CIRCLE"], "top_right": ["STAR", "SUN"], "bottom_left": ["CIRCLE", "TRIANGLE"], "bottom_right": ["DIAMOND"]}
     }
   },
   {
     "card": {
       "dimensions": {"width": 135, "height": 135},
-      "quarters": {"top_left": ["STAR", "CIRCLE", "MOON"], "top_right": ["X", "CIRCLE"], "bottom_left": ["TRIANGLE", "TRIANGLE", "TRIANGLE"], "bottom_right": ["CIRCLE"]}
+      "quarters": {"top_left": ["CIRCLE", "SUN"], "top_right": ["TRIANGLE", "SKULL", "CIRCLE"], "bottom_left": ["SUN", "SUN", "CIRCLE"], "bottom_right": ["STAR"]}
     }
   },
   {
     "card": {
       "dimensions": {"width": 135, "height": 135},
-      "quarters": {"top_left": ["TRIANGLE", "TRIANGLE", "CIRCLE"], "top_right": ["X", "TRIANGLE", "TRIANGLE"], "bottom_left": ["X", "CIRCLE"], "bottom_right": ["X", "TRIANGLE"]}
+      "quarters": {"top_left": ["X", "SUN"], "top_right": ["CIRCLE", "TRIANGLE", "CIRCLE"], "bottom_left": ["ARROW_LEFT", "X"], "bottom_right": ["DIAMOND", "STAR", "CIRCLE"]}
     }
   },
   {
     "card": {
       "dimensions": {"width": 135, "height": 135},
-      "quarters": {"top_left": ["TRIANGLE", "TRIANGLE"], "top_right": ["ARROW_UP", "X"], "bottom_left": ["CIRCLE", "STAR"], "bottom_right": ["TRIANGLE", "STAR", "SQUARE"]}
+      "quarters": {"top_left": ["TRIANGLE", "MOON"], "top_right": ["X", "TRIANGLE", "ARROW_LEFT"], "bottom_left": ["MOON", "CIRCLE", "SKULL"], "bottom_right": ["SKULL"]}
     }
   },
   {
     "card": {
       "dimensions": {"width": 135, "height": 135},
-      "quarters": {"top_left": ["CIRCLE", "ARROW_UP", "STAR", "CIRCLE"], "top_right": ["CIRCLE", "CIRCLE"], "bottom_left": ["CIRCLE"], "bottom_right": ["DIAMOND", "TRIANGLE"]}
+      "quarters": {"top_left": ["STAR"], "top_right": ["X", "SQUARE"], "bottom_left": ["STAR", "ARROW_LEFT", "SUN"], "bottom_right": ["SUN", "DIAMOND", "TRIANGLE", "ARROW_UP"]}
     }
   },
   {
     "card": {
       "dimensions": {"width": 135, "height": 135},
-      "quarters": {"top_left": ["DIAMOND", "X", "SQUARE"], "top_right": ["CIRCLE", "TRIANGLE", "X"], "bottom_left": ["ARROW_DOWN", "X", "CIRCLE", "TRIANGLE"], "bottom_right": ["CIRCLE", "DIAMOND", "ARROW_DOWN", "SQUARE"]}
+      "quarters": {"top_left": ["CIRCLE", "CIRCLE"], "top_right": ["ARROW_DOWN"], "bottom_left": ["TRIANGLE"], "bottom_right": ["TRIANGLE", "X"]}
     }
   },
   {
     "card": {
       "dimensions": {"width": 135, "height": 135},
-      "quarters": {"top_left": ["TRIANGLE"], "top_right": ["SKULL"], "bottom_left": ["X", "DIAMOND", "TRIANGLE", "TRIANGLE"], "bottom_right": ["MOON", "TRIANGLE"]}
+      "quarters": {"top_left": ["X", "TRIANGLE", "X"], "top_right": ["SKULL", "CIRCLE", "STAR"], "bottom_left": ["CIRCLE", "CIRCLE"], "bottom_right": ["CIRCLE", "SUN", "MOON"]}
     }
   },
   {
     "card": {
       "dimensions": {"width": 135, "height": 135},
-      "quarters": {"top_left": ["MOON", "ARROW_RIGHT", "SKULL"], "top_right": ["MOON", "TRIANGLE", "SQUARE"], "bottom_left": ["CIRCLE", "ARROW_RIGHT", "SQUARE"], "bottom_right": ["ARROW_LEFT", "X"]}
+      "quarters": {"top_left": ["SKULL", "CIRCLE", "TRIANGLE"], "top_right": ["SQUARE", "MOON", "TRIANGLE"], "bottom_left": ["SUN", "MOON"], "bottom_right": []}
     }
   },
   {
     "card": {
       "dimensions": {"width": 135, "height": 135},
-      "quarters": {"top_left": ["STAR"], "top_right": ["X"], "bottom_left": ["X", "TRIANGLE"], "bottom_right": ["MOON"]}
+      "quarters": {"top_left": ["STAR", "CIRCLE"], "top_right": ["ARROW_LEFT", "MOON"], "bottom_left": ["SUN", "TRIANGLE"], "bottom_right": ["STAR", "MOON", "ARROW_LEFT"]}
     }
   },
   {
     "card": {
       "dimensions": {"width": 135, "height": 135},
-      "quarters": {"top_left": ["TRIANGLE", "TRIANGLE", "CIRCLE"], "top_right": ["STAR", "TRIANGLE"], "bottom_left": ["STAR", "SQUARE"], "bottom_right": []}
+      "quarters": {"top_left": ["X", "TRIANGLE", "SQUARE"], "top_right": ["ARROW_RIGHT", "TRIANGLE"], "bottom_left": ["CIRCLE", "X", "STAR", "SUN"], "bottom_right": ["ARROW_UP", "X", "X"]}
     }
   },
   {
     "card": {
       "dimensions": {"width": 135, "height": 135},
-      "quarters": {"top_left": ["CIRCLE"], "top_right": ["X"], "bottom_left": ["STAR", "X"], "bottom_right": ["ARROW_RIGHT", "X"]}
+      "quarters": {"top_left": ["STAR", "SKULL", "TRIANGLE"], "top_right": ["DIAMOND", "MOON"], "bottom_left": ["SKULL", "CIRCLE", "SKULL"], "bottom_right": ["MOON", "SUN"]}
     }
   },
   {
     "card": {
       "dimensions": {"width": 135, "height": 135},
-      "quarters": {"top_left": ["TRIANGLE"], "top_right": ["ARROW_LEFT"], "bottom_left": ["SQUARE", "ARROW_LEFT", "TRIANGLE"], "bottom_right": ["X", "TRIANGLE", "TRIANGLE"]}
+      "quarters": {"top_left": ["ARROW_DOWN", "SKULL"], "top_right": ["SKULL", "TRIANGLE", "SQUARE"], "bottom_left": ["SQUARE"], "bottom_right": ["X", "MOON", "SUN"]}
     }
   },
   {
     "card": {
       "dimensions": {"width": 135, "height": 135},
-      "quarters": {"top_left": ["SQUARE", "SQUARE", "TRIANGLE"], "top_right": ["TRIANGLE"], "bottom_left": ["CIRCLE", "SUN"], "bottom_right": ["X", "TRIANGLE"]}
+      "quarters": {"top_left": ["SUN", "SQUARE"], "top_right": ["TRIANGLE"], "bottom_left": ["SKULL"], "bottom_right": ["CIRCLE", "CIRCLE"]}
     }
   },
   {
     "card": {
       "dimensions": {"width": 135, "height": 135},
-      "quarters": {"top_left": ["SUN"], "top_right": ["X"], "bottom_left": ["STAR"], "bottom_right": []}
+      "quarters": {"top_left": ["X", "STAR"], "top_right": ["CIRCLE", "STAR"], "bottom_left": ["STAR", "TRIANGLE", "CIRCLE"], "bottom_right": ["SKULL"]}
     }
   },
   {
     "card": {
       "dimensions": {"width": 135, "height": 135},
-      "quarters": {"top_left": ["STAR"], "top_right": ["X", "TRIANGLE", "CIRCLE", "TRIANGLE"], "bottom_left": ["TRIANGLE", "STAR"], "bottom_right": ["SKULL", "SQUARE"]}
+      "quarters": {"top_left": ["CIRCLE", "CIRCLE", "ARROW_LEFT"], "top_right": ["CIRCLE"], "bottom_left": ["CIRCLE", "X", "ARROW_UP"], "bottom_right": ["DIAMOND", "SUN", "MOON"]}
     }
   },
   {
     "card": {
       "dimensions": {"width": 135, "height": 135},
-      "quarters": {"top_left": ["SKULL", "X", "SQUARE"], "top_right": ["CIRCLE", "STAR"], "bottom_left": ["MOON", "CIRCLE", "TRIANGLE"], "bottom_right": ["TRIANGLE", "TRIANGLE"]}
+      "quarters": {"top_left": ["SQUARE", "MOON"], "top_right": ["STAR"], "bottom_left": ["CIRCLE", "STAR"], "bottom_right": ["TRIANGLE", "SUN", "CIRCLE"]}
     }
   },
   {
     "card": {
       "dimensions": {"width": 135, "height": 135},
-      "quarters": {"top_left": ["SQUARE", "CIRCLE", "STAR"], "top_right": ["X", "ARROW_UP"], "bottom_left": ["SQUARE", "X", "SKULL", "X"], "bottom_right": ["ARROW_RIGHT", "ARROW_LEFT", "SUN"]}
+      "quarters": {"top_left": ["X", "SKULL"], "top_right": ["SUN", "TRIANGLE", "DIAMOND", "ARROW_RIGHT"], "bottom_left": ["TRIANGLE"], "bottom_right": ["STAR"]}
     }
   },
   {
     "card": {
       "dimensions": {"width": 135, "height": 135},
-      "quarters": {"top_left": ["X", "SKULL"], "top_right": ["MOON", "SKULL"], "bottom_left": ["ARROW_DOWN", "CIRCLE", "CIRCLE"], "bottom_right": ["CIRCLE", "TRIANGLE", "SQUARE"]}
+      "quarters": {"top_left": ["CIRCLE"], "top_right": ["CIRCLE", "CIRCLE", "TRIANGLE"], "bottom_left": ["MOON", "DIAMOND", "X"], "bottom_right": ["CIRCLE", "SUN"]}
     }
   },
   {
     "card": {
       "dimensions": {"width": 135, "height": 135},
-      "quarters": {"top_left": ["MOON", "TRIANGLE"], "top_right": ["TRIANGLE", "STAR", "SQUARE"], "bottom_left": ["CIRCLE"], "bottom_right": ["SQUARE", "SUN", "SQUARE"]}
+      "quarters": {"top_left": ["DIAMOND"], "top_right": ["MOON", "CIRCLE", "MOON"], "bottom_left": ["SQUARE", "TRIANGLE", "SUN"], "bottom_right": ["X", "CIRCLE", "SUN", "SQUARE"]}
     }
   },
   {
     "card": {
       "dimensions": {"width": 135, "height": 135},
-      "quarters": {"top_left": ["SQUARE"], "top_right": ["TRIANGLE", "CIRCLE"], "bottom_left": ["SKULL", "CIRCLE"], "bottom_right": ["STAR", "STAR", "SKULL", "SQUARE"]}
+      "quarters": {"top_left": ["CIRCLE", "CIRCLE", "X"], "top_right": ["TRIANGLE", "CIRCLE", "SKULL"], "bottom_left": ["X", "TRIANGLE"], "bottom_right": ["SUN", "X"]}
     }
   },
   {
     "card": {
       "dimensions": {"width": 135, "height": 135},
-      "quarters": {"top_left": ["STAR", "TRIANGLE", "CIRCLE"], "top_right": ["STAR", "MOON"], "bottom_left": ["SQUARE", "MOON", "SQUARE"], "bottom_right": ["SQUARE", "CIRCLE", "CIRCLE"]}
+      "quarters": {"top_left": ["SKULL", "TRIANGLE"], "top_right": ["STAR", "MOON", "TRIANGLE"], "bottom_left": [], "bottom_right": ["STAR", "SKULL"]}
     }
   },
   {
     "card": {
       "dimensions": {"width": 135, "height": 135},
-      "quarters": {"top_left": ["SUN", "STAR"], "top_right": ["ARROW_LEFT", "SKULL"], "bottom_left": ["ARROW_LEFT", "STAR", "CIRCLE", "SUN"], "bottom_right": ["ARROW_RIGHT", "DIAMOND"]}
+      "quarters": {"top_left": ["STAR"], "top_right": ["X", "SUN"], "bottom_left": ["MOON", "CIRCLE", "SQUARE"], "bottom_right": ["SKULL", "TRIANGLE", "SQUARE"]}
     }
   },
   {
     "card": {
       "dimensions": {"width": 135, "height": 135},
-      "quarters": {"top_left": ["MOON", "CIRCLE"], "top_right": ["SKULL", "STAR"], "bottom_left": ["CIRCLE", "TRIANGLE", "CIRCLE"], "bottom_right": ["TRIANGLE", "TRIANGLE", "MOON"]}
+      "quarters": {"top_left": ["STAR"], "top_right": ["X", "SKULL", "TRIANGLE", "X"], "bottom_left": ["DIAMOND", "SKULL", "DIAMOND", "CIRCLE"], "bottom_right": ["STAR", "SUN", "SUN"]}
     }
   },
   {
     "card": {
       "dimensions": {"width": 135, "height": 135},
-      "quarters": {"top_left": ["CIRCLE", "X"], "top_right": ["MOON", "SUN"], "bottom_left": ["SUN", "MOON", "MOON"], "bottom_right": ["CIRCLE", "X"]}
+      "quarters": {"top_left": ["MOON", "TRIANGLE"], "top_right": ["X", "SUN", "STAR"], "bottom_left": ["SQUARE", "SKULL"], "bottom_right": ["TRIANGLE", "STAR"]}
     }
   },
   {
     "card": {
       "dimensions": {"width": 135, "height": 135},
-      "quarters": {"top_left": ["X", "MOON"], "top_right": ["X"], "bottom_left": ["X", "CIRCLE"], "bottom_right": ["CIRCLE", "ARROW_RIGHT"]}
+      "quarters": {"top_left": ["ARROW_RIGHT", "ARROW_RIGHT", "X"], "top_right": ["SQUARE"], "bottom_left": ["CIRCLE", "CIRCLE", "STAR", "MOON"], "bottom_right": ["TRIANGLE", "X", "SUN"]}
     }
   },
   {
     "card": {
       "dimensions": {"width": 135, "height": 135},
-      "quarters": {"top_left": ["SUN"], "top_right": ["X", "X"], "bottom_left": ["STAR", "MOON"], "bottom_right": ["STAR", "STAR"]}
+      "quarters": {"top_left": ["X", "ARROW_UP", "SUN"], "top_right": ["DIAMOND", "MOON", "X"], "bottom_left": ["SQUARE", "TRIANGLE", "MOON", "TRIANGLE"], "bottom_right": ["SUN", "SQUARE"]}
     }
   },
   {
     "card": {
       "dimensions": {"width": 135, "height": 135},
-      "quarters": {"top_left": ["SQUARE", "X", "CIRCLE"], "top_right": ["X", "TRIANGLE"], "bottom_left": ["SUN", "STAR"], "bottom_right": ["TRIANGLE", "TRIANGLE", "CIRCLE", "STAR"]}
+      "quarters": {"top_left": ["ARROW_UP", "SUN", "STAR"], "top_right": ["SKULL", "MOON"], "bottom_left": ["STAR", "MOON"], "bottom_right": ["CIRCLE", "CIRCLE", "TRIANGLE"]}
     }
   },
   {
     "card": {
       "dimensions": {"width": 135, "height": 135},
-      "quarters": {"top_left": ["TRIANGLE", "MOON"], "top_right": ["ARROW_RIGHT", "SUN", "CIRCLE"], "bottom_left": ["CIRCLE", "TRIANGLE", "CIRCLE"], "bottom_right": ["CIRCLE", "STAR"]}
+      "quarters": {"top_left": ["CIRCLE", "SQUARE", "MOON"], "top_right": ["SQUARE"], "bottom_left": ["SKULL", "X"], "bottom_right": ["TRIANGLE", "STAR", "SUN"]}
     }
   },
   {
     "card": {
       "dimensions": {"width": 135, "height": 135},
-      "quarters": {"top_left": ["SKULL", "CIRCLE"], "top_right": ["TRIANGLE", "SKULL", "TRIANGLE"], "bottom_left": ["TRIANGLE"], "bottom_right": ["SUN", "ARROW_DOWN"]}
+      "quarters": {"top_left": ["TRIANGLE", "TRIANGLE"], "top_right": ["DIAMOND", "ARROW_DOWN"], "bottom_left": ["CIRCLE"], "bottom_right": ["SUN"]}
     }
   },
   {
     "card": {
       "dimensions": {"width": 135, "height": 135},
-      "quarters": {"top_left": ["SUN", "CIRCLE", "SKULL"], "top_right": ["TRIANGLE", "SUN", "CIRCLE"], "bottom_left": ["SQUARE", "ARROW_RIGHT"], "bottom_right": ["SUN", "SQUARE", "SUN"]}
+      "quarters": {"top_left": ["STAR"], "top_right": ["SUN", "MOON", "STAR"], "bottom_left": ["SQUARE", "TRIANGLE"], "bottom_right": ["CIRCLE", "CIRCLE"]}
     }
   },
   {
     "card": {
       "dimensions": {"width": 135, "height": 135},
-      "quarters": {"top_left": ["STAR"], "top_right": ["DIAMOND", "STAR", "TRIANGLE"], "bottom_left": ["SUN"], "bottom_right": ["TRIANGLE", "TRIANGLE", "STAR"]}
+      "quarters": {"top_left": ["CIRCLE", "SKULL"], "top_right": ["ARROW_LEFT", "CIRCLE", "DIAMOND"], "bottom_left": ["MOON"], "bottom_right": ["TRIANGLE"]}
     }
   },
   {
     "card": {
       "dimensions": {"width": 135, "height": 135},
-      "quarters": {"top_left": ["X", "CIRCLE", "CIRCLE", "CIRCLE"], "top_right": ["DIAMOND", "STAR"], "bottom_left": ["SKULL", "DIAMOND", "STAR"], "bottom_right": ["ARROW_RIGHT", "SQUARE"]}
+      "quarters": {"top_left": ["SQUARE", "SUN", "STAR"], "top_right": ["STAR", "X"], "bottom_left": ["TRIANGLE", "SKULL", "SQUARE"], "bottom_right": ["X", "STAR"]}
     }
   },
   {
     "card": {
       "dimensions": {"width": 135, "height": 135},
-      "quarters": {"top_left": [], "top_right": ["X"], "bottom_left": ["STAR", "CIRCLE"], "bottom_right": ["SUN", "X"]}
+      "quarters": {"top_left": ["SUN", "TRIANGLE"], "top_right": ["X", "SQUARE", "CIRCLE"], "bottom_left": ["TRIANGLE", "SUN"], "bottom_right": ["SKULL"]}
     }
   },
   {
     "card": {
       "dimensions": {"width": 135, "height": 135},
-      "quarters": {"top_left": ["SUN"], "top_right": ["ARROW_RIGHT", "DIAMOND"], "bottom_left": ["SKULL", "CIRCLE", "X", "CIRCLE"], "bottom_right": ["DIAMOND", "TRIANGLE", "SKULL", "TRIANGLE"]}
+      "quarters": {"top_left": ["CIRCLE", "SQUARE", "X"], "top_right": ["TRIANGLE"], "bottom_left": ["SUN"], "bottom_right": ["CIRCLE", "DIAMOND", "STAR"]}
     }
   },
   {
     "card": {
       "dimensions": {"width": 135, "height": 135},
-      "quarters": {"top_left": ["X", "X"], "top_right": ["STAR", "STAR"], "bottom_left": ["X"], "bottom_right": ["ARROW_DOWN", "DIAMOND", "X"]}
+      "quarters": {"top_left": ["MOON", "CIRCLE"], "top_right": ["SKULL", "CIRCLE", "SUN"], "bottom_left": ["MOON", "ARROW_RIGHT"], "bottom_right": ["STAR", "ARROW_UP", "ARROW_DOWN", "SKULL"]}
     }
   },
   {
     "card": {
       "dimensions": {"width": 135, "height": 135},
-      "quarters": {"top_left": ["CIRCLE", "ARROW_LEFT", "TRIANGLE"], "top_right": ["TRIANGLE", "SKULL", "STAR"], "bottom_left": ["CIRCLE"], "bottom_right": ["SQUARE"]}
+      "quarters": {"top_left": ["MOON", "SQUARE", "TRIANGLE", "SUN"], "top_right": ["X", "SKULL", "ARROW_LEFT"], "bottom_left": ["SUN", "SQUARE", "ARROW_RIGHT", "X"], "bottom_right": ["CIRCLE", "X"]}
     }
   },
   {
     "card": {
       "dimensions": {"width": 135, "height": 135},
-      "quarters": {"top_left": ["CIRCLE", "SUN"], "top_right": ["CIRCLE", "STAR"], "bottom_left": ["TRIANGLE", "CIRCLE"], "bottom_right": ["ARROW_RIGHT", "MOON", "TRIANGLE", "DIAMOND"]}
+      "quarters": {"top_left": ["STAR", "SKULL", "X"], "top_right": ["DIAMOND", "SUN", "STAR"], "bottom_left": ["TRIANGLE", "STAR", "X"], "bottom_right": ["ARROW_UP", "CIRCLE"]}
     }
   },
   {
     "card": {
       "dimensions": {"width": 135, "height": 135},
-      "quarters": {"top_left": ["STAR"], "top_right": ["DIAMOND", "CIRCLE"], "bottom_left": ["CIRCLE", "TRIANGLE"], "bottom_right": ["DIAMOND", "ARROW_DOWN", "SQUARE", "SKULL"]}
+      "quarters": {"top_left": ["CIRCLE", "MOON"], "top_right": ["CIRCLE", "STAR"], "bottom_left": ["STAR", "TRIANGLE", "ARROW_DOWN"], "bottom_right": ["ARROW_UP", "SUN", "MOON"]}
     }
   },
   {
     "card": {
       "dimensions": {"width": 135, "height": 135},
-      "quarters": {"top_left": ["MOON", "X"], "top_right": ["MOON", "X"], "bottom_left": ["SQUARE", "CIRCLE"], "bottom_right": ["X", "CIRCLE", "MOON"]}
+      "quarters": {"top_left": ["STAR", "CIRCLE"], "top_right": ["DIAMOND", "CIRCLE"], "bottom_left": ["STAR", "ARROW_DOWN"], "bottom_right": ["X", "SUN", "TRIANGLE"]}
     }
   },
   {
     "card": {
       "dimensions": {"width": 135, "height": 135},
-      "quarters": {"top_left": ["STAR", "CIRCLE", "TRIANGLE", "ARROW_DOWN"], "top_right": ["TRIANGLE", "TRIANGLE"], "bottom_left": ["SQUARE", "STAR"], "bottom_right": ["X", "MOON"]}
+      "quarters": {"top_left": ["CIRCLE", "SUN", "SKULL"], "top_right": ["STAR"], "bottom_left": ["CIRCLE", "CIRCLE", "STAR"], "bottom_right": ["SKULL"]}
     }
   },
   {
     "card": {
       "dimensions": {"width": 135, "height": 135},
-      "quarters": {"top_left": ["ARROW_UP", "X", "CIRCLE"], "top_right": ["STAR", "TRIANGLE", "STAR"], "bottom_left": ["TRIANGLE"], "bottom_right": ["TRIANGLE", "STAR", "CIRCLE"]}
+      "quarters": {"top_left": ["SQUARE", "TRIANGLE"], "top_right": ["TRIANGLE"], "bottom_left": ["X", "SUN"], "bottom_right": ["X", "SQUARE", "SKULL"]}
     }
   },
   {
     "card": {
       "dimensions": {"width": 135, "height": 135},
-      "quarters": {"top_left": ["DIAMOND", "SKULL", "STAR"], "top_right": ["CIRCLE", "TRIANGLE"], "bottom_left": ["DIAMOND", "TRIANGLE", "SQUARE"], "bottom_right": ["X", "SQUARE"]}
+      "quarters": {"top_left": ["STAR"], "top_right": ["CIRCLE", "STAR"], "bottom_left": ["TRIANGLE", "SQUARE"], "bottom_right": ["CIRCLE", "SUN", "MOON"]}
     }
   },
   {
     "card": {
       "dimensions": {"width": 135, "height": 135},
-      "quarters": {"top_left": ["SQUARE", "TRIANGLE", "TRIANGLE"], "top_right": ["CIRCLE", "ARROW_RIGHT"], "bottom_left": ["CIRCLE", "CIRCLE"], "bottom_right": ["ARROW_RIGHT", "CIRCLE", "MOON"]}
+      "quarters": {"top_left": ["X", "SQUARE"], "top_right": ["ARROW_LEFT", "ARROW_DOWN", "DIAMOND"], "bottom_left": ["STAR"], "bottom_right": ["DIAMOND", "SQUARE"]}
     }
   },
   {
     "card": {
       "dimensions": {"width": 135, "height": 135},
-      "quarters": {"top_left": ["TRIANGLE", "CIRCLE"], "top_right": ["MOON", "TRIANGLE", "CIRCLE"], "bottom_left": ["TRIANGLE", "MOON", "DIAMOND"], "bottom_right": ["CIRCLE", "STAR"]}
+      "quarters": {"top_left": ["CIRCLE", "ARROW_UP"], "top_right": ["DIAMOND", "ARROW_LEFT", "SUN"], "bottom_left": ["CIRCLE", "X", "CIRCLE"], "bottom_right": ["SUN", "CIRCLE"]}
     }
   },
   {
     "card": {
       "dimensions": {"width": 135, "height": 135},
-      "quarters": {"top_left": ["SQUARE", "CIRCLE", "ARROW_LEFT"], "top_right": ["CIRCLE"], "bottom_left": ["TRIANGLE"], "bottom_right": ["TRIANGLE", "TRIANGLE"]}
+      "quarters": {"top_left": ["X"], "top_right": ["STAR", "TRIANGLE", "SQUARE"], "bottom_left": ["TRIANGLE", "SQUARE"], "bottom_right": ["MOON"]}
     }
   },
   {
     "card": {
       "dimensions": {"width": 135, "height": 135},
-      "quarters": {"top_left": ["STAR", "SQUARE", "TRIANGLE"], "top_right": ["X", "CIRCLE"], "bottom_left": ["TRIANGLE", "X"], "bottom_right": ["TRIANGLE", "STAR", "SQUARE"]}
+      "quarters": {"top_left": ["STAR", "STAR", "STAR"], "top_right": ["STAR", "STAR"], "bottom_left": ["MOON", "STAR", "TRIANGLE", "STAR"], "bottom_right": ["MOON", "SKULL"]}
     }
   },
   {
     "card": {
       "dimensions": {"width": 135, "height": 135},
-      "quarters": {"top_left": ["CIRCLE", "X", "TRIANGLE"], "top_right": ["ARROW_UP", "SUN", "MOON"], "bottom_left": ["TRIANGLE", "X", "TRIANGLE", "STAR"], "bottom_right": ["DIAMOND", "SKULL", "DIAMOND"]}
+      "quarters": {"top_left": ["SKULL", "MOON", "SQUARE"], "top_right": ["STAR", "CIRCLE", "X"], "bottom_left": ["TRIANGLE", "CIRCLE"], "bottom_right": ["STAR", "SUN", "MOON"]}
     }
   },
   {
     "card": {
       "dimensions": {"width": 135, "height": 135},
-      "quarters": {"top_left": ["TRIANGLE", "X", "CIRCLE"], "top_right": ["STAR", "SQUARE", "SQUARE"], "bottom_left": ["SQUARE", "CIRCLE"], "bottom_right": ["CIRCLE", "STAR"]}
+      "quarters": {"top_left": ["SQUARE"], "top_right": ["CIRCLE", "SUN", "ARROW_RIGHT"], "bottom_left": ["TRIANGLE", "SUN", "TRIANGLE", "ARROW_RIGHT"], "bottom_right": ["ARROW_UP", "SUN"]}
     }
   },
   {
     "card": {
       "dimensions": {"width": 135, "height": 135},
-      "quarters": {"top_left": ["STAR", "STAR", "SKULL", "X"], "top_right": ["DIAMOND", "TRIANGLE", "ARROW_LEFT"], "bottom_left": ["CIRCLE", "TRIANGLE"], "bottom_right": ["TRIANGLE", "SUN", "X", "MOON"]}
+      "quarters": {"top_left": ["MOON", "CIRCLE"], "top_right": ["STAR", "TRIANGLE", "MOON"], "bottom_left": ["CIRCLE", "ARROW_RIGHT"], "bottom_right": ["DIAMOND", "STAR"]}
     }
   },
   {
     "card": {
       "dimensions": {"width": 135, "height": 135},
-      "quarters": {"top_left": ["TRIANGLE", "CIRCLE", "CIRCLE"], "top_right": ["CIRCLE"], "bottom_left": ["STAR", "CIRCLE", "CIRCLE"], "bottom_right": ["CIRCLE", "ARROW_DOWN", "STAR"]}
+      "quarters": {"top_left": ["CIRCLE"], "top_right": ["SQUARE", "STAR", "SUN"], "bottom_left": ["TRIANGLE", "ARROW_UP"], "bottom_right": ["SUN", "STAR"]}
     }
   },
   {
     "card": {
       "dimensions": {"width": 135, "height": 135},
-      "quarters": {"top_left": ["DIAMOND", "STAR", "X"], "top_right": ["STAR", "CIRCLE", "SKULL", "CIRCLE"], "bottom_left": ["SKULL", "DIAMOND", "TRIANGLE"], "bottom_right": ["CIRCLE", "MOON", "CIRCLE"]}
+      "quarters": {"top_left": ["SQUARE"], "top_right": ["X", "CIRCLE", "ARROW_LEFT"], "bottom_left": ["CIRCLE", "SQUARE", "SUN"], "bottom_right": ["SUN", "CIRCLE"]}
     }
   },
   {
     "card": {
       "dimensions": {"width": 135, "height": 135},
-      "quarters": {"top_left": ["DIAMOND"], "top_right": [], "bottom_left": ["TRIANGLE", "TRIANGLE"], "bottom_right": ["TRIANGLE", "STAR", "SUN", "STAR"]}
+      "quarters": {"top_left": ["ARROW_RIGHT", "TRIANGLE", "CIRCLE", "SQUARE"], "top_right": ["CIRCLE", "STAR", "X"], "bottom_left": ["MOON", "MOON"], "bottom_right": ["SUN", "X", "CIRCLE"]}
     }
   },
   {
     "card": {
       "dimensions": {"width": 135, "height": 135},
-      "quarters": {"top_left": ["SUN", "TRIANGLE"], "top_right": ["STAR", "SUN", "SUN", "SUN"], "bottom_left": ["CIRCLE", "CIRCLE"], "bottom_right": ["CIRCLE", "CIRCLE", "SQUARE"]}
+      "quarters": {"top_left": ["STAR", "TRIANGLE", "X"], "top_right": ["ARROW_LEFT", "SQUARE"], "bottom_left": ["SUN", "SUN"], "bottom_right": ["STAR", "SQUARE"]}
     }
   },
   {
     "card": {
       "dimensions": {"width": 135, "height": 135},
-      "quarters": {"top_left": ["X", "SUN", "CIRCLE"], "top_right": ["TRIANGLE", "TRIANGLE", "SUN", "SUN"], "bottom_left": ["CIRCLE", "MOON", "SUN", "SUN"], "bottom_right": ["TRIANGLE"]}
+      "quarters": {"top_left": ["STAR", "TRIANGLE"], "top_right": ["SQUARE", "ARROW_UP", "STAR"], "bottom_left": ["X", "STAR"], "bottom_right": ["ARROW_UP", "SUN"]}
     }
   },
   {
     "card": {
       "dimensions": {"width": 135, "height": 135},
-      "quarters": {"top_left": ["DIAMOND", "MOON"], "top_right": ["MOON", "X"], "bottom_left": ["STAR", "MOON"], "bottom_right": ["STAR"]}
+      "quarters": {"top_left": ["STAR", "ARROW_UP", "STAR"], "top_right": ["ARROW_DOWN", "SQUARE"], "bottom_left": ["X", "SUN", "DIAMOND"], "bottom_right": ["CIRCLE", "DIAMOND", "SUN"]}
     }
   }
 ]
