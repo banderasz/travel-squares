@@ -45,9 +45,13 @@ JITTER_PCT = 10
 SCATTER_SPACING = (25 * 0.7 * 1.8, 22 * 0.7 * 1.8)
 SCATTER_ICON = 15 * 0.7
 SCATTER_OPACITY = 128                # the script uses opacity 50 (of 100)
-ROUGHEN_SIZE_PCT = 0.10              # Illustrator Roughen: size 10%, relative
-                                     # (relative to the bounding-box diagonal)
-ROUGHEN_DETAIL = 6.0                 # anchors per inch (72pt), smooth points
+# Roughen, as (size, detail) passes applied one after another. Size is a
+# fraction of the shape's bounding-box diagonal; detail is anchors per inch
+# (72pt). Illustrator's own effect is a single pass, but one pass can only
+# produce one wavelength: crank the size and you get a few huge lobes, crank
+# the detail and you get an even fuzz. A coastline has both, so the coarse
+# pass sets the silhouette and the fine pass crinkles the edge it leaves.
+ROUGHEN_PASSES = ((0.070, 5.0, 12), (0.026, 14.0, 5))   # size, detail, curve samples
 
 
 # Asset filenames, keyed by stable symbol ID. They mostly match the display
@@ -122,18 +126,8 @@ def _catmull_rom(points, samples=12):
     return out
 
 
-def roughen(points, scale, rng, size_pct=ROUGHEN_SIZE_PCT, detail_per_inch=ROUGHEN_DETAIL):
-    """Illustrator's Roughen, with its own parameters.
-
-    Size is a percentage of the shape's own size, Detail is anchors per inch
-    (72pt), and the anchors are *smooth* — so the edge undulates like a coastline
-    rather than turning into the jagged fringe a corner-point version produces.
-    """
-    xs = [p[0] for p in points]
-    ys = [p[1] for p in points]
-    size = size_pct * math.hypot(max(xs) - min(xs), max(ys) - min(ys))
-    spacing = (72.0 / detail_per_inch) * scale
-
+def _roughen_pass(points, size, spacing, samples, rng):
+    """Resample the outline at `spacing`, jog every anchor by up to `size`."""
     anchors = []
     for i in range(len(points)):
         ax, ay = points[i]
@@ -145,7 +139,24 @@ def roughen(points, scale, rng, size_pct=ROUGHEN_SIZE_PCT, detail_per_inch=ROUGH
             angle = rng.random() * math.tau
             r = rng.random() * size
             anchors.append((x + math.cos(angle) * r, y + math.sin(angle) * r))
-    return _catmull_rom(anchors)
+    return _catmull_rom(anchors, samples)
+
+
+def roughen(points, scale, rng, passes=ROUGHEN_PASSES):
+    """Illustrator's Roughen, run at more than one wavelength.
+
+    The anchors are *smooth*, not corners — a corner-point version at this
+    density gives a jagged fringe rather than an edge. Size stays measured
+    against the original bounding box so a later pass does not compound the
+    displacement an earlier one already added.
+    """
+    xs = [p[0] for p in points]
+    ys = [p[1] for p in points]
+    diagonal = math.hypot(max(xs) - min(xs), max(ys) - min(ys))
+    for size_pct, detail_per_inch, samples in passes:
+        points = _roughen_pass(points, size_pct * diagonal,
+                               (72.0 / detail_per_inch) * scale, samples, rng)
+    return points
 
 
 def _shape_points(n, cx, cy, pw, ph, rng):
