@@ -229,3 +229,6 @@ __marimo__/
 # Long-running deck growth: checkpoints and logs
 /data/grow_*.json
 /data/grow_*.log
+
+# Rendered card artwork (regenerate: python -m src.training_images.render_card)
+/cards/

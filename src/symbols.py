@@ -37,7 +37,7 @@ NUMBER_OF_SYMBOLS_IN_PLAY = 96
 # When you rename a symbol, append its previous `display` value here.
 LEGACY_NAMES: Dict[str, Tuple[str, ...]] = {
     "CIRCLE":   ("anchor",),
-    "SQUARE":   ("map",),
+    "SQUARE":   ("map", "gem"),        # gem: the artwork asset name
     "TRIANGLE": (),           # rum: never renamed
     "STAR":     ("spyglass",),
     "X":        (),           # rat: never renamed
