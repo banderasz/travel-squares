@@ -68,8 +68,8 @@ JITTER_PCT = 10
 SCATTER_SPACING = (25 * 0.7 * 0.7, 22 * 0.7 * 0.7)
 SCATTER_ICON = 15 * 0.45
 SCATTER_OPACITY = 235
-SCATTER_TRIES = 2000                 # dart throws per card
-SCATTER_MAX = 30                     # scenery pieces actually drawn
+SCATTER_TRIES = 600                  # dart throws per island
+SCATTER_MAX = 10                     # scenery pieces drawn on one island
 # The example sheet's coast is 0.025 of the card wide, but its cards carry at
 # most one symbol per quarter. Ours carry four, so a line that heavy crowds
 # them; half of it reads the same at card size and leaves the artwork room.
@@ -297,8 +297,12 @@ def _fit_in_box(points, box):
     return [(x + dx, y + dy) for x, y in points]
 
 
-def _scatter(size, mask, scale, rng, keepout=()):
-    """Dot the island with pine/palm/tree/grass, avoiding the symbols.
+def _scatter(size, mask, scale, rng, keepout=(), bbox=None):
+    """Dot one island with one kind of scenery, avoiding the symbols.
+
+    A grass island, a palm island, a pine island: the kind is drawn once here,
+    so a single island never mixes them. Called per island rather than per
+    card, which is what makes that possible -- the mask is that island alone.
 
     The Illustrator script tiles a pattern across the whole shape and lets the
     symbols land on top, which buries most of it — the visible scenery ends up
@@ -308,14 +312,13 @@ def _scatter(size, mask, scale, rng, keepout=()):
     can carry proper weight instead of being faded to near-nothing.
     """
     target = SCATTER_ICON * scale
-    icons = []
-    for name in SCATTER:
-        art = _load(name, int(max(target, 4)))
-        ratio = target / max(art.size)
-        icons.append(art.resize((max(1, int(art.width * ratio)),
-                                 max(1, int(art.height * ratio))), Image.LANCZOS))
+    art = _load(SCATTER[rng.randrange(len(SCATTER))], int(max(target, 4)))
+    ratio = target / max(art.size)
+    icon = art.resize((max(1, int(art.width * ratio)),
+                       max(1, int(art.height * ratio))), Image.LANCZOS)
     probe = mask.load()
     w, h = size
+    bx0, by0, bx1, by1 = bbox if bbox else (0, 0, w, h)
     spacing = SCATTER_SPACING[0] * scale
     layer = Image.new('RGBA', size, (0, 0, 0, 0))
 
@@ -328,8 +331,7 @@ def _scatter(size, mask, scale, rng, keepout=()):
     for _ in range(SCATTER_TRIES):
         if len(taken) >= SCATTER_MAX:
             break
-        icon = icons[rng.randrange(len(icons))]
-        cx, cy = rng.uniform(0, w), rng.uniform(0, h)
+        cx, cy = rng.uniform(bx0, bx1), rng.uniform(by0, by1)
         box = (cx - icon.width / 2, cy - icon.height / 2,
                cx + icon.width / 2, cy + icon.height / 2)
         if not _on_land(probe, box, w, h):
@@ -469,13 +471,8 @@ def render_card(card, px=512, seed=None):
         for pts in scaled:
             pen.polygon(pts, fill=ISLAND)
         island = big.resize((px, px), Image.LANCZOS)
-        # Clip the scatter to the fill, not to the island's alpha: the alpha
-        # includes the outline and its soft downsampled edge, which puts trees
-        # on the coast and a few pixels out to sea.
-        inland = Image.new('L', (px * ss, px * ss), 0)
-        ink = ImageDraw.Draw(inland)
-        for pts in scaled:
-            ink.polygon(pts, fill=255)
+        img.alpha_composite(island)
+
         # Every symbol is scaled to fit a target-by-target box, so reserving that
         # box keeps the scenery out from under artwork that has not been drawn
         # yet. Slightly generous for art that is not square, which is the right
@@ -483,9 +480,18 @@ def render_card(card, px=512, seed=None):
         half = q * SYMBOL_SCALE / 2
         keepout = [(sx - half, sy - half, sx + half, sy + half)
                    for _, sx, sy in placements]
-        img.alpha_composite(island)
-        img.alpha_composite(_scatter(img.size, inland.resize((px, px), Image.LANCZOS),
-                                     scale, rng, keepout))
+        # One scatter pass per island, each picking its own kind of scenery, so
+        # an island is all grass or all palm rather than a mixture. Each pass
+        # gets that island's own mask -- the fill, not the drawn island's alpha,
+        # which includes the outline and its soft downsampled edge and would put
+        # trees on the coast and a few pixels out to sea.
+        for pts in scaled:
+            one = Image.new('L', (px * ss, px * ss), 0)
+            ImageDraw.Draw(one).polygon(pts, fill=255)
+            bbox = (min(x for x, _ in pts) / ss, min(y for _, y in pts) / ss,
+                    max(x for x, _ in pts) / ss, max(y for _, y in pts) / ss)
+            img.alpha_composite(_scatter(img.size, one.resize((px, px), Image.LANCZOS),
+                                         scale, rng, keepout, bbox))
 
     target = q * SYMBOL_SCALE
     boxes = []
