@@ -6,10 +6,14 @@ needs it — generation, simulation, analysis and board reconstruction alike.
 import collections
 from collections import Counter
 from itertools import combinations
-from random import choices
+from random import choices, random
 from typing import List, Dict, Tuple
 
-from src.symbols import Symbols
+from src.symbols import NUMBER_OF_SYMBOLS_IN_PLAY, PLAYABLE_WEIGHT, Symbols
+
+_PLAYABLE = [symbol for symbol in Symbols if symbol is not Symbols.NOTHING]
+_PLAYABLE_WEIGHTS = [symbol.weight for symbol in _PLAYABLE]
+
 
 class Quarter:
     def __init__(self, symbols: List[Symbols]):
@@ -18,15 +22,29 @@ class Quarter:
 
     @staticmethod
     def generate_quarter() -> "Quarter":
-        """Four slots drawn independently by symbol weight.
+        """Four slots, all of one kind: pick the kind, then fill 0-4 of them.
+
+        A quarter is one island in the artwork, and an island holding a jumble
+        of four unrelated things does not read as a place. So the kind is drawn
+        once per quarter and every filled slot takes it.
+
+        The per-slot rates are unchanged by this. Drawing the kind among the
+        real symbols alone gives it probability w/PLAYABLE_WEIGHT rather than
+        w/NUMBER_OF_SYMBOLS_IN_PLAY, which is too high by exactly the ratio of
+        the two; filling each slot with probability equal to that ratio puts it
+        back. Every symbol still turns up at its stated weight, and NOTHING
+        still takes the remaining 44 of 96 slots -- only the joint distribution
+        within a quarter changes, which is the whole point.
 
         There used to be a rule here rejecting any quarter with more than one
         parrot, rerolling the whole quarter. It capped parrot at 4 per card and
         left it about 6% rarer than its weight of 2 implies. Removed, so every
         symbol now appears at its stated rate.
         """
-        return Quarter(choices([symbol for symbol in Symbols],
-                               weights=[symbol.weight for symbol in Symbols], k=4))
+        kind = choices(_PLAYABLE, weights=_PLAYABLE_WEIGHTS, k=1)[0]
+        fill = PLAYABLE_WEIGHT / NUMBER_OF_SYMBOLS_IN_PLAY
+        return Quarter([kind if random() < fill else Symbols.NOTHING
+                        for _ in range(4)])
 
     def is_empty(self):
         return not [symbol for symbol in self.symbols if symbol != Symbols.NOTHING]

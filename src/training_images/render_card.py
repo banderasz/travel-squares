@@ -11,11 +11,11 @@ Per quarter it draws a "landmark" whose shape says how many symbols are there:
     1 symbol   small square        3 symbols  triangle, pointing down
     2 symbols  hexagon             4 symbols  large square
 
-with every dimension jittered +-10% so no two cards look stamped out. The
-outlines are roughened, merged into one island, and stroked once around the
-whole coast; inside, one of pine/palm/tree/grass is scattered at half opacity
-and clipped to the land. The card itself is parchment with wave glyphs on the
-open sea. Symbols sit at fixed positions on top.
+with every dimension jittered +-10% so no two cards look stamped out. Each
+landmark is roughened and then held inside its own quarter, so the four of them
+never touch each other or run off the card; inside, one of pine/palm/tree/grass
+is scattered and clipped to the land. The card itself is parchment with wave
+glyphs on the open sea. Symbols sit at fixed positions on top.
 
 Palette, stroke weight and roughen spectrum are measured off
 image_generator/example_image.ai, a printed sheet of finished cards, rather
@@ -49,14 +49,21 @@ SEA_MARK = (224, 208, 178, 255)      # the little wave glyphs on the open sea
 
 # All from the Illustrator script, expressed against its 135pt card.
 REF_CARD = 135.0
-PADDING = 8.0
-# The script's own scales are {1: 0.6, 2: 1.0, 3: 1.7, 4: 2.0}, but those were
-# drawn against a deck whose quarters held at most one symbol. Ours hold up to
-# four, and at scale 2.0 a quarter's shape is twice the size its symbols need,
-# so the four of them merge into one slab covering the whole card instead of an
-# island with sea around it. These are sized to clear the symbols they contain.
-SHAPE_SCALE = {1: 0.60, 2: 1.15, 3: 1.60, 4: 1.25}
-SYMBOL_SCALE = 0.45 * 0.8            # tSize = qW*0.45, then symbolScale 0.8
+# Half the sea channel between two neighbouring islands, and the margin from
+# the card's edge. The script's 8 was a starting inset for shapes that then
+# grew past it; here nothing leaves the padded box, so it is the channel width
+# and 8 makes it wider than it needs to be.
+PADDING = 4.0
+# Fractions of the padded quarter box, which is also the ceiling: a landmark is
+# scaled down if roughen or jitter would take it past its own quarter. The
+# script's {1: 0.6, 2: 1.0, 3: 1.7, 4: 2.0} were drawn against a deck holding
+# at most one symbol per quarter and let neighbouring shapes overlap freely.
+SHAPE_SCALE = {1: 0.45, 2: 0.95, 3: 1.00, 4: 0.95}
+# Fraction of a quarter. Set by the three-symbol triangle, which is the tightest
+# shape to place in: it has to hold two symbols side by side near its wide top
+# and a third down where it has narrowed, all clear of a coast that wanders.
+# The other three shapes have room to spare at this size.
+SYMBOL_SCALE = 0.23
 JITTER_PCT = 10
 SCATTER_SPACING = (25 * 0.7 * 0.7, 22 * 0.7 * 0.7)
 SCATTER_ICON = 15 * 0.45
@@ -240,32 +247,54 @@ def _curve_radius(a, b, c):
 
 
 def _shape_points(n, cx, cy, pw, ph, rng):
-    """The landmark outline for a quarter holding n symbols."""
+    """The landmark outline for a quarter holding n symbols.
+
+    Every shape is built around its own bounding box, centred on the quarter,
+    so SHAPE_SCALE reads directly as "this fraction of the quarter" whichever
+    shape it is. That was not true while the triangle was described by its
+    circumradius: scale 1.7 there meant a shape almost 1.5 quarters wide.
+    """
     k = SHAPE_SCALE[n]
-    if n == 4 or n == 1:
-        w = _jitter((pw * 0.5 if n == 4 else pw) * k, rng)
-        h = _jitter((ph * 0.5 if n == 4 else pw) * k, rng)
+    w, h = _jitter(pw * k, rng), _jitter(ph * k, rng)
+    if n in (1, 4):
         return [(cx - w / 2, cy - h / 2), (cx + w / 2, cy - h / 2),
                 (cx + w / 2, cy + h / 2), (cx - w / 2, cy + h / 2)]
     if n == 2:
-        w, h = _jitter(pw * k, rng), _jitter(ph * k, rng)
         return [(cx - w / 2, cy), (cx - w / 2, cy - h / 2), (cx, cy - h / 2),
                 (cx + w / 2, cy), (cx + w / 2, cy + h / 2), (cx, cy + h / 2)]
-    # 3 -> triangle with a flat top and the apex at the bottom. The script builds
+    # 3 -> equilateral triangle, flat top, apex at the bottom. The script builds
     # an upward polygon then rotates it 180. That orientation is what the symbol
     # layout needs: two symbols sit along the wide top edge and one near the
     # point, so an upward triangle leaves the top two hanging outside it.
-    #
-    # Its scale is 2.0, not the script's 1.7. At 1.7 the triangle has already
-    # narrowed to about the width of one symbol by the time it reaches the
-    # bottom one, so that symbol overhangs the edge -- and the roughen then eats
-    # into what little margin is left. 2.0 keeps the apex wide enough to hold it.
-    r = _jitter(pw * 0.5 * k, rng)
-    h = _jitter(ph * 0.5 * k, rng)
-    cy2 = cy - h / 8
-    return [(cx - r * math.cos(math.pi / 6), cy2 - r * math.sin(math.pi / 6)),
-            (cx + r * math.cos(math.pi / 6), cy2 - r * math.sin(math.pi / 6)),
-            (cx, cy2 + r)]
+    h *= math.sqrt(3) / 2                      # equilateral, so height follows width
+    return [(cx - w / 2, cy - h / 2), (cx + w / 2, cy - h / 2), (cx, cy + h / 2)]
+
+
+def _fit_in_box(points, box):
+    """Shrink and slide an outline until it sits wholly inside `box`.
+
+    A quarter's landmark has to stay in its own quarter: overlapping the next
+    one reads as a single island spanning both, and running off the card looks
+    like a printing error. Jitter and roughen both work outwards from the base
+    shape, though, and roughen is random, so the size that fits cannot be known
+    before the fact. Clamping afterwards is exact where a conservative base
+    size would only be likely. It scales about the outline's own centre and
+    never grows anything, so a shape already inside is left alone.
+    """
+    x0, y0, x1, y1 = box
+    ax0 = min(p[0] for p in points)
+    ax1 = max(p[0] for p in points)
+    ay0 = min(p[1] for p in points)
+    ay1 = max(p[1] for p in points)
+    k = min(1.0, (x1 - x0) / max(ax1 - ax0, 1e-9), (y1 - y0) / max(ay1 - ay0, 1e-9))
+    mx, my = (ax0 + ax1) / 2, (ay0 + ay1) / 2
+    points = [(mx + (x - mx) * k, my + (y - my) * k) for x, y in points]
+
+    ax0, ax1 = mx + (ax0 - mx) * k, mx + (ax1 - mx) * k
+    ay0, ay1 = my + (ay0 - my) * k, my + (ay1 - my) * k
+    dx = max(0.0, x0 - ax0) - max(0.0, ax1 - x1)
+    dy = max(0.0, y0 - ay0) - max(0.0, ay1 - y1)
+    return [(x + dx, y + dy) for x, y in points]
 
 
 def _scatter(size, mask, scale, rng, keepout=()):
@@ -392,10 +421,9 @@ def render_card(card, px=512, seed=None):
 
     # Two passes: every landmark first, then every symbol. The Illustrator
     # script did one quarter at a time, so a later quarter's shape could cover
-    # an earlier quarter's symbols — the shapes are up to 1.7x the quarter and
-    # do overlap. That matters here because the annotations would still call
-    # those symbols visible, which is exactly the mislabelling this renderer
-    # exists to avoid.
+    # an earlier quarter's symbols. Landmarks are confined to their own quarter
+    # now and cannot reach a neighbour's symbols, but the order still matters
+    # for the scenery, which has to know where every symbol will land.
     placements, outlines = [], []
     for qi, name in enumerate(QUARTERS):
         symbols = [Symbols.of(x) for x in card['card']['quarters'].get(name, [])]
@@ -404,23 +432,33 @@ def render_card(card, px=512, seed=None):
         pw = ph = q - 2 * pad
         cx, cy = qx + q / 2, qy + q / 2
         if n:
-            outlines.append(roughen(_shape_points(n, cx, cy, pw, ph, rng), rng))
+            # Leave room for the stroke, which straddles the outline, so the
+            # coastline itself stops short of the quarter's edge too.
+            edge = STROKE_WIDTH * px / 2
+            box = (qx + pad + edge, qy + pad + edge,
+                   qx + q - pad - edge, qy + q - pad - edge)
+            outlines.append(
+                _fit_in_box(roughen(_shape_points(n, cx, cy, pw, ph, rng), rng), box))
+        # Fractions of the padded quarter. Pulled well in from the quarter's
+        # corners, which is where a roughened coast is furthest from the box it
+        # is drawn in -- the corners get blunted before the roughen even starts.
+        # These are the tightest grouping that still keeps two symbols from
+        # touching, searched against the outlines this renderer actually
+        # produces rather than against the ideal polygons.
         spots = {
             1: [(0.50, 0.50)],
-            2: [(0.25, 0.25), (0.75, 0.75)],
-            3: [(0.25, 0.25), (0.75, 0.25), (0.50, 0.75)],
-            4: [(0.25, 0.25), (0.75, 0.25), (0.25, 0.75), (0.75, 0.75)],
+            2: [(0.32, 0.32), (0.68, 0.68)],
+            3: [(0.36, 0.28), (0.64, 0.28), (0.50, 0.56)],
+            4: [(0.35, 0.35), (0.65, 0.35), (0.35, 0.65), (0.65, 0.65)],
         }.get(n, [])
         for symbol, (fx, fy) in zip(symbols, spots):
             placements.append((symbol, qx + pad + pw * fx, qy + pad + ph * fy))
 
-    # One island, not four landmarks. Neighbouring quarters' shapes overlap, and
-    # stroking each on its own leaves the seams showing as lines across the
-    # middle of the island; the example sheet has a single unbroken coastline.
-    # Stroking every outline first and only then filling them all hides each
-    # seam under the next shape's fill, which unions them without needing any
-    # polygon arithmetic. Drawn at SUPERSAMPLE and scaled down, because a hard
-    # -edged 2.5%-of-card stroke aliases badly.
+    # Stroke every outline first, then fill them all. The landmarks are in
+    # separate quarters and no longer touch, so this is no longer hiding seams
+    # between overlapping shapes, but it still saves stroking the inner half of
+    # a line that the fill would only cover again. Drawn at SUPERSAMPLE and
+    # scaled down, because a hard-edged stroke aliases badly.
     if outlines:
         ss = SUPERSAMPLE
         big = Image.new('RGBA', (px * ss, px * ss), (0, 0, 0, 0))

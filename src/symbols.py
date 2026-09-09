@@ -165,6 +165,10 @@ _SYMBOL_LOOKUP: Dict[str, Symbols] = _build_symbol_lookup()
 
 assert sum(symbol.weight for symbol in Symbols) == NUMBER_OF_SYMBOLS_IN_PLAY
 
+# How much of that weight belongs to a real symbol rather than an empty slot.
+# Quarter generation needs it to draw a symbol without drawing NOTHING.
+PLAYABLE_WEIGHT = NUMBER_OF_SYMBOLS_IN_PLAY - Symbols.NOTHING.weight
+
 # Points are multiplied against 13-long count vectors elsewhere; keep them aligned.
 assert all(len(symbol.points) == 13 for symbol in Symbols), \
     "every points table must have 13 entries (counts 0..12)"
